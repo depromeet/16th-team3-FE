@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
+@import url('https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css');
 
 @layer base {
   :root {
@@ -66,7 +64,11 @@ body {
   * {
     @apply border-border;
   }
+  html {
+    font-family: 'Pretendard', sans-serif;
+  }
   body {
+    font-family: 'Pretendard', sans-serif;
     @apply bg-background text-foreground;
   }
 }
