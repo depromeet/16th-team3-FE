@@ -1,4 +1,4 @@
-export type TaskInputType = {
+export type TaskForm = {
   task?: string;
   deadlineDate?: Date;
   deadlineTime?: string;
@@ -9,7 +9,7 @@ export type TaskInputType = {
   moodType?: string;
 };
 
-export type SmallActionInputType = {
+export type SmallActionInput = {
   task: string;
   deadlineDate: Date;
   deadlineTime: string;
@@ -20,7 +20,7 @@ export type SmallActionInputType = {
   moodType?: string;
 };
 
-export type EstimatedTimeInputType = {
+export type EstimatedTimeInput = {
   task: string;
   deadlineDate: Date;
   deadlineTime: string;
@@ -31,7 +31,7 @@ export type EstimatedTimeInputType = {
   moodType?: string;
 };
 
-export type BufferTimeType = {
+export type BufferTime = {
   task: string;
   deadlineDate: Date;
   deadlineTime: string;
@@ -42,7 +42,7 @@ export type BufferTimeType = {
   moodType?: string;
 };
 
-export type TaskTypeInputType = {
+export type TaskTypeInput = {
   task: string;
   deadlineDate: Date;
   deadlineTime: string;
