@@ -9,7 +9,7 @@ import {
   TaskTypeInputType,
 } from './context';
 import useMount from '@/hooks/useMount';
-import TaskInput from './_components/taskForm/TaskForm';
+import TaskInput from './_components/taskInput/TaskInput';
 
 type FormState = {
   task?: string;
