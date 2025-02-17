@@ -1,16 +1,19 @@
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { X } from 'lucide-react';
+import { RefObject } from 'react';
 
 interface ClearableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
+  ref: RefObject<HTMLInputElement | null>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ClearableInput = ({
   className,
   value,
+  ref,
   onChange,
   ...props
 }: ClearableInputProps) => {
@@ -20,6 +23,7 @@ const ClearableInput = ({
       <Input
         className={cn('pr-10', className)}
         value={value}
+        ref={ref}
         onChange={onChange}
         {...props}
       />
