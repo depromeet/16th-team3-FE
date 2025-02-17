@@ -56,7 +56,17 @@ const TaskCreate = () => {
     <div className="flex min-h-screen flex-col items-center justify-start gap-6 overflow-y-auto bg-white px-4 py-6 dark:bg-gray-900">
       할 일 등록 페이지
       <funnel.Render
-        taskForm={() => <TaskInput />}
+        taskForm={({ history }) => (
+          <TaskInput
+            onClick={(task: string) =>
+              history.push('smallActionInput', {
+                task: task,
+                deadlineDate: new Date(),
+                deadlineTime: '',
+              })
+            }
+          />
+        )}
         smallActionInput={() => <div>작은행동 입력</div>}
         estimatedTimeInput={() => <div>예상시간 입력</div>}
         bufferTime={() => <div>버퍼시간 입력</div>}
