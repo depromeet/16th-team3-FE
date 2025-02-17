@@ -4,10 +4,16 @@ import { useEffect, useRef, useState } from 'react';
 const WAITING_TIME = 300;
 const MAX_TASK_LENGTH = 15;
 
-const TaskInput = () => {
+interface TaskInputProps {
+  onClick: (task: string) => void;
+}
+
+const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
@@ -33,11 +39,12 @@ const TaskInput = () => {
 
       <button
         className={`mt-5 w-full rounded-md px-4 py-2 font-semibold text-white transition ${
-          task.length > MAX_TASK_LENGTH
+          isInvalid
             ? 'cursor-not-allowed bg-gray-400'
             : 'bg-blue-500 hover:bg-blue-600'
         }`}
-        disabled={task.length > MAX_TASK_LENGTH}
+        onClick={() => onClick(task)}
+        disabled={isInvalid}
       >
         다음
       </button>
