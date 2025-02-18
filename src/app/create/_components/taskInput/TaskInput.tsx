@@ -1,4 +1,5 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
+import SelectedComponent from '@/components/selectedComponent/SelectedComponent';
 import { useEffect, useRef, useState } from 'react';
 
 const WAITING_TIME = 300;
@@ -10,6 +11,7 @@ interface TaskInputProps {
 
 const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -17,6 +19,10 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
+  };
+
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
   };
 
   useEffect(() => {
@@ -38,6 +44,10 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         </p>
       )}
 
+      <SelectedComponent
+        selectedDate={selectedDate}
+        handleDateChange={handleDateChange}
+      />
       <button
         className={`mt-5 w-full rounded-md px-4 py-2 font-semibold text-white transition ${
           isInvalid

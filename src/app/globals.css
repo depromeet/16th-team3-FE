@@ -144,7 +144,7 @@ body {
 
 /* 버튼 스타일 */
 .button-primary {
-  @apply bg-main-300 rounded-md px-4 py-2 text-white;
+  @apply rounded-md bg-main-300 px-4 py-2 text-white;
 }
 
 .button-secondary {
