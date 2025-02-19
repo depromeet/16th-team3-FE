@@ -13,6 +13,7 @@ const Toast = ({ icon, message, className }: ToastProps) => {
     <div
       className={cn(
         'flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-3 text-white',
+        'mx-auto w-96 max-w-[90%]',
         className,
       )}
     >
