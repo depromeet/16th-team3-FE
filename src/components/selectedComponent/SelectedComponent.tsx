@@ -5,7 +5,15 @@ import { ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import DatePicker from '../datePicker/DatePicker';
-import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '../ui/drawer';
 
 interface SelectedComponentProps {
   selectedDate: Date | undefined;
@@ -17,16 +25,21 @@ const SelectedComponent = ({
   handleDateChange,
 }: SelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
+    selectedDate,
+  );
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
-    setIsFocused((prev) => !prev);
+  };
+
+  const handleTemporaryDate = (date: Date) => {
+    setTemporaryDate(date);
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
+    <Drawer open={isOpen}>
+      <DrawerTrigger>
         <div className="relative w-full">
           <button
             className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
@@ -34,7 +47,7 @@ const SelectedComponent = ({
           >
             <span
               className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-                selectedDate !== undefined || isFocused
+                selectedDate !== undefined
                   ? 'top-[-14px] text-xs opacity-80'
                   : 'top-2 text-sm'
               }`}
@@ -54,16 +67,33 @@ const SelectedComponent = ({
               />
             </div>
           </button>
-
-          {isOpen && (
+          <DrawerContent className="w-auto p-3">
+            <DrawerHeader>
+              <DrawerTitle>마감일을 선택해주세요</DrawerTitle>
+            </DrawerHeader>
             <DatePicker
-              selectedDate={selectedDate}
-              handleDateChange={handleDateChange}
+              selectedDate={temporaryDate}
+              handleDateChange={handleTemporaryDate}
             />
-          )}
+            <DrawerFooter>
+              <DrawerClose>
+                <button
+                  className="mt-4 flex h-10 w-full items-center justify-center rounded-lg bg-[#1E2235] text-sm text-white"
+                  onClick={() => {
+                    if (temporaryDate) {
+                      handleDateChange(temporaryDate);
+                      setIsOpen(false);
+                    }
+                  }}
+                >
+                  확인
+                </button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
         </div>
-      </PopoverTrigger>
-    </Popover>
+      </DrawerTrigger>
+    </Drawer>
   );
 };
 
