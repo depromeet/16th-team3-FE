@@ -1,5 +1,5 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
-import SelectedComponent from '@/components/selectedComponent/SelectedComponent';
+import SelectedComponent from '@/app/create/_components/selectedComponent/SelectedComponent';
 import { useEffect, useRef, useState } from 'react';
 
 const WAITING_TIME = 300;

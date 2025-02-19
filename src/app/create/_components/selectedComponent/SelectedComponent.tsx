@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import DatePicker from '../datePicker/DatePicker';
+import DatePicker from '../../../../components/datePicker/DatePicker';
 import {
   Drawer,
   DrawerClose,
@@ -13,7 +13,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '../ui/drawer';
+} from '../../../../components/ui/drawer';
 
 interface SelectedComponentProps {
   selectedDate: Date | undefined;

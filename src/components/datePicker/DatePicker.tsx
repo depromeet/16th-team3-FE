@@ -18,6 +18,7 @@ const DatePicker = ({ selectedDate, handleDateChange }: DatePickerProps) => {
       onSelect={(date) => date && handleDateChange(date)}
       initialFocus
       locale={ko}
+      disabled={{ before: new Date() }}
       classNames={{
         nav_button: cn(
           'h-7 w-7 bg-transparent p-0 hover:opacity-100 text-[#5981fa]',
