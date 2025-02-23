@@ -204,6 +204,10 @@ body {
   @apply text-text-primary;
 }
 
+.text-red {
+  @apply text-text-red;
+}
+
 .text-secondary {
   @apply text-text-secondary;
 }
@@ -218,6 +222,18 @@ body {
 
 .text-strong {
   @apply text-text-strong;
+}
+
+.text-alternative {
+  @apply text-text-alternative;
+}
+
+.text-neutral {
+  @apply text-text-neutral;
+}
+
+.text-normal {
+  @apply text-text-normal;
 }
 
 .bg-point-gradient {

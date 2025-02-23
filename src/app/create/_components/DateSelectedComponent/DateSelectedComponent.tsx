@@ -14,16 +14,17 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '../../../../components/ui/drawer';
+import { Button } from '@/components/ui/button';
 
-interface SelectedComponentProps {
+interface DateSelectedComponentProps {
   selectedDate: Date | undefined;
   handleDateChange: (date: Date) => void;
 }
 
-const SelectedComponent = ({
+const DateSelectedComponent = ({
   selectedDate,
   handleDateChange,
-}: SelectedComponentProps) => {
+}: DateSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
     selectedDate,
@@ -40,7 +41,7 @@ const SelectedComponent = ({
   return (
     <Drawer open={isOpen}>
       <DrawerTrigger>
-        <div className="relative w-full">
+        <div className="relative mt-2 w-full">
           <button
             className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
             onClick={handleToggle}
@@ -48,14 +49,14 @@ const SelectedComponent = ({
             <span
               className={`absolute left-0 text-gray-500 transition-all duration-200 ${
                 selectedDate !== undefined
-                  ? 'top-[-14px] text-xs opacity-80'
-                  : 'top-2 text-sm'
+                  ? 'text-neutral b3 top-[-8px]'
+                  : 't3 top-1'
               }`}
             >
               마감일 선택
             </span>
             <div className="flex w-full items-center justify-between pt-4">
-              <span className="text-base font-semibold">
+              <span className="t3 text-base font-semibold">
                 {selectedDate
                   ? format(selectedDate, 'M월 d일 (E)', { locale: ko })
                   : ''}
@@ -67,18 +68,21 @@ const SelectedComponent = ({
               />
             </div>
           </button>
-          <DrawerContent className="w-auto p-3">
-            <DrawerHeader>
-              <DrawerTitle>마감일을 선택해주세요</DrawerTitle>
+          <DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+            <DrawerHeader className="px-0 pb-10 pt-6">
+              <DrawerTitle className="t3 text-left">
+                마감일을 선택해주세요
+              </DrawerTitle>
             </DrawerHeader>
             <DatePicker
               selectedDate={temporaryDate}
               handleDateChange={handleTemporaryDate}
             />
-            <DrawerFooter>
+            <DrawerFooter className="px-0">
               <DrawerClose>
-                <button
-                  className="mt-4 flex h-10 w-full items-center justify-center rounded-lg bg-[#1E2235] text-sm text-white"
+                <Button
+                  variant="primary"
+                  className="mt-4 flex w-full items-center justify-center"
                   onClick={() => {
                     if (temporaryDate) {
                       handleDateChange(temporaryDate);
@@ -87,7 +91,7 @@ const SelectedComponent = ({
                   }}
                 >
                   확인
-                </button>
+                </Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>
@@ -97,4 +101,4 @@ const SelectedComponent = ({
   );
 };
 
-export default SelectedComponent;
+export default DateSelectedComponent;

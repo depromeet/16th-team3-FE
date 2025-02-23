@@ -1,6 +1,7 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
-import SelectedComponent from '@/app/create/_components/selectedComponent/SelectedComponent';
+import SelectedComponent from '@/app/create/_components/DateSelectedComponent/DateSelectedComponent';
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 const WAITING_TIME = 300;
 const MAX_TASK_LENGTH = 15;
@@ -34,31 +35,38 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
   }, []);
 
   return (
-    <div className="flex w-full flex-col">
-      <span className="t2 pb-10 pt-4">어떤 일의 마감이 급하신가요?</span>
-      <ClearableInput ref={inputRef} value={task} onChange={handleTaskChange} />
+    <div className="w-full">
+      <div className="pb-10 pt-4">
+        <span className="t2">어떤 일의 마감이 급하신가요?</span>
+      </div>
+      <div className="flex flex-col gap-6">
+        <div>
+          <ClearableInput
+            ref={inputRef}
+            value={task}
+            onChange={handleTaskChange}
+          />
+          {task.length > MAX_TASK_LENGTH && (
+            <p className="mt-2 text-sm text-red-500">
+              최대 16자 이내로 입력할 수 있어요.
+            </p>
+          )}
+        </div>
 
-      {task.length > MAX_TASK_LENGTH && (
-        <p className="text-sm text-red-500">
-          최대 16자 이내로 입력할 수 있어요.
-        </p>
-      )}
+        <SelectedComponent
+          selectedDate={selectedDate}
+          handleDateChange={handleDateChange}
+        />
+      </div>
 
-      <SelectedComponent
-        selectedDate={selectedDate}
-        handleDateChange={handleDateChange}
-      />
-      <button
-        className={`mt-5 w-full rounded-md px-4 py-2 font-semibold text-white transition ${
-          isInvalid
-            ? 'cursor-not-allowed bg-gray-400'
-            : 'bg-blue-500 hover:bg-blue-600'
-        }`}
+      <Button
+        variant="primary"
+        className="mt-6"
         onClick={() => onClick(task)}
         disabled={isInvalid}
       >
         다음
-      </button>
+      </Button>
     </div>
   );
 };
