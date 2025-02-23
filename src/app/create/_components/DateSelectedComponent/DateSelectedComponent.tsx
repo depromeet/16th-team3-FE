@@ -39,7 +39,7 @@ const DateSelectedComponent = ({
   };
 
   return (
-    <Drawer open={isOpen}>
+    <Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
       <DrawerTrigger>
         <div className="relative mt-2 w-full">
           <button
