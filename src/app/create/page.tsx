@@ -54,7 +54,7 @@ const TaskCreate = () => {
   if (!isMounted) return null;
 
   return (
-    <div className="background-primary flex min-h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
+    <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
       <BackHeader onClick={() => funnel.history.back()} />
       <funnel.Render
         taskForm={({ history }) => (

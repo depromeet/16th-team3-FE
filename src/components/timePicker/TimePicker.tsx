@@ -3,36 +3,49 @@
 import Picker from './Picker';
 import { TimePickerType } from '@/types/time';
 
-const hours = Array.from({ length: 12 }, (_, i) =>
+interface TimePickerProps {
+  time: TimePickerType | undefined;
+  handleTime: (time: TimePickerType) => void;
+}
+
+const HOURS = Array.from({ length: 12 }, (_, i) =>
   (i + 1).toString().padStart(2, '0'),
 );
-const minutes = Array.from({ length: 60 }, (_, i) =>
+const MINUTES = Array.from({ length: 60 }, (_, i) =>
   i.toString().padStart(2, '0'),
 );
-const meridiem = ['오전', '오후'];
+const MERIDIEM = ['오전', '오후'];
 
-const TimePicker = ({
-  handleTemporaryTime,
-}: {
-  handleTemporaryTime: (time: (prev: TimePickerType) => TimePickerType) => void;
-}) => {
-  const handleSelectedMeridiem = (time: string) => {
-    handleTemporaryTime((prev) => ({ ...prev, meridiem: time }));
+const TimePicker = ({ time, handleTime }: TimePickerProps) => {
+  const handleSelectedMeridiem = (selectedTime: string) => {
+    handleTime({
+      meridiem: selectedTime,
+      hour: time?.hour ?? '01',
+      minute: time?.minute ?? '00',
+    });
   };
 
-  const handleSelectedHour = (time: string) => {
-    handleTemporaryTime((prev) => ({ ...prev, hour: time }));
+  const handleSelectedHour = (selectedTime: string) => {
+    handleTime({
+      meridiem: time?.meridiem ?? '오전',
+      hour: selectedTime,
+      minute: time?.minute ?? '00',
+    });
   };
 
-  const handleSelectedMinute = (time: string) => {
-    handleTemporaryTime((prev) => ({ ...prev, minute: time }));
+  const handleSelectedMinute = (selectedTime: string) => {
+    handleTime({
+      meridiem: time?.meridiem ?? '오전',
+      hour: time?.hour ?? '01',
+      minute: selectedTime,
+    });
   };
 
   return (
-    <div className="background-primary flex justify-center gap-6 p-4">
-      <Picker list={meridiem} onSelectedChange={handleSelectedMeridiem} />
-      <Picker list={hours} onSelectedChange={handleSelectedHour} />
-      <Picker list={minutes} onSelectedChange={handleSelectedMinute} />
+    <div className="background-primary flex justify-center gap-6">
+      <Picker list={MERIDIEM} onSelectedChange={handleSelectedMeridiem} />
+      <Picker list={HOURS} onSelectedChange={handleSelectedHour} />
+      <Picker list={MINUTES} onSelectedChange={handleSelectedMinute} />
     </div>
   );
 };
