@@ -16,7 +16,7 @@ import TimePicker from '@/components/timePicker/TimePicker';
 import { TimePickerType } from '@/types/time';
 
 interface TimeSelectedComponentProps {
-  selectedTime: TimePickerType;
+  selectedTime: TimePickerType | undefined;
   handleTimeChange: (time: TimePickerType) => void;
 }
 
@@ -25,28 +25,31 @@ const TimeSelectedComponent = ({
   handleTimeChange,
 }: TimeSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [temporaryTime, setTemporaryTime] =
-    useState<TimePickerType>(selectedTime);
+  const [temporaryTime, setTemporaryTime] = useState<
+    TimePickerType | undefined
+  >(selectedTime);
   const [isFirstTouched, setIsFirstTouched] = useState(true);
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleTemporaryTime = (
-    time: (prev: TimePickerType) => TimePickerType,
-  ) => {
+  const handleTemporaryTime = (time: TimePickerType) => {
     setTemporaryTime(time);
     setIsFirstTouched(false);
   };
 
   const handleConfirmButtonClick = () => {
+    if (temporaryTime === undefined) return;
+
     handleTimeChange(temporaryTime);
     setIsOpen(false);
     setIsFirstTouched(false);
   };
 
-  const deadlineTime = `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute}`;
+  const deadlineTime = selectedTime
+    ? `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute}`
+    : '';
 
   return (
     <Drawer open={isOpen} dismissible={false}>
@@ -82,7 +85,7 @@ const TimeSelectedComponent = ({
             마감시간을 선택해주세요
           </DrawerTitle>
         </DrawerHeader>
-        <TimePicker handleTemporaryTime={handleTemporaryTime} />
+        <TimePicker time={temporaryTime} handleTime={handleTemporaryTime} />
         <DrawerFooter className="px-0">
           <Button
             variant="primary"

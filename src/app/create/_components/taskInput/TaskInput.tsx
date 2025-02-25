@@ -13,14 +13,16 @@ interface TaskInputProps {
 
 const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedTime, setSelectedTime] = useState<TimePickerType>({
-    meridiem: '오전',
-    hour: '01',
-    minute: '00',
-  });
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = useState<TimePickerType | undefined>(
+    undefined,
+  );
 
-  const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
+  const isInvalid =
+    task.length > MAX_TASK_LENGTH ||
+    task.length === 0 ||
+    !selectedDate ||
+    !selectedTime;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);

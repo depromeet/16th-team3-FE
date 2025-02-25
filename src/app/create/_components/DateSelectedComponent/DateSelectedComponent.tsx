@@ -16,7 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 interface DateSelectedComponentProps {
-  selectedDate: Date;
+  selectedDate: Date | undefined;
   handleDateChange: (date: Date) => void;
 }
 
@@ -25,7 +25,9 @@ const DateSelectedComponent = ({
   handleDateChange,
 }: DateSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [temporaryDate, setTemporaryDate] = useState<Date>(new Date());
+  const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
+    selectedDate,
+  );
   const [isFirstTouched, setIsFirstTouched] = useState(true);
 
   const handleToggle = () => {
@@ -38,6 +40,8 @@ const DateSelectedComponent = ({
   };
 
   const handleConfirmButtonClick = () => {
+    if (temporaryDate === undefined) return;
+
     handleDateChange(temporaryDate);
     setIsOpen(false);
     setIsFirstTouched(false);
@@ -60,7 +64,7 @@ const DateSelectedComponent = ({
             </span>
             <div className="flex w-full items-center justify-between pt-4">
               <span className="t3 text-base font-semibold">
-                {isFirstTouched
+                {isFirstTouched || !selectedDate
                   ? ''
                   : format(selectedDate, 'M월 d일 (E)', { locale: ko })}
               </span>
