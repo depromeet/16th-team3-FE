@@ -1,23 +1,34 @@
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-import { useState, RefObject } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 interface ClearableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
-  ref: RefObject<HTMLInputElement | null>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+const WAITING_TIME = 200;
 
 const ClearableInput = ({
   className,
   value,
-  ref,
   onChange,
   ...props
 }: ClearableInputProps) => {
-  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isFocused, setIsFocused] = useState(true);
+
+  useEffect(() => {
+    if (inputRef.current)
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          setIsFocused(true);
+        }
+      }, WAITING_TIME);
+  }, []);
 
   return (
     <div className="relative w-full">
@@ -36,10 +47,10 @@ const ClearableInput = ({
           className,
         )}
         value={value}
-        ref={ref}
-        onChange={onChange}
+        ref={inputRef}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChange={onChange}
         {...props}
       />
 

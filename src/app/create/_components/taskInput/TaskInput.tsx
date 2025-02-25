@@ -1,11 +1,10 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import DateSelectedComponent from '@/app/create/_components/dateSelectedComponent/DateSelectedComponent';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
 import { TimePickerType } from '@/types/time';
 
-const WAITING_TIME = 300;
 const MAX_TASK_LENGTH = 15;
 
 interface TaskInputProps {
@@ -21,8 +20,6 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
     minute: '00',
   });
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,14 +34,6 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
     setSelectedTime(time);
   };
 
-  useEffect(() => {
-    if (inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, WAITING_TIME);
-    }
-  }, []);
-
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
@@ -53,11 +42,7 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         </div>
         <div className="flex flex-col gap-6">
           <div>
-            <ClearableInput
-              ref={inputRef}
-              value={task}
-              onChange={handleTaskChange}
-            />
+            <ClearableInput value={task} onChange={handleTaskChange} />
             {task.length > MAX_TASK_LENGTH && (
               <p className="mt-2 text-sm text-red-500">
                 최대 16자 이내로 입력할 수 있어요.
