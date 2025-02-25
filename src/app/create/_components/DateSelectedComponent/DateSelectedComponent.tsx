@@ -16,17 +16,17 @@ import {
 import { Button } from '@/components/ui/button';
 
 interface DateSelectedComponentProps {
-  selectedDate: Date | undefined;
+  deadlineDate: Date | undefined;
   handleDateChange: (date: Date) => void;
 }
 
 const DateSelectedComponent = ({
-  selectedDate,
+  deadlineDate,
   handleDateChange,
 }: DateSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
-    selectedDate,
+    deadlineDate,
   );
   const [isFirstTouched, setIsFirstTouched] = useState(true);
 
@@ -64,9 +64,9 @@ const DateSelectedComponent = ({
             </span>
             <div className="flex w-full items-center justify-between pt-4">
               <span className="t3 text-base font-semibold">
-                {isFirstTouched || !selectedDate
+                {isFirstTouched || !deadlineDate
                   ? ''
-                  : format(selectedDate, 'M월 d일 (E)', { locale: ko })}
+                  : format(deadlineDate, 'M월 d일 (E)', { locale: ko })}
               </span>
               <ChevronDown
                 className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
@@ -84,7 +84,7 @@ const DateSelectedComponent = ({
           </DrawerTitle>
         </DrawerHeader>
         <DatePicker
-          selectedDate={temporaryDate}
+          deadlineDate={temporaryDate}
           handleDateChange={handleTemporaryDate}
         />
         <DrawerFooter className="px-0">

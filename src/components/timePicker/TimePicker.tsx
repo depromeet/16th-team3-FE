@@ -17,27 +17,27 @@ const MINUTES = Array.from({ length: 60 }, (_, i) =>
 const MERIDIEM = ['오전', '오후'];
 
 const TimePicker = ({ time, handleTime }: TimePickerProps) => {
-  const handleSelectedMeridiem = (selectedTime: string) => {
+  const handleSelectedMeridiem = (deadlineTime: string) => {
     handleTime({
-      meridiem: selectedTime,
+      meridiem: deadlineTime,
       hour: time?.hour || '01',
       minute: time?.minute || '00',
     });
   };
 
-  const handleSelectedHour = (selectedTime: string) => {
+  const handleSelectedHour = (deadlineTime: string) => {
     handleTime({
       meridiem: time?.meridiem || '오전',
-      hour: selectedTime,
+      hour: deadlineTime,
       minute: time?.minute || '00',
     });
   };
 
-  const handleSelectedMinute = (selectedTime: string) => {
+  const handleSelectedMinute = (deadlineTime: string) => {
     handleTime({
       meridiem: time?.meridiem || '오전',
       hour: time?.hour || '01',
-      minute: selectedTime,
+      minute: deadlineTime,
     });
   };
 

@@ -17,18 +17,20 @@ import { TimePickerType } from '@/types/time';
 import Toast from '@/components/toast/Toast';
 
 interface TimeSelectedComponentProps {
-  selectedTime: TimePickerType | undefined;
+  deadlineTime: TimePickerType | undefined;
+  deadlineDate: Date;
   handleTimeChange: (time: TimePickerType) => void;
 }
 
 const TimeSelectedComponent = ({
-  selectedTime,
+  deadlineTime,
+  deadlineDate,
   handleTimeChange,
 }: TimeSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [temporaryTime, setTemporaryTime] = useState<
     TimePickerType | undefined
-  >(selectedTime);
+  >(deadlineTime);
   const [isFirstTouched, setIsFirstTouched] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -61,9 +63,9 @@ const TimeSelectedComponent = ({
     }
 
     const selectedDate = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
+      deadlineDate.getFullYear(),
+      deadlineDate?.getMonth(),
+      deadlineDate?.getDate(),
       selected24Hour,
       selectedMinute,
       0,
@@ -91,8 +93,8 @@ const TimeSelectedComponent = ({
     setIsFirstTouched(false);
   };
 
-  const deadlineTime = selectedTime
-    ? `${selectedTime.meridiem} ${selectedTime.hour}:${selectedTime.minute}`
+  const displayedTime = deadlineTime
+    ? `${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`
     : '';
 
   return (
@@ -113,7 +115,7 @@ const TimeSelectedComponent = ({
               </span>
               <div className="flex w-full items-center justify-between pt-4">
                 <span className="t3 text-base font-semibold">
-                  {isFirstTouched ? '' : deadlineTime}
+                  {isFirstTouched ? '' : displayedTime}
                 </span>
                 <ChevronDown
                   className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${

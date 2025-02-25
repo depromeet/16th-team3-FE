@@ -13,27 +13,27 @@ interface TaskInputProps {
 
 const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<TimePickerType | undefined>(
+  const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
+  const [deadlineTime, setDeadlineTime] = useState<TimePickerType | undefined>(
     undefined,
   );
 
   const isInvalid =
     task.length > MAX_TASK_LENGTH ||
     task.length === 0 ||
-    !selectedDate ||
-    !selectedTime;
+    !deadlineDate ||
+    !deadlineTime;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
   };
 
   const handleDateChange = (date: Date) => {
-    setSelectedDate(date);
+    setDeadlineDate(date);
   };
 
   const handleTimeChange = (time: TimePickerType) => {
-    setSelectedTime(time);
+    setDeadlineTime(time);
   };
 
   return (
@@ -53,13 +53,14 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
           </div>
 
           <DateSelectedComponent
-            selectedDate={selectedDate}
+            deadlineDate={deadlineDate}
             handleDateChange={handleDateChange}
           />
 
-          {selectedDate !== undefined && (
+          {deadlineDate !== undefined && (
             <TimeSelectedComponent
-              selectedTime={selectedTime}
+              deadlineTime={deadlineTime}
+              deadlineDate={deadlineDate}
               handleTimeChange={handleTimeChange}
             />
           )}
