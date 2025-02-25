@@ -8,6 +8,7 @@ interface PickerProps {
 }
 
 const ITEM_HEIGHT = 50;
+const DRAG_SENSITIVITY = 1.5;
 
 const Picker = ({ list, onSelectedChange }: PickerProps) => {
   const newList = ['', ...list, ''];
@@ -26,8 +27,6 @@ const Picker = ({ list, onSelectedChange }: PickerProps) => {
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    e.preventDefault();
-
     if (!isDragging.current || !ref.current) return;
 
     if (animationFrame.current) {
@@ -36,15 +35,8 @@ const Picker = ({ list, onSelectedChange }: PickerProps) => {
 
     animationFrame.current = requestAnimationFrame(() => {
       const deltaY = startY.current - e.touches[0].clientY;
-      ref.current!.scrollTop += deltaY;
+      ref.current!.scrollTop += deltaY * DRAG_SENSITIVITY;
       startY.current = e.touches[0].clientY;
-
-      let index =
-        Math.floor((ref.current!.scrollTop + ITEM_HEIGHT / 2) / ITEM_HEIGHT) -
-        1;
-      index = Math.max(0, Math.min(index, newList.length - 1));
-
-      setSelected(index);
     });
   };
 
@@ -52,9 +44,8 @@ const Picker = ({ list, onSelectedChange }: PickerProps) => {
     isDragging.current = false;
     if (!ref.current) return;
 
-    let index =
-      Math.round((ref.current.scrollTop + ITEM_HEIGHT / 2) / ITEM_HEIGHT) - 1;
-    index = Math.max(0, Math.min(index, newList.length - 1));
+    let index = Math.round(ref.current.scrollTop / ITEM_HEIGHT);
+    index = Math.max(0, Math.min(index, newList.length - 2));
 
     setSelected(index);
 
@@ -73,7 +64,6 @@ const Picker = ({ list, onSelectedChange }: PickerProps) => {
   useEffect(() => {
     if (ref.current && isInitialLoad.current) {
       isInitialLoad.current = false;
-
       ref.current.scrollTop = selected * ITEM_HEIGHT;
 
       setTimeout(() => {
@@ -101,7 +91,7 @@ const Picker = ({ list, onSelectedChange }: PickerProps) => {
           }}
           className={`flex h-[50px] items-center justify-center transition-colors ${
             index === selected + 1
-              ? 'font-bold text-white opacity-100'
+              ? 't3 font-bold text-white opacity-100'
               : 'opacity-40'
           }`}
         >
