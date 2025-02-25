@@ -20,23 +20,23 @@ const TimePicker = ({ time, handleTime }: TimePickerProps) => {
   const handleSelectedMeridiem = (selectedTime: string) => {
     handleTime({
       meridiem: selectedTime,
-      hour: time?.hour ?? '01',
-      minute: time?.minute ?? '00',
+      hour: time?.hour || '01',
+      minute: time?.minute || '00',
     });
   };
 
   const handleSelectedHour = (selectedTime: string) => {
     handleTime({
-      meridiem: time?.meridiem ?? '오전',
+      meridiem: time?.meridiem || '오전',
       hour: selectedTime,
-      minute: time?.minute ?? '00',
+      minute: time?.minute || '00',
     });
   };
 
   const handleSelectedMinute = (selectedTime: string) => {
     handleTime({
-      meridiem: time?.meridiem ?? '오전',
-      hour: time?.hour ?? '01',
+      meridiem: time?.meridiem || '오전',
+      hour: time?.hour || '01',
       minute: selectedTime,
     });
   };
