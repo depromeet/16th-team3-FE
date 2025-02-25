@@ -71,8 +71,9 @@ const HomePage = () => {
       <footer className="fixed bottom-8 left-0 right-0 bg-background-primary z-10">
         <div className="p-5 flex justify-end">
           {showTooltip && (
-            <div className="b3 text-text-normal absolute bottom-24 right-4 bg-component-gray-tertiary rounded-lg px-6 py-3 b3">
+            <div className="b3 text-text-normal absolute bottom-24 right-4 bg-component-gray-tertiary rounded-[12px] px-4 py-3 shadow-lg">
               지금 바로 할 일을 추가해보세요!
+              <div className="absolute -bottom-2 right-12 w-4 h-4 bg-component-gray-tertiary rotate-45"></div>
             </div>
           )}
           <Button 
