@@ -2,6 +2,8 @@ import ClearableInput from '@/components/clearableInput/ClearableInput';
 import DateSelectedComponent from '@/app/create/_components/DateSelectedComponent/DateSelectedComponent';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
+import { TimePickerType } from '@/types/time';
 
 const WAITING_TIME = 300;
 const MAX_TASK_LENGTH = 15;
@@ -13,6 +15,11 @@ interface TaskInputProps {
 const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = useState<TimePickerType>({
+    meridiem: '오전',
+    hour: '01',
+    minute: '00',
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +31,10 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
+  };
+
+  const handleTimeChange = (time: TimePickerType) => {
+    setSelectedTime(time);
   };
 
   useEffect(() => {
@@ -56,6 +67,11 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         <DateSelectedComponent
           selectedDate={selectedDate}
           handleDateChange={handleDateChange}
+        />
+
+        <TimeSelectedComponent
+          selectedTime={selectedTime}
+          handleTimeChange={handleTimeChange}
         />
       </div>
 
