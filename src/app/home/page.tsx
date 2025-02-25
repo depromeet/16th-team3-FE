@@ -38,15 +38,21 @@ const HomePage = () => {
         </div>
         <div className="px-[20px] py-[11px]">
           <div className="flex space-x-4">
-            <div className="text-component-gray-normal">오늘 할일 <span className="text-component-accent-primary">0</span></div>
-            <div className="text-component-gray-disabled">전체 할일 0</div>
+            <div>
+              <span className="t3 text-text-normal">오늘 할일</span>{" "}
+              <span className="s1 text-text-primary">0</span>
+            </div>
+            <div>
+              <span className="t3 text-text-disabled">전체 할일</span>{" "}
+              <span className="s1 text-text-disabled">0</span>
+            </div>
           </div>
         </div>
       </header>
 
       <main className="flex-1 mt-24 mb-40 flex items-center justify-center">
         <div className="text-center px-4">
-          <div className="mb-6">
+          <div className="mb-[50px] mt-[50px]">
             <Image
               src="/icons/home/rocket.svg"
               alt="Rocket"
@@ -55,8 +61,8 @@ const HomePage = () => {
               className="mx-auto w-auto h-auto"
             />
           </div>
-          <h2 className="t2 mb-2 text-text-normal">마감 할 일을 추가하고<br />바로 시작해볼까요?</h2>
-          <p className="b3 text-text-secondary">
+          <h2 className="t3 mt-[8px] mb-[8px] text-text-strong">마감 할 일을 추가하고<br />바로 시작해볼까요?</h2>
+          <p className="b3 text-text-alternative">
             미루지 않도록 알림을 보내 챙겨드릴게요.
           </p>
         </div>
@@ -65,14 +71,14 @@ const HomePage = () => {
       <footer className="fixed bottom-8 left-0 right-0 bg-background-primary z-10">
         <div className="p-5 flex justify-end">
           {showTooltip && (
-            <div className="absolute bottom-24 right-4 bg-elevated-primary rounded-lg px-6 py-3 b3">
+            <div className="b3 text-text-normal absolute bottom-24 right-4 bg-component-gray-tertiary rounded-lg px-6 py-3 b3">
               지금 바로 할 일을 추가해보세요!
             </div>
           )}
           <Button 
             variant="point" 
             size="md"
-            className="flex items-center gap-2 rounded-full py-4"
+            className="l2 text-text-inverse flex items-center gap-2 rounded-full py-[16.5px]"
           >
             <Image
               src="/icons/home/plus.svg"
