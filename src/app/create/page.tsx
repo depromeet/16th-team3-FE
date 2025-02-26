@@ -47,7 +47,12 @@ const TaskCreate = () => {
     steps: steps,
     initial: {
       step: 'taskForm',
-      context: {},
+      context: {
+        task: '',
+        deadlineDate: undefined,
+        deadlineTime: undefined,
+        smallAction: '',
+      },
     },
   });
 
@@ -59,10 +64,10 @@ const TaskCreate = () => {
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
       <BackHeader onClick={() => funnel.history.back()} />
       <funnel.Render
-        taskForm={({ history }) => (
+        taskForm={() => (
           <TaskInput
             onClick={({ task, deadlineDate, deadlineTime }) =>
-              history.push('smallActionInput', {
+              funnel.history.push('smallActionInput', {
                 task: task,
                 deadlineDate: deadlineDate,
                 deadlineTime: deadlineTime,
@@ -70,10 +75,13 @@ const TaskCreate = () => {
             }
           />
         )}
-        smallActionInput={({ history }) => (
+        smallActionInput={({ context }) => (
           <SmallActionInput
             onClick={(smallAction) =>
-              history.push('estimatedTimeInput', {
+              funnel.history.push('estimatedTimeInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
                 smallAction: smallAction,
               })
             }

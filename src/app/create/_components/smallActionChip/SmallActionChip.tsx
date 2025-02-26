@@ -15,7 +15,7 @@ const SMALL_ACTION_LABELS: Record<string, SmallActionKrType> = {
 const SmallActionChip = ({ smallAction, onClick }: SmallActionChipProps) => {
   return (
     <div
-      className="box-border flex items-center gap-2 rounded-[6px] bg-component-gray-secondary px-3 py-2"
+      className="flex flex-shrink-0 items-center gap-2 rounded-[6px] bg-component-gray-secondary px-3 py-2"
       onClick={() => onClick(SMALL_ACTION_LABELS[smallAction])}
     >
       <Image

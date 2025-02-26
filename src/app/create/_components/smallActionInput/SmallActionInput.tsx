@@ -65,15 +65,17 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
                 최대 16자 이내로 입력할 수 있어요.
               </p>
             )}
-            <div className="mt-3 flex gap-2 overflow-x-auto whitespace-nowrap">
-              {SMALL_ACTION_LIST.map((action, index) => (
-                <SmallActionChip
-                  key={index}
-                  smallAction={action}
-                  onClick={handleSmallActionClick}
-                />
-              ))}
-            </div>
+            {smallAction.length === 0 && (
+              <div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
+                {SMALL_ACTION_LIST.map((action, index) => (
+                  <SmallActionChip
+                    key={index}
+                    smallAction={action}
+                    onClick={handleSmallActionClick}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -83,7 +85,10 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
         <Button
           variant="primary"
           className="w-full"
-          disabled={false}
+          disabled={
+            smallAction.length === 0 ||
+            smallAction.length > MAX_SMALL_ACTION_LENGTH
+          }
           onClick={() => onClick(smallAction)}
         >
           다음
