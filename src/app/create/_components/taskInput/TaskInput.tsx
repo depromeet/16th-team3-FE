@@ -1,22 +1,34 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
 import { TimePickerType } from '@/types/time';
 import DateSelectedComponent from '../dateSelectedComponent/DateSelectedComponent';
 
-const MAX_TASK_LENGTH = 15;
-
 interface TaskInputProps {
-  onClick: (task: string) => void;
+  onClick: ({
+    task,
+    deadlineDate,
+    deadlineTime,
+  }: {
+    task: string;
+    deadlineDate: Date;
+    deadlineTime: TimePickerType;
+  }) => void;
 }
 
+const MAX_TASK_LENGTH = 15;
+const WAITING_TIME = 200;
+
 const TaskInput = ({ onClick }: TaskInputProps) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const [task, setTask] = useState<string>('');
   const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
   const [deadlineTime, setDeadlineTime] = useState<TimePickerType | undefined>(
     undefined,
   );
+  const [isFocused, setIsFocused] = useState(true);
 
   const isInvalid =
     task.length > MAX_TASK_LENGTH ||
@@ -36,6 +48,20 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
     setDeadlineTime(time);
   };
 
+  const handleInputFocus = (value: boolean) => {
+    setIsFocused(value);
+  };
+
+  useEffect(() => {
+    if (inputRef.current)
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          setIsFocused(true);
+        }
+      }, WAITING_TIME);
+  }, []);
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
@@ -44,7 +70,14 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         </div>
         <div className="flex flex-col gap-6">
           <div>
-            <ClearableInput value={task} onChange={handleTaskChange} />
+            <ClearableInput
+              value={task}
+              ref={inputRef}
+              title="할 일 입력"
+              isFocused={isFocused}
+              onChange={handleTaskChange}
+              handleInputFocus={handleInputFocus}
+            />
             {task.length > MAX_TASK_LENGTH && (
               <p className="mt-2 text-sm text-red-500">
                 최대 16자 이내로 입력할 수 있어요.
@@ -71,7 +104,13 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         <Button
           variant="primary"
           className="mt-6"
-          onClick={() => onClick(task)}
+          onClick={() =>
+            onClick({
+              task,
+              deadlineDate: deadlineDate as Date,
+              deadlineTime: deadlineTime as TimePickerType,
+            })
+          }
           disabled={isInvalid}
         >
           다음

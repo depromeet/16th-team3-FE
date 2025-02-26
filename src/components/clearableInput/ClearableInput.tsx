@@ -1,37 +1,31 @@
 import { cn } from '@/lib/utils';
 import { Input } from '../ui/input';
-import { useState, useEffect, useRef } from 'react';
+import { RefObject } from 'react';
 import Image from 'next/image';
 
 interface ClearableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
+  ref?: RefObject<HTMLInputElement | null>;
   value: string;
+  title: string;
+  isFocused?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputFocus?: (value: boolean) => void;
 }
 
 const MAX_TASK_LENGTH = 15;
-const WAITING_TIME = 200;
 
 const ClearableInput = ({
   className,
+  ref,
   value,
+  title,
+  isFocused,
   onChange,
+  handleInputFocus,
   ...props
 }: ClearableInputProps) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const [isFocused, setIsFocused] = useState(true);
-
   const isInvalid = value.length > MAX_TASK_LENGTH;
-
-  useEffect(() => {
-    if (inputRef.current)
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-          setIsFocused(true);
-        }
-      }, WAITING_TIME);
-  }, []);
 
   return (
     <div className="relative w-full">
@@ -41,7 +35,7 @@ const ClearableInput = ({
           isFocused ? 'text-primary' : 'text-neutral',
         )}
       >
-        할 일 입력
+        {title}
       </span>
 
       <Input
@@ -53,14 +47,14 @@ const ClearableInput = ({
           className,
         )}
         value={value}
-        ref={inputRef}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        ref={ref}
+        onFocus={() => handleInputFocus?.(true)}
+        onBlur={() => handleInputFocus?.(false)}
         onChange={onChange}
         {...props}
       />
 
-      {value && isFocused && (
+      {value && (
         <button
           type="button"
           className="absolute right-0 top-[24px] translate-y-1/4 text-black hover:text-gray-600"
