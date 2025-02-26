@@ -30,6 +30,10 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
     setIsFocused(value);
   };
 
+  const handleSmallActionClick = (action: string) => {
+    setSmallAction(action);
+  };
+
   useEffect(() => {
     if (inputRef.current)
       setTimeout(() => {
@@ -63,7 +67,11 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
             )}
             <div className="mt-3 flex gap-2 overflow-x-auto whitespace-nowrap">
               {SMALL_ACTION_LIST.map((action, index) => (
-                <SmallActionChip key={index} smallAction={action} />
+                <SmallActionChip
+                  key={index}
+                  smallAction={action}
+                  onClick={handleSmallActionClick}
+                />
               ))}
             </div>
           </div>
