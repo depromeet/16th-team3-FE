@@ -6,6 +6,8 @@ import { formatDistanceToNow, set } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useState } from 'react';
 import HeaderTitle from '../headerTitle/HeaderTitle';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TabsContent } from '@radix-ui/react-tabs';
 
 interface EstimatedTimeInputProps {
   task: string;
@@ -42,6 +44,7 @@ const EstimatedTimeInput = ({
   const [estimatedHour, setEstimatedHour] = useState<string>('');
   const [estimatedMinute, setEstimatedMinute] = useState<string>('');
   const [isFocused, setIsFocused] = useState(true);
+  const [currentTab, setCurrentTab] = useState('시간');
 
   const formattedDeadline = formatDistanceToNow(
     convertDeadlineToDate(deadlineDate, deadlineTime),
@@ -62,6 +65,29 @@ const EstimatedTimeInput = ({
             <span className="text-text-neutral">{formattedDeadline}</span>
           </div>
         </div>
+        <Tabs
+          defaultValue="시간"
+          value={currentTab}
+          onValueChange={(value) => setCurrentTab(value)}
+          className="mt-6 w-full"
+        >
+          <TabsList className="h-full w-full rounded-[10px] bg-component-gray-primary p-1">
+            <TabsTrigger
+              value="시간"
+              className={`l4 w-full p-[10px] ${currentTab === '시간' ? 'bg-component-gray-tertiary' : ''} rounded-[8px]`}
+            >
+              시간
+            </TabsTrigger>
+            <TabsTrigger
+              value="분"
+              className={`l4 w-full p-[10px] ${currentTab === '분' ? 'bg-component-gray-tertiary' : ''} rounded-[8px]`}
+            >
+              분
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="시간">시간</TabsContent>
+          <TabsContent value="분">분</TabsContent>
+        </Tabs>
       </div>
       <div
         className={`transition-all duration-300 ${isFocused ? 'mb-[48vh]' : 'pb-[46px]'}`}
