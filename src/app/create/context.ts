@@ -1,7 +1,9 @@
+import { TimePickerType } from '@/types/create';
+
 export type TaskInputType = {
   task?: string;
   deadlineDate?: Date;
-  deadlineTime?: string;
+  deadlineTime?: TimePickerType;
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
@@ -12,7 +14,7 @@ export type TaskInputType = {
 export type SmallActionInputType = {
   task: string;
   deadlineDate: Date;
-  deadlineTime: string;
+  deadlineTime: TimePickerType;
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
@@ -23,7 +25,7 @@ export type SmallActionInputType = {
 export type EstimatedTimeInputType = {
   task: string;
   deadlineDate: Date;
-  deadlineTime: string;
+  deadlineTime: TimePickerType;
   smallAction: string;
   estimatedHour?: string;
   estimatedMinute?: string;
@@ -34,7 +36,7 @@ export type EstimatedTimeInputType = {
 export type BufferTimeType = {
   task: string;
   deadlineDate: Date;
-  deadlineTime: string;
+  deadlineTime: TimePickerType;
   smallAction: string;
   estimatedHour: string;
   estimatedMinute: string;
@@ -45,7 +47,7 @@ export type BufferTimeType = {
 export type TaskTypeInputType = {
   task: string;
   deadlineDate: Date;
-  deadlineTime: string;
+  deadlineTime: TimePickerType;
   smallAction: string;
   estimatedHour: string;
   estimatedMinute: string;

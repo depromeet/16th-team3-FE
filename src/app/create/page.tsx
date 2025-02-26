@@ -11,11 +11,13 @@ import {
 import useMount from '@/hooks/useMount';
 import TaskInput from './_components/taskInput/TaskInput';
 import BackHeader from '@/components/backHeader/BackHeader';
+import SmallActionInput from './_components/smallActionInput/SmallActionInput';
+import { TimePickerType } from '@/types/create';
 
 type FormState = {
   task?: string;
   deadlineDate?: Date;
-  deadlineTime?: string;
+  deadlineTime?: TimePickerType;
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
@@ -59,16 +61,24 @@ const TaskCreate = () => {
       <funnel.Render
         taskForm={({ history }) => (
           <TaskInput
-            onClick={(task: string) =>
+            onClick={({ task, deadlineDate, deadlineTime }) =>
               history.push('smallActionInput', {
                 task: task,
-                deadlineDate: new Date(),
-                deadlineTime: '',
+                deadlineDate: deadlineDate,
+                deadlineTime: deadlineTime,
               })
             }
           />
         )}
-        smallActionInput={() => <div>작은행동 입력</div>}
+        smallActionInput={({ history }) => (
+          <SmallActionInput
+            onClick={(smallAction) =>
+              history.push('estimatedTimeInput', {
+                smallAction: smallAction,
+              })
+            }
+          />
+        )}
         estimatedTimeInput={() => <div>예상시간 입력</div>}
         bufferTime={() => <div>버퍼시간 입력</div>}
         taskTypeInput={() => <div>할 일 종류 입력</div>}
