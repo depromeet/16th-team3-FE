@@ -163,18 +163,17 @@ const HomePage = () => {
               ))}
             </div>
 
-            <div className="flex justify-center">
-              <button
-                className="t3 text-text-primary flex items-center"
+            <div>
+              <button 
+                className="flex justify-between items-center w-full px-4 py-4"
                 onClick={() => console.log('이번주 할 일 더보기')}
               >
-                이번주 할일 더보기
+                <span className="s2 text-text-neutral">이번주 할일 더보기</span>
                 <Image
                   src="/icons/home/arrow-right.svg"
                   alt="Arrow Right"
-                  width={16}
-                  height={16}
-                  className="ml-1"
+                  width={7}
+                  height={12}
                 />
               </button>
             </div>
