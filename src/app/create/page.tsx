@@ -11,11 +11,13 @@ import {
 import useMount from '@/hooks/useMount';
 import TaskInput from './_components/taskInput/TaskInput';
 import BackHeader from '@/components/backHeader/BackHeader';
+import SmallActionInput from './_components/smallActionInput/SmallActionInput';
+import { TimePickerType } from '@/types/create';
 
 type FormState = {
   task?: string;
   deadlineDate?: Date;
-  deadlineTime?: string;
+  deadlineTime?: TimePickerType;
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
@@ -45,7 +47,12 @@ const TaskCreate = () => {
     steps: steps,
     initial: {
       step: 'taskForm',
-      context: {},
+      context: {
+        task: '',
+        deadlineDate: undefined,
+        deadlineTime: undefined,
+        smallAction: '',
+      },
     },
   });
 
@@ -57,18 +64,29 @@ const TaskCreate = () => {
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
       <BackHeader onClick={() => funnel.history.back()} />
       <funnel.Render
-        taskForm={({ history }) => (
+        taskForm={() => (
           <TaskInput
-            onClick={(task: string) =>
-              history.push('smallActionInput', {
+            onClick={({ task, deadlineDate, deadlineTime }) =>
+              funnel.history.push('smallActionInput', {
                 task: task,
-                deadlineDate: new Date(),
-                deadlineTime: '',
+                deadlineDate: deadlineDate,
+                deadlineTime: deadlineTime,
               })
             }
           />
         )}
-        smallActionInput={() => <div>작은행동 입력</div>}
+        smallActionInput={({ context }) => (
+          <SmallActionInput
+            onClick={(smallAction) =>
+              funnel.history.push('estimatedTimeInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: smallAction,
+              })
+            }
+          />
+        )}
         estimatedTimeInput={() => <div>예상시간 입력</div>}
         bufferTime={() => <div>버퍼시간 입력</div>}
         taskTypeInput={() => <div>할 일 종류 입력</div>}
