@@ -3,44 +3,92 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/ui/header';
-import TaskItem from '@/components/home/TaskItem';
 import Image from 'next/image';
 import TaskDetailSheet from '@/components/home/TaskDetailSheet';
-import { Button } from '@/components/ui/button';
+import WeeklyTaskItem from '@/components/home/WeeklyTaskItem';
+
+interface Task {
+    id: number;
+    title: string;
+    dueDate: string;
+    dueDay: string;
+    dueTime: string;
+    timeRequired: string;
+    dDayCount: number;
+    description: string;
+  }
 
 const SAMPLE_WEEKLY_TASKS = [
   {
     id: 1,
-    title: '디프만 와이어프레임 수정하기',
-    dueDate: '2025-02-25',
-    dueTime: '3시간',
-    description: '디프만 프로젝트의 와이어프레임을 수정해야 합니다.'
+    title: '산학 발표 준비하기',
+    dueDate: '2025-02-10',
+    dueDay: '(화)',
+    dueTime: '오후 6시까지',
+    timeRequired: '3시간 소요',
+    dDayCount: 1,
+    description: '산학 협력 프로젝트 중간 발표 준비하기'
   },
   {
     id: 2,
-    title: '주간 보고서 작성',
-    dueDate: '2025-02-26',
-    dueTime: '2시간',
-    description: '이번 주 진행 상황에 대한 보고서를 작성해야 합니다.'
+    title: '산학 발표 준비하기',
+    dueDate: '2025-02-11',
+    dueDay: '(수)',
+    dueTime: '오후 6시까지',
+    timeRequired: '3시간 소요',
+    dDayCount: 2,
+    description: '산학 협력 프로젝트 최종 발표 준비하기'
   },
   {
     id: 3,
-    title: 'Figma 디자인 업데이트',
-    dueDate: '2025-02-27',
-    dueTime: '1시간',
-    description: '최신 피드백 반영하여 디자인 업데이트하기.'
+    title: '블로그 글쓰기 챌린지하기',
+    dueDate: '2025-02-12',
+    dueDay: '(목)',
+    dueTime: '오후 6시까지',
+    timeRequired: '1일 소요',
+    dDayCount: 3,
+    description: '기술 블로그 첫 번째 글 작성하기'
+  },
+  {
+    id: 4,
+    title: '블로그 글쓰기 챌린지하기',
+    dueDate: '2025-02-13',
+    dueDay: '(금)',
+    dueTime: '오후 6시까지',
+    timeRequired: '1일 소요',
+    dDayCount: 4,
+    description: '기술 블로그 두 번째 글 작성하기'
+  },
+  {
+    id: 5,
+    title: '블로그 글쓰기 챌린지하기',
+    dueDate: '2025-02-14',
+    dueDay: '(토)',
+    dueTime: '오후 6시까지',
+    timeRequired: '1일 소요',
+    dDayCount: 5,
+    description: '기술 블로그 세 번째 글 작성하기'
+  },
+  {
+    id: 6,
+    title: '블로그 글쓰기 챌린지하기',
+    dueDate: '2025-02-15',
+    dueDay: '(일)',
+    dueTime: '오후 6시까지',
+    timeRequired: '1일 반 소요',
+    dDayCount: 6,
+    description: '기술 블로그 네 번째 글 작성하기'
   }
 ];
 
 const WeeklyTasksPage = () => {
   const router = useRouter();
   
-  // 이번주 할일 데이터 - 빈 배열로 설정하여 '할일 없음' 화면 표시
-  const [weeklyTasks, setWeeklyTasks] = useState<any[]>([]);
-  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [weeklyTasks, setWeeklyTasks] = useState<Task[]>(SAMPLE_WEEKLY_TASKS);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
-  const handleTaskClick = (task: any) => {
+  const handleTaskClick = (task: Task) => {
     setSelectedTask(task);
     setIsDetailSheetOpen(true);
   };
@@ -52,29 +100,36 @@ const WeeklyTasksPage = () => {
   const handleStartTask = () => {
     console.log('태스크 시작:', selectedTask);
     setIsDetailSheetOpen(false);
-    // 태스크 시작 관련 로직 추가
+    // 태스크 시작 관련 로직
   };
 
-  const handleAddTask = () => {
-    console.log('할 일 추가');
-    // 할 일 추가 로직 추가
+  const handleDeleteTask = (taskId: number) => {
+    // 특정 ID의 할일을 삭제
+    setWeeklyTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-background-primary">
       <Header title="이번주 할일" />
 
-      <main className="flex-1 mt-16 px-5 overflow-y-auto mb-24">
+      <main className="flex-1 mt-16 px-5 pb-24">
         {weeklyTasks.length > 0 ? (
-          weeklyTasks.map(task => (
-            <TaskItem
-              key={task.id}
-              title={task.title}
-              dueDate={task.dueDate}
-              dueTime={task.dueTime}
-              onClick={() => handleTaskClick(task)}
-            />
-          ))
+          <>
+            <div className="flex justify-end mt-2 mb-4">
+              <button className="c1 bg-component-gray-primary text-text-normal rounded-[8px] px-3 py-2">
+                마감일 가까운 순
+              </button>
+            </div>
+
+            {weeklyTasks.map(task => (
+              <WeeklyTaskItem
+                key={task.id}
+                task={task}
+                onClick={handleTaskClick}
+                onDelete={handleDeleteTask}
+              />
+            ))}
+          </>
         ) : (
           <div className="text-center px-4 flex flex-col items-center justify-center h-full mt-[120px]">
             <div className="mb-[50px] mt-[50px]">
@@ -93,6 +148,13 @@ const WeeklyTasksPage = () => {
           </div>
         )}
       </main>
+
+      <TaskDetailSheet
+        isOpen={isDetailSheetOpen}
+        onClose={handleCloseDetailSheet}
+        task={selectedTask || { title: '', dueDate: '', dueTime: '' }}
+        onStartTask={handleStartTask}
+      />
     </div>
   );
 };
