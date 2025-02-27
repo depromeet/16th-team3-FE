@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 
-type WeeklyTaskItemProps = {
+type AllTaskItemProps = {
   task: {
     id: number;
     title: string;
@@ -11,58 +12,85 @@ type WeeklyTaskItemProps = {
     timeRequired: string;
     dDayCount: number;
     description?: string;
+    type?: 'today' | 'weekly' | 'future';
   };
   onClick: (task: any) => void;
   onDelete: (taskId: number) => void;
 };
 
-const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({ task, onClick, onDelete }) => {
+const AllTaskItem: React.FC<AllTaskItemProps> = ({ task, onClick, onDelete }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const truncatedTitle = task.title.length > 16 ? task.title.substring(0, 16) + '...' : task.title;
 
   useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          menuRef.current && !menuRef.current.contains(event.target as Node) &&
-          buttonRef.current && !buttonRef.current.contains(event.target as Node)
-        ) {
-          setShowMenu(false);
-        }
-      };
-  
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);
-
-  const handleMoreClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setShowMenu((prev) => !prev);
-    };
-  
-    const handleDeleteClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setShowMenu(false);
-      onDelete(task.id);
-    };
-  
-    const handleTaskClick = () => {
-      if (!showMenu) {
-        onClick(task);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current && !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current && !buttonRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
       }
     };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowMenu((prev) => !prev);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowMenu(false);
+    onDelete(task.id);
+  };
+
+  const handleTaskClick = () => {
+    if (!showMenu) {
+      onClick(task);
+    }
+  };
+
+  const renderDayChip = () => {
+    const dDayText = task.dDayCount > 99 ? 'D-99+' : `D-${task.dDayCount}`;
+  
+    if (task.type === 'today') {
+      return (
+        <Button 
+            variant="hologram" 
+            size="sm"
+            className="text-text-inverse z-10 rounded-[6px] px-[15px] py-[3px] h-auto"
+        >
+            <span className="c2">D-DAY</span>
+        </Button>
+      );
+    } else if (task.type === 'weekly') {
+      return (
+        <div className="bg-component-accent-secondary text-text-primary rounded-[6px] px-[15px] py-[0px]">
+          <span className="c2">{dDayText}</span>
+        </div>
+      );
+    } else {
+      return (
+        <div className="bg-component-gray-tertiary text-text-neutral rounded-[6px] px-[15px] py-[0px]">
+          <span className="c2">{dDayText}</span>
+        </div>
+      );
+    }
+  };  
 
   return (
     <div className="bg-component-gray-secondary rounded-[20px] p-4 mb-4 relative" onClick={handleTaskClick}>
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center mb-2">
-            <div className="bg-component-accent-secondary text-text-primary rounded-[6px] px-[15px] py-[0px]">
-              <span className="c2">D-{task.dDayCount}</span>
-            </div>
+            {renderDayChip()}
           </div>
           <div className="c3 flex items-center text-text-primary">
             <span>{task.dueDate.substring(5).replace('-', '월 ')}일 {task.dueDay} {task.dueTime}</span>
@@ -117,4 +145,4 @@ const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({ task, onClick, onDelete
   );
 };
 
-export default WeeklyTaskItem;
+export default AllTaskItem;
