@@ -115,7 +115,7 @@ const WeeklyTasksPage = () => {
       <main className="flex-1 mt-16 px-5 pb-24">
         {weeklyTasks.length > 0 ? (
           <>
-            <div className="flex justify-end mt-2 mb-4">
+            <div className="flex justify-end mb-4">
               <button className="c1 bg-component-gray-primary text-text-normal rounded-[8px] px-3 py-2">
                 마감일 가까운 순
               </button>
