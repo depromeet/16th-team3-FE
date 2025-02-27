@@ -31,9 +31,11 @@ const EstimatedTimeInput = ({
 }: EstimatedTimeInputProps) => {
   const hourInputRef = useRef<HTMLInputElement>(null);
   const minuteInputRef = useRef<HTMLInputElement>(null);
+  const dayInputRef = useRef<HTMLInputElement>(null);
 
   const [estimatedHour, setEstimatedHour] = useState<string>('');
   const [estimatedMinute, setEstimatedMinute] = useState<string>('');
+  const [estimatedDay, setEstimatedDay] = useState<string>('');
   const [focusedTab, setFocusedTab] = useState<string | null>('시간');
   const [currentTab, setCurrentTab] = useState('시간');
   const [isOnlyMinute, setIsOnlyMinute] = useState(false);
@@ -47,6 +49,14 @@ const EstimatedTimeInput = ({
   });
 
   const [minuteError, setMinuteError] = useState<{
+    isValid: boolean;
+    message: string;
+  }>({
+    isValid: true,
+    message: '',
+  });
+
+  const [dayError, setDayError] = useState<{
     isValid: boolean;
     message: string;
   }>({
@@ -81,9 +91,20 @@ const EstimatedTimeInput = ({
 
     if (type === '시간') {
       setEstimatedHour(numericValue);
-    } else {
+    } else if (type === '분') {
       setEstimatedMinute(numericValue);
+    } else if (type === '일') {
+      setEstimatedDay(numericValue);
     }
+  };
+
+  const resetInputValues = () => {
+    setEstimatedHour('');
+    setEstimatedMinute('');
+    setEstimatedDay('');
+    setHourError({ isValid: true, message: '' });
+    setMinuteError({ isValid: true, message: '' });
+    setDayError({ isValid: true, message: '' });
   };
 
   useEffect(() => {
@@ -126,6 +147,19 @@ const EstimatedTimeInput = ({
     }
   }, [estimatedHour, estimatedMinute, deadlineDate, deadlineTime]);
 
+  useEffect(() => {
+    const now = new Date();
+    const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
+    const estimatedDurationMs = parseInt(estimatedDay, 10) * 86400000;
+
+    if (now.getTime() + estimatedDurationMs > deadlineDateTime.getTime()) {
+      setDayError({
+        isValid: false,
+        message: '예상 소요시간이 마감 시간보다 길어요.',
+      });
+    }
+  }, [estimatedDay, deadlineDate, deadlineTime]);
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
@@ -143,7 +177,10 @@ const EstimatedTimeInput = ({
         <Tabs
           defaultValue="시간"
           value={currentTab}
-          onValueChange={(value) => setCurrentTab(value)}
+          onValueChange={(value) => {
+            setCurrentTab(value);
+            resetInputValues();
+          }}
           className="mt-6 w-full"
         >
           <TabsList className="h-full w-full rounded-[10px] bg-component-gray-primary p-1">
@@ -273,12 +310,12 @@ const EstimatedTimeInput = ({
             </div>
           </TabsContent>
           <TabsContent value="일">
-            <div className="relative flex w-full flex-col gap-2">
+            <div className="relative mt-3 flex w-full flex-col gap-2">
               <span
                 className={`b3 ${
-                  !minuteError.isValid
+                  !dayError.isValid
                     ? 'text-red'
-                    : focusedTab === '분' || estimatedMinute.length > 0
+                    : focusedTab === '일' || estimatedDay.length > 0
                       ? 'text-primary'
                       : 'text-neutral'
                 }`}
@@ -287,15 +324,15 @@ const EstimatedTimeInput = ({
               </span>
               <div
                 className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
-                  !minuteError.isValid
+                  !dayError.isValid
                     ? 'border-b-2 border-line-error'
-                    : focusedTab === '일' || estimatedMinute.length > 0
+                    : focusedTab === '일' || estimatedDay.length > 0
                       ? 'border-b-2 border-b-component-accent-primary'
                       : 'border-gray-300'
                 }`}
                 onClick={() => {
-                  minuteInputRef.current?.focus();
-                  setFocusedTab('분');
+                  dayInputRef.current?.focus();
+                  setFocusedTab('일');
                 }}
               >
                 <Input
@@ -304,25 +341,25 @@ const EstimatedTimeInput = ({
                   className="t3 text-normal border-0 bg-transparent p-0"
                   style={{
                     minWidth: '1ch',
-                    width: `${Math.max(estimatedMinute.length, 2)}ch`,
+                    width: `${Math.max(estimatedDay.length, 2)}ch`,
                     caretColor: 'transparent',
                   }}
-                  ref={minuteInputRef}
-                  value={estimatedMinute}
+                  ref={dayInputRef}
+                  value={estimatedDay}
                   maxLength={2}
-                  onChange={(event) => handleHourChange(event, '분')}
+                  onChange={(event) => handleHourChange(event, '일')}
                 />
-                {estimatedMinute.length > 0 && (
+                {estimatedDay.length > 0 && (
                   <span
-                    className={`t3 text-normal ${estimatedMinute.length === 1 ? 'ml-[-14px]' : 'ml-[-2px]'} transform`}
+                    className={`t3 text-normal ${estimatedDay.length === 1 ? 'ml-[-14px]' : 'ml-[-2px]'} transform`}
                   >
                     일
                   </span>
                 )}
               </div>
-              {!minuteError.isValid && (
+              {!dayError.isValid && (
                 <span className="text-red s3 absolute bottom-[-28px]">
-                  {minuteError.message}
+                  {dayError.message}
                 </span>
               )}
             </div>
@@ -333,31 +370,33 @@ const EstimatedTimeInput = ({
       <div
         className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? 'mb-[35vh]' : 'pb-[46px]'} gap-6`}
       >
-        <div className="flex items-center justify-center space-x-2">
-          <label
-            htmlFor="onlyMinute"
-            className="mt-0.5 rounded-[2px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            분만 입력
-          </label>
-          {isOnlyMinute ? (
-            <Image
-              src="/icons/CheckedBox.svg"
-              alt="checkedBox"
-              width={20}
-              height={20}
-              onClick={() => setIsOnlyMinute(false)}
-            />
-          ) : (
-            <Image
-              src="/icons/UncheckedBox.svg"
-              alt="uncheckedBox"
-              width={20}
-              height={20}
-              onClick={() => setIsOnlyMinute(true)}
-            />
-          )}
-        </div>
+        {currentTab === '시간' && (
+          <div className="flex items-center justify-center space-x-2">
+            <label
+              htmlFor="onlyMinute"
+              className="mt-0.5 rounded-[2px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              분만 입력
+            </label>
+            {isOnlyMinute ? (
+              <Image
+                src="/icons/CheckedBox.svg"
+                alt="checkedBox"
+                width={20}
+                height={20}
+                onClick={() => setIsOnlyMinute(false)}
+              />
+            ) : (
+              <Image
+                src="/icons/UncheckedBox.svg"
+                alt="uncheckedBox"
+                width={20}
+                height={20}
+                onClick={() => setIsOnlyMinute(true)}
+              />
+            )}
+          </div>
+        )}
         <Button
           variant="primary"
           className="w-full"
