@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { TimePickerType } from '@/types/create';
 import { formatDistanceStrict, set } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import HeaderTitle from '../headerTitle/HeaderTitle';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -23,19 +23,6 @@ interface EstimatedTimeInputProps {
   }) => void;
 }
 
-const convertDeadlineToDate = (date: Date, time: TimePickerType): Date => {
-  let hour = parseInt(time.hour, 10);
-  const minute = parseInt(time.minute, 10);
-
-  if (time.meridiem === '오전' && hour === 12) {
-    hour = 0;
-  } else if (time.meridiem === '오후' && hour !== 12) {
-    hour += 12;
-  }
-
-  return set(date, { hours: hour, minutes: minute, seconds: 0 });
-};
-
 const EstimatedTimeInput = ({
   task,
   deadlineDate,
@@ -50,6 +37,35 @@ const EstimatedTimeInput = ({
   const [focusedTab, setFocusedTab] = useState<string | null>('시간');
   const [currentTab, setCurrentTab] = useState('시간');
 
+  const [hourError, setHourError] = useState<{
+    isValid: boolean;
+    message: string;
+  }>({
+    isValid: true,
+    message: '',
+  });
+
+  const [minuteError, setMinuteError] = useState<{
+    isValid: boolean;
+    message: string;
+  }>({
+    isValid: true,
+    message: '',
+  });
+
+  const convertDeadlineToDate = (date: Date, time: TimePickerType): Date => {
+    let hour = parseInt(time.hour, 10);
+    const minute = parseInt(time.minute, 10);
+
+    if (time.meridiem === '오전' && hour === 12) {
+      hour = 0;
+    } else if (time.meridiem === '오후' && hour !== 12) {
+      hour += 12;
+    }
+
+    return set(date, { hours: hour, minutes: minute, seconds: 0 });
+  };
+
   const formattedDeadline = formatDistanceStrict(
     new Date(),
     convertDeadlineToDate(deadlineDate, deadlineTime),
@@ -60,16 +76,49 @@ const EstimatedTimeInput = ({
     event: React.ChangeEvent<HTMLInputElement>,
     type: string,
   ) => {
-    if (type === '시간') {
-      const valueWithoutSuffix = event.target.value.replace(/시간$/, '');
-      setEstimatedHour(valueWithoutSuffix);
-    }
+    const numericValue = event.target.value.replace(/[^0-9]/g, '');
 
-    if (type === '분') {
-      const valueWithoutSuffix = event.target.value.replace(/분$/, '');
-      setEstimatedMinute(valueWithoutSuffix);
+    if (type === '시간') {
+      setEstimatedHour(numericValue);
+    } else {
+      setEstimatedMinute(numericValue);
     }
   };
+
+  useEffect(() => {
+    const hour = parseInt(estimatedHour, 10) || 0;
+    const minute = parseInt(estimatedMinute, 10) || 0;
+
+    const now = new Date();
+    const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
+    const estimatedDurationMs = hour * 3600000 + minute * 60000;
+
+    if (now.getTime() + estimatedDurationMs > deadlineDateTime.getTime()) {
+      setHourError({
+        isValid: false,
+        message: '예상 소요시간이 마감 시간보다 길어요.',
+      });
+      setMinuteError({ isValid: true, message: '' });
+      return;
+    }
+
+    if (hour > 23 && minute > 60) {
+      setHourError({
+        isValid: false,
+        message: '시간과 분을 다시 입력해주세요.',
+      });
+      setMinuteError({ isValid: false, message: '' });
+    } else if (hour > 23 && (minute < 61 || minute >= 0)) {
+      setHourError({ isValid: false, message: '24시간 이하로 입력해주세요.' });
+      setMinuteError({ isValid: true, message: '' });
+    } else if (minute > 60 && (hour < 24 || hour >= 0)) {
+      setHourError({ isValid: true, message: '' });
+      setMinuteError({ isValid: false, message: '60분 이하로 입력해주세요.' });
+    } else {
+      setHourError({ isValid: true, message: '' });
+      setMinuteError({ isValid: true, message: '' });
+    }
+  }, [estimatedHour, estimatedMinute, deadlineDate, deadlineTime]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
@@ -106,15 +155,27 @@ const EstimatedTimeInput = ({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="시간">
-            <div className="mt-3 flex justify-between gap-6">
+            <div className="relative mt-3 flex justify-between gap-6">
               <div className="flex w-full flex-col gap-2">
                 <span
-                  className={`b3 ${estimatedHour.length > 0 ? 'text-primary' : 'text-neutral'}`}
+                  className={`b3 ${
+                    !hourError.isValid
+                      ? 'text-red'
+                      : focusedTab === '시간' || estimatedHour.length > 0
+                        ? 'text-primary'
+                        : 'text-neutral'
+                  }`}
                 >
                   시간
                 </span>
                 <div
-                  className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${focusedTab === '시간' || estimatedHour.length > 0 ? 'border-b-component-accent-primary' : 'border-gray-300'}`}
+                  className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
+                    !hourError.isValid
+                      ? 'border-b-2 border-line-error'
+                      : focusedTab === '시간' || estimatedHour.length > 0
+                        ? 'border-b-2 border-b-component-accent-primary'
+                        : 'border-gray-300'
+                  }`}
                   onClick={() => {
                     hourInputRef.current?.focus();
                     setFocusedTab('시간');
@@ -131,26 +192,43 @@ const EstimatedTimeInput = ({
                     }}
                     ref={hourInputRef}
                     value={estimatedHour}
-                    onClick={() => setFocusedTab('시간')}
+                    maxLength={2}
                     onChange={(event) => handleHourChange(event, '시간')}
                   />
                   {estimatedHour.length > 0 && (
                     <span
-                      className={`t3 text-normal ${estimatedHour.length === 1 ? 'ml-[-14px]' : 'ml-[-4px]'} transform`}
+                      className={`t3 text-normal ${estimatedHour.length === 1 ? 'ml-[-14px]' : 'ml-[-2px]'} transform`}
                     >
                       시간
                     </span>
                   )}
                 </div>
+                {!hourError.isValid && (
+                  <span className="text-red s3 absolute bottom-[-28px]">
+                    {hourError.message}
+                  </span>
+                )}
               </div>
-              <div className="flex w-full flex-col gap-2">
+              <div className="relative flex w-full flex-col gap-2">
                 <span
-                  className={`b3 ${estimatedMinute.length > 0 ? 'text-primary' : 'text-neutral'}`}
+                  className={`b3 ${
+                    !minuteError.isValid
+                      ? 'text-red'
+                      : focusedTab === '분' || estimatedMinute.length > 0
+                        ? 'text-primary'
+                        : 'text-neutral'
+                  }`}
                 >
                   분
                 </span>
                 <div
-                  className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${focusedTab === '분' || estimatedMinute.length > 0 ? 'border-b-component-accent-primary' : 'border-gray-300'}`}
+                  className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
+                    !minuteError.isValid
+                      ? 'border-b-2 border-line-error'
+                      : focusedTab === '분' || estimatedMinute.length > 0
+                        ? 'border-b-2 border-b-component-accent-primary'
+                        : 'border-gray-300'
+                  }`}
                   onClick={() => {
                     minuteInputRef.current?.focus();
                     setFocusedTab('분');
@@ -167,16 +245,22 @@ const EstimatedTimeInput = ({
                     }}
                     ref={minuteInputRef}
                     value={estimatedMinute}
+                    maxLength={2}
                     onChange={(event) => handleHourChange(event, '분')}
                   />
                   {estimatedMinute.length > 0 && (
                     <span
-                      className={`t3 text-normal ${estimatedMinute.length === 1 ? 'ml-[-14px]' : 'ml-[-4px]'} transform`}
+                      className={`t3 text-normal ${estimatedMinute.length === 1 ? 'ml-[-14px]' : 'ml-[-2px]'} transform`}
                     >
                       분
                     </span>
                   )}
                 </div>
+                {!minuteError.isValid && (
+                  <span className="text-red s3 absolute bottom-[-28px]">
+                    {minuteError.message}
+                  </span>
+                )}
               </div>
             </div>
           </TabsContent>
