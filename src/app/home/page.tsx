@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import TaskItem from '@/components//home/TaskItem';
@@ -38,6 +39,7 @@ const HomePage = () => {
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
+  const router = useRouter();
 
   // 첫 방문 시 툴팁 표시 관련 로직
   useEffect(() => {
@@ -166,7 +168,7 @@ const HomePage = () => {
             <div>
               <button 
                 className="flex justify-between items-center w-full px-4 py-4"
-                onClick={() => console.log('이번주 할 일 더보기')}
+                onClick={() => router.push('/home/weekly-tasks')}
               >
                 <span className="s2 text-text-neutral">이번주 할일 더보기</span>
                 <Image
