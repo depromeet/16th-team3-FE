@@ -23,6 +23,7 @@ type FormState = {
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
+  estimatedDay?: string;
   taskType?: string;
   moodType?: string;
 };
@@ -33,7 +34,9 @@ const steps = createFunnelSteps<FormState>()
     requiredKeys: ['task', 'deadlineDate', 'deadlineTime'],
   })
   .extends('estimatedTimeInput', { requiredKeys: 'smallAction' })
-  .extends('bufferTime', { requiredKeys: ['estimatedHour', 'estimatedMinute'] })
+  .extends('bufferTime', {
+    requiredKeys: ['estimatedHour', 'estimatedMinute', 'estimatedDay'],
+  })
   .extends('taskTypeInput', { requiredKeys: ['taskType', 'moodType'] })
   .build();
 
@@ -56,6 +59,7 @@ const TaskCreate = () => {
         smallAction: '',
         estimatedHour: '',
         estimatedMinute: '',
+        estimatedDay: '',
         taskType: '',
         moodType: '',
       },
@@ -106,7 +110,7 @@ const TaskCreate = () => {
             task={context.task}
             deadlineDate={context.deadlineDate}
             deadlineTime={context.deadlineTime}
-            onClick={({ estimatedHour, estimatedMinute }) =>
+            onClick={({ estimatedHour, estimatedMinute, estimatedDay }) =>
               history.push(
                 'bufferTime',
                 {
@@ -116,6 +120,7 @@ const TaskCreate = () => {
                   smallAction: context.smallAction,
                   estimatedHour: estimatedHour,
                   estimatedMinute: estimatedMinute,
+                  estimatedDay: estimatedDay,
                 },
                 { estimatedHour, estimatedMinute },
               )
@@ -124,6 +129,7 @@ const TaskCreate = () => {
         )}
         bufferTime={({ context, history }) => (
           <BufferTime
+            context={context}
             onClick={() =>
               history.push('bufferTime', {
                 task: context.task,
@@ -132,6 +138,7 @@ const TaskCreate = () => {
                 smallAction: context.smallAction,
                 estimatedHour: context.estimatedHour,
                 estimatedMinute: context.estimatedMinute,
+                estimatedDay: context.estimatedDay,
               })
             }
           />

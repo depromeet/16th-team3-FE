@@ -7,6 +7,7 @@ export type TaskInputType = {
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
+  estimatedDay?: string;
   taskType?: string;
   moodType?: string;
 };
@@ -18,6 +19,7 @@ export type SmallActionInputType = {
   smallAction?: string;
   estimatedHour?: string;
   estimatedMinute?: string;
+  estimatedDay?: string;
   taskType?: string;
   moodType?: string;
 };
@@ -29,6 +31,7 @@ export type EstimatedTimeInputType = {
   smallAction: string;
   estimatedHour?: string;
   estimatedMinute?: string;
+  estimatedDay?: string;
   taskType?: string;
   moodType?: string;
 };
@@ -40,6 +43,7 @@ export type BufferTimeType = {
   smallAction: string;
   estimatedHour: string;
   estimatedMinute: string;
+  estimatedDay: string;
   taskType?: string;
   moodType?: string;
 };
@@ -51,6 +55,7 @@ export type TaskTypeInputType = {
   smallAction: string;
   estimatedHour: string;
   estimatedMinute: string;
+  estimatedDay?: string;
   taskType: string;
   moodType: string;
 };

@@ -1,12 +1,50 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
+import { BufferTimeDataType } from '@/types/create';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 interface BufferTimeProps {
+  context: BufferTimeDataType;
   onClick: () => void;
 }
 
-const BufferTime = ({ onClick }: BufferTimeProps) => {
+const BufferTime = ({ context, onClick }: BufferTimeProps) => {
+  const {
+    task,
+    deadlineDate,
+    deadlineTime,
+    smallAction,
+    estimatedHour,
+    estimatedMinute,
+    estimatedDay,
+  } = context;
+
+  const formattedDate = format(deadlineDate, 'M월 d일 (E)', { locale: ko });
+
+  const getBufferTime = (
+    estimatedHour: string,
+    estimatedMinute: string,
+    scale: number = 1.5,
+  ) => {
+    const hours = Number(estimatedHour);
+    const minutes = Number(estimatedMinute);
+    const totalMinutes = hours * 60 + minutes;
+
+    const scaledMinutes = totalMinutes * scale;
+
+    const finalHours = Math.floor(scaledMinutes / 60);
+    const finalMinutes = Math.round(scaledMinutes % 60);
+
+    return { finalHours, finalMinutes };
+  };
+
+  const { finalHours, finalMinutes } = getBufferTime(
+    estimatedHour,
+    estimatedMinute,
+  );
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div className="relative mt-[30px]">
@@ -19,24 +57,32 @@ const BufferTime = ({ onClick }: BufferTimeProps) => {
         <div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] blur-[75px]" />
         <div className="mt-10 flex flex-col items-center">
           <div>
-            <span className="t2 text-primary">{'3시간 30분 '}</span>
-            <span className="t2 text-strong">전에는</span>
+            <span className="t2 text-primary">
+              {[
+                finalHours > 0 && `${finalHours}시간`,
+                finalMinutes > 0 && `${finalMinutes}분`,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            </span>
+            <span className="t2 text-strong"> 전에는</span>
           </div>
           <span className="t2 text-strong">시작할 수 있게</span>
           <span className="t2 text-strong">작은 행동 알림을 보낼게요</span>
           <span className="b3 text-neutral mt-6">
-            {'2월 10일 (토) 오후 7:30 '}첫 알림
+            {`${formattedDate} ${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`}{' '}
+            첫 알림
           </span>
         </div>
       </div>
       <div className="pb-[46px] transition-all duration-300">
         <div className="mb-9 flex flex-col items-start gap-5">
-          <span className="text-normal s2">{'PPT 만들고 대본 작성'}</span>
+          <span className="text-normal s2">{task}</span>
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">마감일</span>
             <div className="flex items-center">
               <span className="b2 text-neutral mt-[2px]">
-                {'2월 10일 (월), 오후 09:00'}
+                {`${formattedDate}, ${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`}
               </span>
               <ChevronRight
                 width={20}
@@ -48,7 +94,7 @@ const BufferTime = ({ onClick }: BufferTimeProps) => {
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">작은 행동</span>
             <div className="flex items-center">
-              <span className="b2 text-neutral mt-[2px]">{'노트북 켜기'}</span>
+              <span className="b2 text-neutral mt-[2px]">{smallAction}</span>
               <ChevronRight
                 width={20}
                 height={20}
@@ -59,7 +105,15 @@ const BufferTime = ({ onClick }: BufferTimeProps) => {
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">예상 소요시간</span>
             <div className="flex items-center">
-              <span className="b2 text-neutral mt-[2px]">{'2시간'}</span>
+              <span className="b2 text-neutral mt-[2px]">
+                {[
+                  estimatedHour && `${estimatedHour}시간`,
+                  estimatedMinute && `${estimatedMinute}분`,
+                  estimatedDay && `${estimatedDay}일`,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              </span>
               <ChevronRight
                 width={20}
                 height={20}

@@ -17,9 +17,11 @@ interface EstimatedTimeInputProps {
   onClick: ({
     estimatedHour,
     estimatedMinute,
+    estimatedDay,
   }: {
     estimatedHour: string;
     estimatedMinute: string;
+    estimatedDay: string;
   }) => void;
 }
 
@@ -400,7 +402,9 @@ const EstimatedTimeInput = ({
         <Button
           variant="primary"
           className="w-full"
-          onClick={() => onClick({ estimatedHour, estimatedMinute })}
+          onClick={() =>
+            onClick({ estimatedHour, estimatedMinute, estimatedDay })
+          }
         >
           다음
         </Button>
