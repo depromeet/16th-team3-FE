@@ -6,6 +6,7 @@ type TaskItemProps = {
   dueTime: string;
   dueDate: string;
   onClick: () => void;
+  onDelete: () => void;
   onPreviewStart?: () => void;
 };
 
@@ -14,6 +15,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   dueTime, 
   dueDate, 
   onClick,
+  onDelete,
   onPreviewStart = () => {} 
 }) => {
   const handlePreviewClick = (e: React.MouseEvent) => {

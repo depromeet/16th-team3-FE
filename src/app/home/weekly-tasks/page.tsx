@@ -104,8 +104,14 @@ const WeeklyTasksPage = () => {
   };
 
   const handleDeleteTask = (taskId: number) => {
+    console.log('삭제할 ID:', taskId);
     // 특정 ID의 할일을 삭제
     setWeeklyTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    
+    // 삭제된 항목이 현재 상세 시트에 표시 중이라면 시트 닫기
+    if (isDetailSheetOpen && selectedTask && selectedTask.id === taskId) {
+      setIsDetailSheetOpen(false);
+    }
   };
 
   return (
@@ -153,7 +159,7 @@ const WeeklyTasksPage = () => {
         isOpen={isDetailSheetOpen}
         onClose={handleCloseDetailSheet}
         task={selectedTask || { title: '', dueDate: '', dueTime: '' }}
-        onStartTask={handleStartTask}
+        onDelete={handleDeleteTask}
       />
     </div>
   );

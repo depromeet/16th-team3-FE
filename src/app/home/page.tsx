@@ -151,6 +151,12 @@ const HomePage = () => {
   const [showTooltip, setShowTooltip] = useState(true);
   const [activeTab, setActiveTab] = useState<'today' | 'all'>('today');
   const router = useRouter();
+  const [detailTask, setDetailTask] = useState<any>(null);
+
+  const handleDetailTask = (task: any) => {
+    setDetailTask(task);
+    setIsDetailSheetOpen(true);
+  };
 
   // 분리된 전체 할일 목록
   const todayAllTasks = allTasks.filter(task => task.type === 'today');
@@ -178,12 +184,19 @@ const HomePage = () => {
     .slice(0, 2);
 
   const handleDeleteTask = (taskId: number) => {
+    console.log('삭제할 ID:', taskId);
     // 특정 ID의 할일을 삭제
     setAllTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    
+    // TaskDetailSheet이 열려있는 경우 닫기
+    if (isDetailSheetOpen && detailTask && detailTask.id === taskId) {
+      setIsDetailSheetOpen(false);
+    }
   };
 
   const handleTaskClick = (task: any) => {
     setSelectedTask(task);
+    setDetailTask(task);
     setIsDetailSheetOpen(true);
   };
 
@@ -301,6 +314,8 @@ const HomePage = () => {
                       dueDate={task.dueDate}
                       dueTime={task.dueTime}
                       onClick={() => handleTaskClick(task)}
+                      onDelete={() => handleDeleteTask(task)}
+                      onPreviewStart={() => handleDetailTask(task)}
                     />
                   ))}
                 </div>
@@ -344,9 +359,11 @@ const HomePage = () => {
                     <TaskItem
                       key={task.id}
                       title={task.title}
-                      dueDate={task.dueTime}
-                      dueTime={task.timeRequired}
+                      dueDate={task.dueDate}
+                      dueTime={task.dueTime}
                       onClick={() => handleTaskClick(task)}
+                      onDelete={() => handleDeleteTask(task)}
+                      onPreviewStart={() => handleDetailTask(task)}
                     />
                   ))}
                 </div>
@@ -473,8 +490,8 @@ const HomePage = () => {
       <TaskDetailSheet
         isOpen={isDetailSheetOpen}
         onClose={handleCloseDetailSheet}
-        task={selectedTask || { title: '', dueDate: '', dueTime: '' }}
-        onStartTask={handleStartTask}
+        task={detailTask || { title: '', dueDate: '', dueTime: '' }}
+        onDelete={handleDeleteTask}
       />
     </div>
   );

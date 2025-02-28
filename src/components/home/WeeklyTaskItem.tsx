@@ -38,7 +38,7 @@ const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({ task, onClick, onDelete
       };
     }, []);
 
-  const handleMoreClick = (e: React.MouseEvent) => {
+    const handleMoreClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       setShowMenu((prev) => !prev);
     };
