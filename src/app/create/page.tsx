@@ -13,6 +13,7 @@ import TaskInput from './_components/taskInput/TaskInput';
 import BackHeader from '@/components/backHeader/BackHeader';
 import SmallActionInput from './_components/smallActionInput/SmallActionInput';
 import { TimePickerType } from '@/types/create';
+import EstimatedTimeInput from './_components/estimatedTimeInput/EstimatedTimeInput';
 
 type FormState = {
   task?: string;
@@ -52,6 +53,10 @@ const TaskCreate = () => {
         deadlineDate: undefined,
         deadlineTime: undefined,
         smallAction: '',
+        estimatedHour: '',
+        estimatedMinute: '',
+        taskType: '',
+        moodType: '',
       },
     },
   });
@@ -64,10 +69,10 @@ const TaskCreate = () => {
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
       <BackHeader onClick={() => funnel.history.back()} />
       <funnel.Render
-        taskForm={() => (
+        taskForm={({ history }) => (
           <TaskInput
             onClick={({ task, deadlineDate, deadlineTime }) =>
-              funnel.history.push('smallActionInput', {
+              history.push('smallActionInput', {
                 task: task,
                 deadlineDate: deadlineDate,
                 deadlineTime: deadlineTime,
@@ -75,10 +80,10 @@ const TaskCreate = () => {
             }
           />
         )}
-        smallActionInput={({ context }) => (
+        smallActionInput={({ context, history }) => (
           <SmallActionInput
             onClick={(smallAction) =>
-              funnel.history.push('estimatedTimeInput', {
+              history.push('estimatedTimeInput', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,
@@ -87,7 +92,23 @@ const TaskCreate = () => {
             }
           />
         )}
-        estimatedTimeInput={() => <div>예상시간 입력</div>}
+        estimatedTimeInput={({ context, history }) => (
+          <EstimatedTimeInput
+            task={context.task}
+            deadlineDate={context.deadlineDate}
+            deadlineTime={context.deadlineTime}
+            onClick={({ estimatedHour, estimatedMinute }) =>
+              history.push('estimatedTimeInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: context.smallAction,
+                estimatedHour: estimatedHour,
+                estimatedMinute: estimatedMinute,
+              })
+            }
+          />
+        )}
         bufferTime={() => <div>버퍼시간 입력</div>}
         taskTypeInput={() => <div>할 일 종류 입력</div>}
       />

@@ -4,6 +4,7 @@ import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
 import { useEffect, useRef, useState } from 'react';
 import SmallActionChip from '../smallActionChip/SmallActionChip';
+import HeaderTitle from '../headerTitle/HeaderTitle';
 
 interface SmallActionInputProps {
   onClick: (smallAction: string) => void;
@@ -47,9 +48,7 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
-        <div className="pb-10 pt-4">
-          <span className="t2">어떤 작은 행동부터 시작할래요?</span>
-        </div>
+        <HeaderTitle title="어떤 작은 행동부터 시작할래요?" />
         <div className="flex flex-col gap-6">
           <div>
             <ClearableInput
