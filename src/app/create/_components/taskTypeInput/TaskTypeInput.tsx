@@ -1,7 +1,10 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import TaskTypeChip from '../taskTypeChip/TaskTypeChip';
 import { MoodType, TaskType } from '@/types/create';
+import { useState } from 'react';
 
 const TASK_TYPE_LIST = [
   TaskType.STUDY,
@@ -20,6 +23,17 @@ const MOOD_TYPE_LIST = [
 ];
 
 const TaskTypeInput = () => {
+  const [taskType, setTaskType] = useState<TaskType | null>(null);
+  const [moodType, setMoodType] = useState<MoodType | null>(null);
+
+  const handleTaskTypeClick = (type: TaskType) => {
+    setTaskType(type);
+  };
+
+  const handleMoodTypeClick = (type: MoodType) => {
+    setMoodType(type);
+  };
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
@@ -51,7 +65,12 @@ const TaskTypeInput = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               {TASK_TYPE_LIST.map((type) => (
-                <TaskTypeChip key={type} type={type} />
+                <TaskTypeChip
+                  key={type}
+                  type={type}
+                  isSelected={taskType === type}
+                  onClick={handleTaskTypeClick}
+                />
               ))}
             </div>
           </div>
@@ -62,7 +81,12 @@ const TaskTypeInput = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               {MOOD_TYPE_LIST.map((type) => (
-                <TaskTypeChip key={type} type={type} />
+                <TaskTypeChip
+                  key={type}
+                  type={type}
+                  isSelected={moodType === type}
+                  onClick={handleMoodTypeClick}
+                />
               ))}
             </div>
           </div>

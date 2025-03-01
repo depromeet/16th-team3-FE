@@ -1,6 +1,12 @@
 import { MoodType, TaskType } from '@/types/create';
 import Image from 'next/image';
 
+interface TaskTypeChipProps<T extends TaskType | MoodType> {
+  type: T;
+  isSelected: boolean;
+  onClick: (type: T) => void;
+}
+
 const TYPE_LABELS: { [key: string]: string } = {
   study: '공부',
   writing: '글쓰기',
@@ -14,13 +20,22 @@ const TYPE_LABELS: { [key: string]: string } = {
   calm: '조용한',
 };
 
-const TaskTypeChip = ({ type }: { type: TaskType | MoodType }) => {
+const TaskTypeChip = <T extends TaskType | MoodType>({
+  type,
+  isSelected,
+  onClick,
+}: TaskTypeChipProps<T>) => {
   const label = TYPE_LABELS[type];
 
   return (
-    <div className="flex h-12 gap-2 rounded-[10px] bg-component-gray-secondary p-[14px]">
+    <div
+      className={`flex h-12 items-center gap-2 rounded-[10px] p-[14px] transition-colors duration-300 ${isSelected ? 'bg-point-gradient' : 'bg-component-gray-secondary'}`}
+      onClick={() => onClick(type)}
+    >
       <Image src={`/icons/${type}.svg`} alt={`type`} width={24} height={24} />
-      <span className="l2 text-normal">{label}</span>
+      <span className={`l2 ${isSelected ? 'text-inverse' : 'text-normal'}`}>
+        {label}
+      </span>
     </div>
   );
 };

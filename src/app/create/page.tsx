@@ -74,7 +74,8 @@ const TaskCreate = () => {
 
   const { isMounted } = useMount();
 
-  if (!isMounted) return null;
+  // const { push } = useRouter();
+  /* mutation POST 요청 후, 성공하면 홈 화면으로 이동 후 모달 띄움 */
 
   const handleHistoryBack = () => {
     if (funnel.step === 'smallActionInput') {
@@ -100,8 +101,20 @@ const TaskCreate = () => {
         estimatedMinute: funnel.context.estimatedMinute,
         estimatedDay: funnel.context.estimatedDay,
       });
+    } else if (funnel.step === 'taskTypeInput') {
+      funnel.history.replace('bufferTime', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+        smallAction: funnel.context.smallAction,
+        estimatedHour: funnel.context.estimatedHour,
+        estimatedMinute: funnel.context.estimatedMinute,
+        estimatedDay: funnel.context.estimatedDay,
+      } as BufferTimeType);
     }
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
