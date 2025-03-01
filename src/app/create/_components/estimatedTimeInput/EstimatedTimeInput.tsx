@@ -9,12 +9,11 @@ import HeaderTitle from '../headerTitle/HeaderTitle';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
+import { TaskInputType } from '../../context';
 
 interface EstimatedTimeInputProps {
-  task: string;
-  deadlineDate: Date;
-  deadlineTime: TimePickerType;
-  onClick: ({
+  context: TaskInputType;
+  onNext: ({
     estimatedHour,
     estimatedMinute,
     estimatedDay,
@@ -26,18 +25,30 @@ interface EstimatedTimeInputProps {
 }
 
 const EstimatedTimeInput = ({
-  task,
-  deadlineDate,
-  deadlineTime,
-  onClick,
+  context: {
+    task,
+    deadlineDate,
+    deadlineTime,
+    estimatedHour: historyHourData,
+    estimatedMinute: historyMinuteData,
+    estimatedDay: historyDayData,
+  },
+  onNext,
 }: EstimatedTimeInputProps) => {
   const hourInputRef = useRef<HTMLInputElement>(null);
   const minuteInputRef = useRef<HTMLInputElement>(null);
   const dayInputRef = useRef<HTMLInputElement>(null);
 
-  const [estimatedHour, setEstimatedHour] = useState<string>('');
-  const [estimatedMinute, setEstimatedMinute] = useState<string>('');
-  const [estimatedDay, setEstimatedDay] = useState<string>('');
+  const [estimatedHour, setEstimatedHour] = useState<string>(
+    historyHourData || '',
+  );
+  const [estimatedMinute, setEstimatedMinute] = useState<string>(
+    historyMinuteData || '',
+  );
+  const [estimatedDay, setEstimatedDay] = useState<string>(
+    historyDayData || '',
+  );
+
   const [focusedTab, setFocusedTab] = useState<string | null>('시간');
   const [currentTab, setCurrentTab] = useState('시간');
   const [isOnlyMinute, setIsOnlyMinute] = useState(false);
@@ -81,7 +92,7 @@ const EstimatedTimeInput = ({
 
   const formattedDeadline = formatDistanceStrict(
     new Date(),
-    convertDeadlineToDate(deadlineDate, deadlineTime),
+    convertDeadlineToDate(deadlineDate as Date, deadlineTime as TimePickerType),
     { addSuffix: true, locale: ko },
   );
 
@@ -114,7 +125,10 @@ const EstimatedTimeInput = ({
     const minute = parseInt(estimatedMinute, 10) || 0;
 
     const now = new Date();
-    const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
+    const deadlineDateTime = convertDeadlineToDate(
+      deadlineDate as Date,
+      deadlineTime as TimePickerType,
+    );
     const estimatedDurationMs = hour * 3600000 + minute * 60000;
 
     if (now.getTime() + estimatedDurationMs > deadlineDateTime.getTime()) {
@@ -151,7 +165,10 @@ const EstimatedTimeInput = ({
 
   useEffect(() => {
     const now = new Date();
-    const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
+    const deadlineDateTime = convertDeadlineToDate(
+      deadlineDate as Date,
+      deadlineTime as TimePickerType,
+    );
     const estimatedDurationMs = parseInt(estimatedDay, 10) * 86400000;
 
     if (now.getTime() + estimatedDurationMs > deadlineDateTime.getTime()) {
@@ -403,7 +420,7 @@ const EstimatedTimeInput = ({
           variant="primary"
           className="w-full"
           onClick={() =>
-            onClick({ estimatedHour, estimatedMinute, estimatedDay })
+            onNext({ estimatedHour, estimatedMinute, estimatedDay })
           }
         >
           다음

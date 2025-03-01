@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
 import { TimePickerType } from '@/types/create';
 import HeaderTitle from '../headerTitle/HeaderTitle';
+import { TaskInputType } from '../../context';
 
 interface TaskInputProps {
-  onClick: ({
+  context: TaskInputType;
+  onNext: ({
     task,
     deadlineDate,
     deadlineTime,
@@ -21,7 +23,7 @@ interface TaskInputProps {
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
 
-const TaskInput = ({ onClick }: TaskInputProps) => {
+const TaskInput = ({ context, onNext }: TaskInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
@@ -62,6 +64,18 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
         }
       }, WAITING_TIME);
   }, []);
+
+  useEffect(() => {
+    if (context.task) {
+      setTask(context.task);
+    }
+    if (context.deadlineDate) {
+      setDeadlineDate(context.deadlineDate);
+    }
+    if (context.deadlineTime) {
+      setDeadlineTime(context.deadlineTime);
+    }
+  }, [context]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
@@ -104,7 +118,7 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
           variant="primary"
           className="mt-6"
           onClick={() =>
-            onClick({
+            onNext({
               task,
               deadlineDate: deadlineDate as Date,
               deadlineTime: deadlineTime as TimePickerType,

@@ -31,7 +31,6 @@ const TimeSelectedComponent = ({
   const [temporaryTime, setTemporaryTime] = useState<
     TimePickerType | undefined
   >(deadlineTime);
-  const [isFirstTouched, setIsFirstTouched] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -79,8 +78,6 @@ const TimeSelectedComponent = ({
       }, 3000);
       return;
     }
-
-    setIsFirstTouched(false);
   };
 
   const handleConfirmButtonClick = () => {
@@ -90,7 +87,6 @@ const TimeSelectedComponent = ({
 
     handleTimeChange(temporaryTime);
     setIsOpen(false);
-    setIsFirstTouched(false);
   };
 
   const displayedTime = deadlineTime
@@ -108,14 +104,14 @@ const TimeSelectedComponent = ({
             >
               <span
                 className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-                  isFirstTouched ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
+                  !temporaryTime ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
                 }`}
               >
                 마감시간 선택
               </span>
               <div className="flex w-full items-center justify-between pt-4">
                 <span className="t3 text-base font-semibold">
-                  {isFirstTouched ? '' : displayedTime}
+                  {!temporaryTime ? '' : displayedTime}
                 </span>
                 <ChevronDown
                   className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${

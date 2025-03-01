@@ -70,67 +70,105 @@ const TaskCreate = () => {
 
   if (!isMounted) return null;
 
+  const handleHistoryBack = () => {
+    if (funnel.step === 'smallActionInput') {
+      funnel.history.replace('taskForm', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+      });
+    } else if (funnel.step === 'estimatedTimeInput') {
+      funnel.history.replace('smallActionInput', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+        smallAction: funnel.context.smallAction,
+      });
+    } else if (funnel.step === 'bufferTime') {
+      funnel.history.replace('estimatedTimeInput', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+        smallAction: funnel.context.smallAction,
+      });
+    }
+  };
+
   return (
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
-      <BackHeader onClick={() => funnel.history.back()} />
+      <BackHeader onClick={handleHistoryBack} />
       <funnel.Render
         taskForm={({ history }) => (
           <TaskInput
-            onClick={({ task, deadlineDate, deadlineTime }) =>
-              history.push(
-                'smallActionInput',
-                {
-                  task: task,
-                  deadlineDate: deadlineDate,
-                  deadlineTime: deadlineTime,
-                },
-                { task, deadlineDate, deadlineTime },
-              )
+            context={funnel.context}
+            onNext={({ task, deadlineDate, deadlineTime }) =>
+              history.push('smallActionInput', {
+                task: task,
+                deadlineDate: deadlineDate,
+                deadlineTime: deadlineTime,
+              })
             }
           />
         )}
         smallActionInput={({ context, history }) => (
           <SmallActionInput
-            onClick={(smallAction) =>
-              history.push(
-                'estimatedTimeInput',
-                {
-                  task: context.task,
-                  deadlineDate: context.deadlineDate,
-                  deadlineTime: context.deadlineTime,
-                  smallAction: smallAction,
-                },
-                { smallAction },
-              )
+            smallAction={funnel.context.smallAction}
+            onNext={(smallAction) =>
+              history.push('estimatedTimeInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: smallAction,
+              })
             }
           />
         )}
         estimatedTimeInput={({ context, history }) => (
           <EstimatedTimeInput
-            task={context.task}
-            deadlineDate={context.deadlineDate}
-            deadlineTime={context.deadlineTime}
-            onClick={({ estimatedHour, estimatedMinute, estimatedDay }) =>
-              history.push(
-                'bufferTime',
-                {
-                  task: context.task,
-                  deadlineDate: context.deadlineDate,
-                  deadlineTime: context.deadlineTime,
-                  smallAction: context.smallAction,
-                  estimatedHour: estimatedHour,
-                  estimatedMinute: estimatedMinute,
-                  estimatedDay: estimatedDay,
-                },
-                { estimatedHour, estimatedMinute },
-              )
+            context={context}
+            onNext={({ estimatedHour, estimatedMinute, estimatedDay }) =>
+              history.push('bufferTime', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: context.smallAction,
+                estimatedHour: estimatedHour,
+                estimatedMinute: estimatedMinute,
+                estimatedDay: estimatedDay,
+              })
             }
           />
         )}
         bufferTime={({ context, history }) => (
           <BufferTime
             context={context}
-            onClick={() =>
+            handleDeadlineModify={() =>
+              history.replace('taskForm', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+              })
+            }
+            handleSmallActionModify={() =>
+              history.replace('smallActionInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: context.smallAction,
+              })
+            }
+            handleEstimatedTimeModify={() =>
+              history.replace('estimatedTimeInput', {
+                task: context.task,
+                deadlineDate: context.deadlineDate,
+                deadlineTime: context.deadlineTime,
+                smallAction: context.smallAction,
+                estimatedHour: context.estimatedHour,
+                estimatedMinute: context.estimatedMinute,
+                estimatedDay: context.estimatedDay,
+              })
+            }
+            onNext={() =>
               history.push('bufferTime', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,

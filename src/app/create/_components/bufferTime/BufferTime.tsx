@@ -7,10 +7,19 @@ import { ko } from 'date-fns/locale';
 
 interface BufferTimeProps {
   context: BufferTimeDataType;
-  onClick: () => void;
+  handleDeadlineModify: () => void;
+  handleSmallActionModify: () => void;
+  handleEstimatedTimeModify: () => void;
+  onNext: () => void;
 }
 
-const BufferTime = ({ context, onClick }: BufferTimeProps) => {
+const BufferTime = ({
+  context,
+  handleDeadlineModify,
+  handleSmallActionModify,
+  handleEstimatedTimeModify,
+  onNext,
+}: BufferTimeProps) => {
   const {
     task,
     deadlineDate,
@@ -80,7 +89,7 @@ const BufferTime = ({ context, onClick }: BufferTimeProps) => {
           <span className="text-normal s2">{task}</span>
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">마감일</span>
-            <div className="flex items-center">
+            <div className="flex items-center" onClick={handleDeadlineModify}>
               <span className="b2 text-neutral mt-[2px]">
                 {`${formattedDate}, ${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`}
               </span>
@@ -93,7 +102,10 @@ const BufferTime = ({ context, onClick }: BufferTimeProps) => {
           </div>
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">작은 행동</span>
-            <div className="flex items-center">
+            <div
+              className="flex items-center"
+              onClick={handleSmallActionModify}
+            >
               <span className="b2 text-neutral mt-[2px]">{smallAction}</span>
               <ChevronRight
                 width={20}
@@ -104,7 +116,10 @@ const BufferTime = ({ context, onClick }: BufferTimeProps) => {
           </div>
           <div className="flex w-full items-center justify-between">
             <span className="b2 text-alternative mt-[2px]">예상 소요시간</span>
-            <div className="flex items-center">
+            <div
+              className="flex items-center"
+              onClick={handleEstimatedTimeModify}
+            >
               <span className="b2 text-neutral mt-[2px]">
                 {[
                   estimatedHour && `${estimatedHour}시간`,
@@ -122,7 +137,7 @@ const BufferTime = ({ context, onClick }: BufferTimeProps) => {
             </div>
           </div>
         </div>
-        <Button variant="primary" className="w-full" onClick={onClick}>
+        <Button variant="primary" className="w-full" onClick={onNext}>
           다음
         </Button>
       </div>
