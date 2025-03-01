@@ -15,6 +15,7 @@ import SmallActionInput from './_components/smallActionInput/SmallActionInput';
 import { TimePickerType } from '@/types/create';
 import EstimatedTimeInput from './_components/estimatedTimeInput/EstimatedTimeInput';
 import BufferTime from './_components/bufferTime/BufferTime';
+import TaskTypeInput from './_components/taskTypeInput/TaskTypeInput';
 
 type FormState = {
   task?: string;
@@ -202,7 +203,7 @@ const TaskCreate = () => {
               })
             }
             onNext={() =>
-              history.push('bufferTime', {
+              history.push('taskTypeInput', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,
@@ -210,11 +211,11 @@ const TaskCreate = () => {
                 estimatedHour: context.estimatedHour,
                 estimatedMinute: context.estimatedMinute,
                 estimatedDay: context.estimatedDay,
-              })
+              } as TaskTypeInputType)
             }
           />
         )}
-        taskTypeInput={() => <div>할 일 종류 입력</div>}
+        taskTypeInput={() => <TaskTypeInput />}
       />
     </div>
   );
