@@ -66,6 +66,11 @@ const TaskCreate = () => {
     },
   });
 
+  const lastStep =
+    funnel.historySteps.length > 1
+      ? funnel.historySteps[funnel.historySteps.length - 2].step
+      : undefined;
+
   const { isMounted } = useMount();
 
   if (!isMounted) return null;
@@ -90,6 +95,9 @@ const TaskCreate = () => {
         deadlineDate: funnel.context.deadlineDate,
         deadlineTime: funnel.context.deadlineTime,
         smallAction: funnel.context.smallAction,
+        estimatedHour: funnel.context.estimatedHour,
+        estimatedMinute: funnel.context.estimatedMinute,
+        estimatedDay: funnel.context.estimatedDay,
       });
     }
   };
@@ -101,6 +109,7 @@ const TaskCreate = () => {
         taskForm={({ history }) => (
           <TaskInput
             context={funnel.context}
+            lastStep={lastStep}
             onNext={({ task, deadlineDate, deadlineTime }) =>
               history.push('smallActionInput', {
                 task: task,
@@ -108,11 +117,20 @@ const TaskCreate = () => {
                 deadlineTime: deadlineTime,
               })
             }
+            onEdit={({ task, deadlineDate, deadlineTime }) =>
+              funnel.history.push('bufferTime', {
+                ...(funnel.context as BufferTimeType),
+                task: task,
+                deadlineDate: deadlineDate,
+                deadlineTime: deadlineTime,
+              } as BufferTimeType)
+            }
           />
         )}
         smallActionInput={({ context, history }) => (
           <SmallActionInput
             smallAction={funnel.context.smallAction}
+            lastStep={funnel.historySteps[funnel.historySteps.length - 2].step}
             onNext={(smallAction) =>
               history.push('estimatedTimeInput', {
                 task: context.task,
@@ -121,11 +139,18 @@ const TaskCreate = () => {
                 smallAction: smallAction,
               })
             }
+            onEdit={(smallAction) =>
+              funnel.history.push('bufferTime', {
+                ...(funnel.context as BufferTimeType),
+                smallAction: smallAction,
+              } as BufferTimeType)
+            }
           />
         )}
         estimatedTimeInput={({ context, history }) => (
           <EstimatedTimeInput
             context={context}
+            lastStep={funnel.historySteps[funnel.historySteps.length - 2].step}
             onNext={({ estimatedHour, estimatedMinute, estimatedDay }) =>
               history.push('bufferTime', {
                 task: context.task,
@@ -137,20 +162,28 @@ const TaskCreate = () => {
                 estimatedDay: estimatedDay,
               })
             }
+            onEdit={({ estimatedHour, estimatedMinute, estimatedDay }) =>
+              funnel.history.push('bufferTime', {
+                ...(funnel.context as BufferTimeType),
+                estimatedHour: estimatedHour,
+                estimatedMinute: estimatedMinute,
+                estimatedDay: estimatedDay,
+              } as BufferTimeType)
+            }
           />
         )}
         bufferTime={({ context, history }) => (
           <BufferTime
             context={context}
             handleDeadlineModify={() =>
-              history.replace('taskForm', {
+              history.push('taskForm', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,
               })
             }
             handleSmallActionModify={() =>
-              history.replace('smallActionInput', {
+              history.push('smallActionInput', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,
@@ -158,7 +191,7 @@ const TaskCreate = () => {
               })
             }
             handleEstimatedTimeModify={() =>
-              history.replace('estimatedTimeInput', {
+              history.push('estimatedTimeInput', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,

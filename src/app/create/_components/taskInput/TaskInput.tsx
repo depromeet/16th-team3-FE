@@ -9,7 +9,17 @@ import { TaskInputType } from '../../context';
 
 interface TaskInputProps {
   context: TaskInputType;
+  lastStep?: string;
   onNext: ({
+    task,
+    deadlineDate,
+    deadlineTime,
+  }: {
+    task: string;
+    deadlineDate: Date;
+    deadlineTime: TimePickerType;
+  }) => void;
+  onEdit: ({
     task,
     deadlineDate,
     deadlineTime,
@@ -23,7 +33,7 @@ interface TaskInputProps {
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
 
-const TaskInput = ({ context, onNext }: TaskInputProps) => {
+const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
@@ -117,16 +127,24 @@ const TaskInput = ({ context, onNext }: TaskInputProps) => {
         <Button
           variant="primary"
           className="mt-6"
-          onClick={() =>
-            onNext({
-              task,
-              deadlineDate: deadlineDate as Date,
-              deadlineTime: deadlineTime as TimePickerType,
-            })
+          onClick={
+            lastStep === 'bufferTime'
+              ? () =>
+                  onEdit({
+                    task,
+                    deadlineDate: deadlineDate as Date,
+                    deadlineTime: deadlineTime as TimePickerType,
+                  })
+              : () =>
+                  onNext({
+                    task,
+                    deadlineDate: deadlineDate as Date,
+                    deadlineTime: deadlineTime as TimePickerType,
+                  })
           }
           disabled={isInvalid}
         >
-          다음
+          {lastStep === 'bufferTime' ? '확인' : '다음'}
         </Button>
       </div>
     </div>

@@ -13,7 +13,17 @@ import { TaskInputType } from '../../context';
 
 interface EstimatedTimeInputProps {
   context: TaskInputType;
+  lastStep?: string;
   onNext: ({
+    estimatedHour,
+    estimatedMinute,
+    estimatedDay,
+  }: {
+    estimatedHour: string;
+    estimatedMinute: string;
+    estimatedDay: string;
+  }) => void;
+  onEdit: ({
     estimatedHour,
     estimatedMinute,
     estimatedDay,
@@ -33,7 +43,9 @@ const EstimatedTimeInput = ({
     estimatedMinute: historyMinuteData,
     estimatedDay: historyDayData,
   },
+  lastStep,
   onNext,
+  onEdit,
 }: EstimatedTimeInputProps) => {
   const hourInputRef = useRef<HTMLInputElement>(null);
   const minuteInputRef = useRef<HTMLInputElement>(null);
@@ -387,7 +399,7 @@ const EstimatedTimeInput = ({
       </div>
 
       <div
-        className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? 'mb-[35vh]' : 'pb-[46px]'} gap-6`}
+        className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? 'mb-[32vh]' : 'pb-[46px]'} gap-4`}
       >
         {currentTab === '시간' && (
           <div className="flex items-center justify-center space-x-2">
@@ -419,11 +431,13 @@ const EstimatedTimeInput = ({
         <Button
           variant="primary"
           className="w-full"
-          onClick={() =>
-            onNext({ estimatedHour, estimatedMinute, estimatedDay })
+          onClick={
+            lastStep === 'bufferTime'
+              ? () => onEdit({ estimatedHour, estimatedMinute, estimatedDay })
+              : () => onNext({ estimatedHour, estimatedMinute, estimatedDay })
           }
         >
-          다음
+          {lastStep === 'bufferTime' ? '확인' : '다음'}
         </Button>
       </div>
     </div>
