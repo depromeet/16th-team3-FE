@@ -118,18 +118,17 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
         </div>
 
         <CharacterDialog />
-        <DialogTrigger>
-          <div className="pb-[46px] transition-all duration-300">
-            <Button
-              variant="primary"
-              className="w-full"
-              disabled={!taskType || !moodType}
-              onClick={() => onClick(convertedData)}
-            >
-              확인
-            </Button>
-          </div>
-        </DialogTrigger>
+
+        <div className="pb-[46px] transition-all duration-300">
+          <Button
+            variant="primary"
+            className="w-full"
+            disabled={!taskType || !moodType}
+            onClick={() => onClick(convertedData)}
+          >
+            <DialogTrigger>확인</DialogTrigger>
+          </Button>
+        </div>
       </div>
     </Dialog>
   );

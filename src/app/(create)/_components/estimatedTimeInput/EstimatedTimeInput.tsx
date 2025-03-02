@@ -89,6 +89,15 @@ const EstimatedTimeInput = ({
     message: '',
   });
 
+  const isEmptyValue =
+    (currentTab === '시간' &&
+      estimatedHour.length === 0 &&
+      estimatedMinute.length === 0) ||
+    (currentTab === '일' && estimatedDay.length === 0);
+
+  const isInvalidValue =
+    !hourError.isValid || !minuteError.isValid || !dayError.isValid;
+
   const convertDeadlineToDate = (date: Date, time: TimePickerType): Date => {
     let hour = parseInt(time.hour, 10);
     const minute = parseInt(time.minute, 10);
@@ -236,7 +245,7 @@ const EstimatedTimeInput = ({
                     className={`b3 ${
                       !hourError.isValid
                         ? 'text-red'
-                        : focusedTab === '시간' || estimatedHour.length > 0
+                        : focusedTab === '시간'
                           ? 'text-primary'
                           : 'text-neutral'
                     }`}
@@ -247,7 +256,7 @@ const EstimatedTimeInput = ({
                     className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
                       !hourError.isValid
                         ? 'border-b-2 border-line-error'
-                        : focusedTab === '시간' || estimatedHour.length > 0
+                        : focusedTab === '시간'
                           ? 'border-b-2 border-b-component-accent-primary'
                           : 'border-gray-300'
                     }`}
@@ -346,7 +355,7 @@ const EstimatedTimeInput = ({
                 className={`b3 ${
                   !dayError.isValid
                     ? 'text-red'
-                    : focusedTab === '일' || estimatedDay.length > 0
+                    : focusedTab === '일'
                       ? 'text-primary'
                       : 'text-neutral'
                 }`}
@@ -357,7 +366,7 @@ const EstimatedTimeInput = ({
                 className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
                   !dayError.isValid
                     ? 'border-b-2 border-line-error'
-                    : focusedTab === '일' || estimatedDay.length > 0
+                    : focusedTab === '일'
                       ? 'border-b-2 border-b-component-accent-primary'
                       : 'border-gray-300'
                 }`}
@@ -432,6 +441,7 @@ const EstimatedTimeInput = ({
         <Button
           variant="primary"
           className="w-full"
+          disabled={isEmptyValue || isInvalidValue}
           onClick={
             lastStep === 'bufferTime'
               ? () => onEdit({ estimatedHour, estimatedMinute, estimatedDay })
