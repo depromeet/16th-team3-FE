@@ -2,7 +2,7 @@ import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
-import { TimePickerType } from '@/types/time';
+import { TimePickerType } from '@/types/create';
 import DateSelectedComponent from '../dateSelectedComponent/DateSelectedComponent';
 
 interface TaskInputProps {
