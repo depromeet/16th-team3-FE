@@ -1,3 +1,5 @@
+'use client';
+
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -5,7 +7,7 @@ import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponen
 import { TimePickerType } from '@/types/create';
 import HeaderTitle from '../headerTitle/HeaderTitle';
 import { TaskInputType } from '../../context';
-import DateSelectedComponent from '../DateSelectedComponent/DateSelectedComponent';
+import DateSelectedComponent from '../dateSelectedComponent/DateSelectedComponent';
 
 interface TaskInputProps {
   context: TaskInputType;
@@ -19,7 +21,7 @@ interface TaskInputProps {
     deadlineDate: Date;
     deadlineTime: TimePickerType;
   }) => void;
-  onEdit: ({
+  onEdit?: ({
     task,
     deadlineDate,
     deadlineTime,
@@ -130,7 +132,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
           onClick={
             lastStep === 'bufferTime'
               ? () =>
-                  onEdit({
+                  onEdit?.({
                     task,
                     deadlineDate: deadlineDate as Date,
                     deadlineTime: deadlineTime as TimePickerType,

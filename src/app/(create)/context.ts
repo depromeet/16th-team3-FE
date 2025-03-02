@@ -60,6 +60,14 @@ export type TaskTypeInputType = {
   moodType: string;
 };
 
+export type InstantTaskInputType = {
+  task: string;
+  deadlineDate: Date;
+  deadlineTime: TimePickerType;
+  taskType?: string;
+  moodType?: string;
+};
+
 export const TYPE_LABELS: { [key: string]: string } = {
   study: '공부',
   writing: '글쓰기',

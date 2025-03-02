@@ -8,7 +8,8 @@ import { useState } from 'react';
 import CharacterDialog from '../characterDialog/CharacterDialog';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TaskTypeInputType } from '../../context';
-import transformScheduledTaskData from '@/utils/text';
+import getBufferTime from '@/utils/getBufferTime';
+import { transformScheduledTaskData } from '@/utils/transformTaskData';
 
 interface TaskTypeInputProps {
   context: TaskTypeInputType;
@@ -49,6 +50,11 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
     moodType: moodType || '',
   });
 
+  const { finalHours, finalMinutes } = getBufferTime(
+    context.estimatedHour,
+    context.estimatedMinute,
+  );
+
   return (
     <Dialog>
       <div className="flex h-full w-full flex-col justify-between">
@@ -66,7 +72,7 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
             <span className="text-strong t2 mt-1">정말 마지막단계에요!</span>
             <div className="flex flex-col">
               <span className="b2 text-neutral">
-                3시간 30분 동안, 몰입을 도울
+                {`${finalHours}시간 ${finalMinutes}분 동안, 몰입을 도울`}
               </span>
               <span className="b2 text-neutral">
                 캐릭터와 플레이리스트를 만들어 드릴게요.
