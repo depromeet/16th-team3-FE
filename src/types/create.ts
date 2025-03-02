@@ -16,3 +16,19 @@ export interface BufferTimeDataType {
 
 export type SmallActionType = 'SitAtTheDesk' | 'TurnOnTheLaptop' | 'DrinkWater';
 export type SmallActionKrType = '책상 앞에 앉기' | '노트북 켜기' | '물 마시기';
+
+export enum TaskType {
+  'STUDY' = 'study',
+  'WRITING' = 'writing',
+  'EXERCISE' = 'exercise',
+  'PROGRAMMING' = 'programming',
+  'DESIGN' = 'design',
+  'ASSIGNMENT' = 'assignment',
+}
+
+export enum MoodType {
+  'URGENT' = 'urgent',
+  'EXCITED' = 'excited',
+  'EMOTIONAL' = 'emotional',
+  'CALM' = 'calm',
+}
