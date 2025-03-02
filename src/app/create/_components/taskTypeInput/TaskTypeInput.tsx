@@ -3,10 +3,17 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import TaskTypeChip from '../taskTypeChip/TaskTypeChip';
-import { MoodType, TaskType } from '@/types/create';
+import { MoodType, ScheduledTaskType, TaskType } from '@/types/create';
 import { useState } from 'react';
 import CharacterDialog from '../characterDialog/CharacterDialog';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { TaskTypeInputType } from '../../context';
+import transformScheduledTaskData from '@/utils/text';
+
+interface TaskTypeInputProps {
+  context: TaskTypeInputType;
+  onClick: (data: ScheduledTaskType) => void;
+}
 
 const TASK_TYPE_LIST = [
   TaskType.STUDY,
@@ -24,7 +31,7 @@ const MOOD_TYPE_LIST = [
   MoodType.CALM,
 ];
 
-const TaskTypeInput = () => {
+const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
   const [taskType, setTaskType] = useState<TaskType | null>(null);
   const [moodType, setMoodType] = useState<MoodType | null>(null);
 
@@ -35,6 +42,12 @@ const TaskTypeInput = () => {
   const handleMoodTypeClick = (type: MoodType) => {
     setMoodType(type);
   };
+
+  const convertedData = transformScheduledTaskData({
+    ...context,
+    taskType: taskType || '',
+    moodType: moodType || '',
+  });
 
   return (
     <Dialog>
@@ -101,7 +114,12 @@ const TaskTypeInput = () => {
         <CharacterDialog />
         <DialogTrigger>
           <div className="pb-[46px] transition-all duration-300">
-            <Button variant="primary" className="w-full">
+            <Button
+              variant="primary"
+              className="w-full"
+              disabled={!taskType || !moodType}
+              onClick={() => onClick(convertedData)}
+            >
               확인
             </Button>
           </div>

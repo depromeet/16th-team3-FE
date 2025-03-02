@@ -32,3 +32,13 @@ export enum MoodType {
   'EMOTIONAL' = 'emotional',
   'CALM' = 'calm',
 }
+
+export interface ScheduledTaskType {
+  name: string;
+  dueDatetime: string;
+  triggerAction: string;
+  estimatedTime: number;
+  triggerActionAlarmTime: string;
+  taskType: string;
+  taskMode: string;
+}
