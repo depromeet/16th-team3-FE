@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { BufferTimeDataType } from '@/types/create';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import getBufferTime from '@/utils/getBufferTime';
 
 interface BufferTimeProps {
   context: BufferTimeDataType;
@@ -31,23 +32,6 @@ const BufferTime = ({
   } = context;
 
   const formattedDate = format(deadlineDate, 'M월 d일 (E)', { locale: ko });
-
-  const getBufferTime = (
-    estimatedHour: string,
-    estimatedMinute: string,
-    scale: number = 1.5,
-  ) => {
-    const hours = Number(estimatedHour);
-    const minutes = Number(estimatedMinute);
-    const totalMinutes = hours * 60 + minutes;
-
-    const scaledMinutes = totalMinutes * scale;
-
-    const finalHours = Math.floor(scaledMinutes / 60);
-    const finalMinutes = Math.round(scaledMinutes % 60);
-
-    return { finalHours, finalMinutes };
-  };
 
   const { finalHours, finalMinutes } = getBufferTime(
     estimatedHour,

@@ -42,3 +42,10 @@ export interface ScheduledTaskType {
   taskType: string;
   taskMode: string;
 }
+
+export interface InstantTaskType {
+  name: string;
+  dueDatetime: string;
+  taskType: string;
+  taskMode: string;
+}

@@ -3,17 +3,16 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import TaskTypeChip from '../taskTypeChip/TaskTypeChip';
-import { MoodType, ScheduledTaskType, TaskType } from '@/types/create';
+import { InstantTaskType, MoodType, TaskType } from '@/types/create';
 import { useState } from 'react';
 import CharacterDialog from '../characterDialog/CharacterDialog';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { TaskTypeInputType } from '../../context';
-import getBufferTime from '@/utils/getBufferTime';
-import { transformScheduledTaskData } from '@/utils/transformTaskData';
+import { InstantTaskInputType } from '../../context';
+import { transformInstantScheduledTaskData } from '@/utils/transformTaskData';
 
 interface TaskTypeInputProps {
-  context: TaskTypeInputType;
-  onClick: (data: ScheduledTaskType) => void;
+  context: InstantTaskInputType;
+  onClick: (data: InstantTaskType) => void;
 }
 
 const TASK_TYPE_LIST = [
@@ -32,7 +31,7 @@ const MOOD_TYPE_LIST = [
   MoodType.CALM,
 ];
 
-const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
+const InstantTaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
   const [taskType, setTaskType] = useState<TaskType | null>(null);
   const [moodType, setMoodType] = useState<MoodType | null>(null);
 
@@ -44,16 +43,11 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
     setMoodType(type);
   };
 
-  const convertedData = transformScheduledTaskData({
+  const convertedData = transformInstantScheduledTaskData({
     ...context,
     taskType: taskType || '',
     moodType: moodType || '',
   });
-
-  const { finalHours, finalMinutes } = getBufferTime(
-    context.estimatedHour,
-    context.estimatedMinute,
-  );
 
   return (
     <Dialog>
@@ -71,9 +65,7 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
             </div>
             <span className="text-strong t2 mt-1">정말 마지막단계에요!</span>
             <div className="flex flex-col">
-              <span className="b2 text-neutral">
-                {`${finalHours}시간 ${finalMinutes}분 동안, 몰입을 도울`}
-              </span>
+              <span className="b2 text-neutral">몰입을 도울</span>
               <span className="b2 text-neutral">
                 캐릭터와 플레이리스트를 만들어 드릴게요.
               </span>
@@ -135,4 +127,4 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
   );
 };
 
-export default TaskTypeInput;
+export default InstantTaskTypeInput;
