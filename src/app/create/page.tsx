@@ -15,6 +15,7 @@ import SmallActionInput from './_components/smallActionInput/SmallActionInput';
 import { TimePickerType } from '@/types/create';
 import EstimatedTimeInput from './_components/estimatedTimeInput/EstimatedTimeInput';
 import BufferTime from './_components/bufferTime/BufferTime';
+import TaskTypeInput from './_components/taskTypeInput/TaskTypeInput';
 
 type FormState = {
   task?: string;
@@ -73,7 +74,8 @@ const TaskCreate = () => {
 
   const { isMounted } = useMount();
 
-  if (!isMounted) return null;
+  // const { push } = useRouter();
+  /* mutation POST 요청 후, 성공하면 홈 화면으로 이동 후 모달 띄움 */
 
   const handleHistoryBack = () => {
     if (funnel.step === 'smallActionInput') {
@@ -99,8 +101,20 @@ const TaskCreate = () => {
         estimatedMinute: funnel.context.estimatedMinute,
         estimatedDay: funnel.context.estimatedDay,
       });
+    } else if (funnel.step === 'taskTypeInput') {
+      funnel.history.replace('bufferTime', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+        smallAction: funnel.context.smallAction,
+        estimatedHour: funnel.context.estimatedHour,
+        estimatedMinute: funnel.context.estimatedMinute,
+        estimatedDay: funnel.context.estimatedDay,
+      } as BufferTimeType);
     }
   };
+
+  if (!isMounted) return null;
 
   return (
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
@@ -202,7 +216,7 @@ const TaskCreate = () => {
               })
             }
             onNext={() =>
-              history.push('bufferTime', {
+              history.push('taskTypeInput', {
                 task: context.task,
                 deadlineDate: context.deadlineDate,
                 deadlineTime: context.deadlineTime,
@@ -210,11 +224,11 @@ const TaskCreate = () => {
                 estimatedHour: context.estimatedHour,
                 estimatedMinute: context.estimatedMinute,
                 estimatedDay: context.estimatedDay,
-              })
+              } as TaskTypeInputType)
             }
           />
         )}
-        taskTypeInput={() => <div>할 일 종류 입력</div>}
+        taskTypeInput={() => <TaskTypeInput />}
       />
     </div>
   );
