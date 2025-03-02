@@ -7,15 +7,15 @@ import { Calendar } from '@/components/ui/calendar';
 import Image from 'next/image';
 
 interface DatePickerProps {
-  selectedDate: Date | undefined;
+  deadlineDate: Date | undefined;
   handleDateChange: (date: Date) => void;
 }
 
-const DatePicker = ({ selectedDate, handleDateChange }: DatePickerProps) => {
+const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
   return (
     <Calendar
       mode="single"
-      selected={selectedDate}
+      selected={deadlineDate}
       onSelect={(date) => date && handleDateChange(date)}
       initialFocus
       locale={ko}

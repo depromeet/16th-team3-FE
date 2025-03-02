@@ -1,9 +1,10 @@
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import DateSelectedComponent from '@/app/create/_components/DateSelectedComponent/DateSelectedComponent';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
+import { TimePickerType } from '@/types/time';
 
-const WAITING_TIME = 300;
 const MAX_TASK_LENGTH = 15;
 
 interface TaskInputProps {
@@ -12,61 +13,70 @@ interface TaskInputProps {
 
 const TaskInput = ({ onClick }: TaskInputProps) => {
   const [task, setTask] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
+  const [deadlineTime, setDeadlineTime] = useState<TimePickerType | undefined>(
+    undefined,
+  );
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
+  const isInvalid =
+    task.length > MAX_TASK_LENGTH ||
+    task.length === 0 ||
+    !deadlineDate ||
+    !deadlineTime;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
   };
 
   const handleDateChange = (date: Date) => {
-    setSelectedDate(date);
+    setDeadlineDate(date);
   };
 
-  useEffect(() => {
-    if (inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, WAITING_TIME);
-    }
-  }, []);
+  const handleTimeChange = (time: TimePickerType) => {
+    setDeadlineTime(time);
+  };
 
   return (
-    <div className="w-full">
-      <div className="pb-10 pt-4">
-        <span className="t2">어떤 일의 마감이 급하신가요?</span>
-      </div>
-      <div className="flex flex-col gap-6">
-        <div>
-          <ClearableInput
-            ref={inputRef}
-            value={task}
-            onChange={handleTaskChange}
+    <div className="flex h-full w-full flex-col justify-between">
+      <div>
+        <div className="pb-10 pt-4">
+          <span className="t2">어떤 일의 마감이 급하신가요?</span>
+        </div>
+        <div className="flex flex-col gap-6">
+          <div>
+            <ClearableInput value={task} onChange={handleTaskChange} />
+            {task.length > MAX_TASK_LENGTH && (
+              <p className="mt-2 text-sm text-red-500">
+                최대 16자 이내로 입력할 수 있어요.
+              </p>
+            )}
+          </div>
+
+          <DateSelectedComponent
+            deadlineDate={deadlineDate}
+            handleDateChange={handleDateChange}
           />
-          {task.length > MAX_TASK_LENGTH && (
-            <p className="mt-2 text-sm text-red-500">
-              최대 16자 이내로 입력할 수 있어요.
-            </p>
+
+          {deadlineDate !== undefined && (
+            <TimeSelectedComponent
+              deadlineTime={deadlineTime}
+              deadlineDate={deadlineDate}
+              handleTimeChange={handleTimeChange}
+            />
           )}
         </div>
-
-        <DateSelectedComponent
-          selectedDate={selectedDate}
-          handleDateChange={handleDateChange}
-        />
       </div>
 
-      <Button
-        variant="primary"
-        className="mt-6"
-        onClick={() => onClick(task)}
-        disabled={isInvalid}
-      >
-        다음
-      </Button>
+      <div className="pb-[46px]">
+        <Button
+          variant="primary"
+          className="mt-6"
+          onClick={() => onClick(task)}
+          disabled={isInvalid}
+        >
+          다음
+        </Button>
+      </div>
     </div>
   );
 };
