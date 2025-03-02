@@ -405,10 +405,11 @@ const EstimatedTimeInput = ({
           <div className="flex items-center justify-center space-x-2">
             <label
               htmlFor="onlyMinute"
-              className="mt-0.5 rounded-[2px] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="b3 text-neutral mt-0.5 rounded-[2px] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               분만 입력
             </label>
+            {/* !! TODO: Checkbox로 변환하기  */}
             {isOnlyMinute ? (
               <Image
                 src="/icons/CheckedBox.svg"

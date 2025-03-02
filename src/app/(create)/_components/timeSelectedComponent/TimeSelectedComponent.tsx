@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import TimePicker from '@/components/timePicker/TimePicker';
 import { TimePickerType } from '@/types/create';
 import Toast from '@/components/toast/Toast';
+import Image from 'next/image';
 
 interface TimeSelectedComponentProps {
   deadlineTime: TimePickerType | undefined;
@@ -32,6 +33,7 @@ const TimeSelectedComponent = ({
     TimePickerType | undefined
   >(deadlineTime);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isMidnight, setIsMidnight] = useState<boolean>(false);
 
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -131,6 +133,42 @@ const TimeSelectedComponent = ({
           <TimePicker time={temporaryTime} handleTime={handleTemporaryTime} />
           {toastMessage && <Toast message={toastMessage} />}
           <DrawerFooter className="px-0">
+            <div className="flex items-center justify-center space-x-2">
+              <label
+                htmlFor="midnight"
+                className="s2 text-strong mt-0.5 rounded-[2px] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                자정 마감 (11시 59분 59초)
+              </label>
+              {isMidnight ? (
+                <Image
+                  src="/icons/CheckedBox.svg"
+                  alt="checkedBox"
+                  width={20}
+                  height={20}
+                  onClick={() => {
+                    setIsMidnight(false);
+                    setTemporaryTime(undefined);
+                  }}
+                />
+              ) : (
+                <Image
+                  src="/icons/UncheckedBox.svg"
+                  alt="uncheckedBox"
+                  width={20}
+                  height={20}
+                  onClick={() => {
+                    setIsMidnight(true);
+                    setTemporaryTime({
+                      hour: '11',
+                      minute: '59',
+                      meridiem: '오후',
+                      second: '59',
+                    });
+                  }}
+                />
+              )}
+            </div>
             <Button
               variant="primary"
               className="mt-4 flex w-full items-center justify-center"

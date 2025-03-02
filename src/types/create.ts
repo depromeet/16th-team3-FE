@@ -2,6 +2,7 @@ export interface TimePickerType {
   meridiem: string;
   hour: string;
   minute: string;
+  second?: string;
 }
 
 export interface BufferTimeDataType {
