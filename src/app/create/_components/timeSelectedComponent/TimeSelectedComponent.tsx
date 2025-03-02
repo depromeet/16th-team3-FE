@@ -13,7 +13,7 @@ import {
 } from '../../../../components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import TimePicker from '@/components/timePicker/TimePicker';
-import { TimePickerType } from '@/types/time';
+import { TimePickerType } from '@/types/create';
 import Toast from '@/components/toast/Toast';
 
 interface TimeSelectedComponentProps {

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import TimeSelectedComponent from '../timeSelectedComponent/TimeSelectedComponent';
 import { TimePickerType } from '@/types/create';
 import DateSelectedComponent from '../dateSelectedComponent/DateSelectedComponent';
+import HeaderTitle from '../headerTitle/HeaderTitle';
 
 interface TaskInputProps {
   onClick: ({
@@ -65,9 +66,7 @@ const TaskInput = ({ onClick }: TaskInputProps) => {
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div>
-        <div className="pb-10 pt-4">
-          <span className="t2">어떤 일의 마감이 급하신가요?</span>
-        </div>
+        <HeaderTitle title="어떤 일의 마감이 급하신가요?" />
         <div className="flex flex-col gap-6">
           <div>
             <ClearableInput
