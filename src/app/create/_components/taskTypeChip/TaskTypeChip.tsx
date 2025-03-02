@@ -1,24 +1,12 @@
 import { MoodType, TaskType } from '@/types/create';
 import Image from 'next/image';
+import { TYPE_LABELS } from '../../context';
 
 interface TaskTypeChipProps<T extends TaskType | MoodType> {
   type: T;
   isSelected: boolean;
   onClick: (type: T) => void;
 }
-
-const TYPE_LABELS: { [key: string]: string } = {
-  study: '공부',
-  writing: '글쓰기',
-  exercise: '운동',
-  programming: '프로그래밍',
-  design: '그림ㆍ디자인',
-  assignment: '과제',
-  urgent: '긴급한',
-  excited: '신나는',
-  emotional: '감성적인',
-  calm: '조용한',
-};
 
 const TaskTypeChip = <T extends TaskType | MoodType>({
   type,

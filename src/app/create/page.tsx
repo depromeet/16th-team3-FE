@@ -12,10 +12,11 @@ import useMount from '@/hooks/useMount';
 import TaskInput from './_components/taskInput/TaskInput';
 import BackHeader from '@/components/backHeader/BackHeader';
 import SmallActionInput from './_components/smallActionInput/SmallActionInput';
-import { TimePickerType } from '@/types/create';
+import { ScheduledTaskType, TimePickerType } from '@/types/create';
 import EstimatedTimeInput from './_components/estimatedTimeInput/EstimatedTimeInput';
 import BufferTime from './_components/bufferTime/BufferTime';
 import TaskTypeInput from './_components/taskTypeInput/TaskTypeInput';
+import { useMutation } from '@tanstack/react-query';
 
 type FormState = {
   task?: string;
@@ -74,8 +75,18 @@ const TaskCreate = () => {
 
   const { isMounted } = useMount();
 
-  // const { push } = useRouter();
-  /* mutation POST 요청 후, 성공하면 홈 화면으로 이동 후 모달 띄움 */
+  const { mutate: createScheduledTaskMutation } = useMutation({
+    mutationFn: async (data: ScheduledTaskType) => {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/tasks/scheduled`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEST_TOKEN_1! + process.env.NEXT_PUBLIC_TEST_TOKEN_2!}`,
+        },
+        body: JSON.stringify(data),
+      });
+    },
+  });
 
   const handleHistoryBack = () => {
     if (funnel.step === 'smallActionInput') {
@@ -228,7 +239,12 @@ const TaskCreate = () => {
             }
           />
         )}
-        taskTypeInput={() => <TaskTypeInput />}
+        taskTypeInput={({ context }) => (
+          <TaskTypeInput
+            context={context}
+            onClick={(data) => createScheduledTaskMutation(data)}
+          />
+        )}
       />
     </div>
   );

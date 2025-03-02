@@ -59,3 +59,16 @@ export type TaskTypeInputType = {
   taskType: string;
   moodType: string;
 };
+
+export const TYPE_LABELS: { [key: string]: string } = {
+  study: '공부',
+  writing: '글쓰기',
+  exercise: '운동',
+  programming: '프로그래밍',
+  design: '그림ㆍ디자인',
+  assignment: '과제',
+  urgent: '긴급한',
+  excited: '신나는',
+  emotional: '감성적인',
+  calm: '조용한',
+};
