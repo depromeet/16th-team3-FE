@@ -214,7 +214,6 @@ const TaskCreate = () => {
             }
           />
         )}
-        bufferTime={() => <div>버퍼시간 입력</div>}
         taskTypeInput={() => <div>할 일 종류 입력</div>}
       />
     </div>
