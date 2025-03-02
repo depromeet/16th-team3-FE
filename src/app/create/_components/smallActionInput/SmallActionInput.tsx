@@ -7,7 +7,10 @@ import SmallActionChip from '../smallActionChip/SmallActionChip';
 import HeaderTitle from '../headerTitle/HeaderTitle';
 
 interface SmallActionInputProps {
-  onClick: (smallAction: string) => void;
+  smallAction?: string;
+  lastStep?: string;
+  onNext: (smallAction: string) => void;
+  onEdit: (smallAction: string) => void;
 }
 
 const MAX_SMALL_ACTION_LENGTH = 15;
@@ -15,11 +18,18 @@ const WAITING_TIME = 200;
 
 const SMALL_ACTION_LIST = ['SitAtTheDesk', 'TurnOnTheLaptop', 'DrinkWater'];
 
-const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
+const SmallActionInput = ({
+  smallAction: smallActionHistoryData,
+  lastStep,
+  onNext,
+  onEdit,
+}: SmallActionInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [isFocused, setIsFocused] = useState(true);
-  const [smallAction, setSmallAction] = useState<string>('');
+  const [smallAction, setSmallAction] = useState<string>(
+    smallActionHistoryData || '',
+  );
 
   const handleSmallActionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -88,9 +98,13 @@ const SmallActionInput = ({ onClick }: SmallActionInputProps) => {
             smallAction.length === 0 ||
             smallAction.length > MAX_SMALL_ACTION_LENGTH
           }
-          onClick={() => onClick(smallAction)}
+          onClick={
+            lastStep === 'bufferTime'
+              ? () => onEdit(smallAction)
+              : () => onNext(smallAction)
+          }
         >
-          다음
+          {lastStep === 'bufferTime' ? '확인' : '다음'}
         </Button>
       </div>
     </div>

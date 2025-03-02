@@ -28,15 +28,12 @@ const DateSelectedComponent = ({
   const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
     deadlineDate,
   );
-  const [isFirstTouched, setIsFirstTouched] = useState(true);
-
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
   const handleTemporaryDate = (date: Date) => {
     setTemporaryDate(date || new Date());
-    setIsFirstTouched(false);
   };
 
   const handleConfirmButtonClick = () => {
@@ -44,7 +41,6 @@ const DateSelectedComponent = ({
 
     handleDateChange(temporaryDate);
     setIsOpen(false);
-    setIsFirstTouched(false);
   };
 
   return (
@@ -57,14 +53,14 @@ const DateSelectedComponent = ({
           >
             <span
               className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-                isFirstTouched ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
+                !deadlineDate ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
               }`}
             >
               마감일 선택
             </span>
             <div className="flex w-full items-center justify-between pt-4">
               <span className="t3 text-base font-semibold">
-                {isFirstTouched || !deadlineDate
+                {!deadlineDate
                   ? ''
                   : format(deadlineDate, 'M월 d일 (E)', { locale: ko })}
               </span>
