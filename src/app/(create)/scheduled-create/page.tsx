@@ -7,15 +7,15 @@ import {
   SmallActionInputType,
   TaskInputType,
   TaskTypeInputType,
-} from './context';
+} from '../context';
 import useMount from '@/hooks/useMount';
-import TaskInput from './_components/taskInput/TaskInput';
+import TaskInput from '../_components/taskInput/TaskInput';
 import BackHeader from '@/components/backHeader/BackHeader';
-import SmallActionInput from './_components/smallActionInput/SmallActionInput';
+import SmallActionInput from '../_components/smallActionInput/SmallActionInput';
 import { ScheduledTaskType, TimePickerType } from '@/types/create';
-import EstimatedTimeInput from './_components/estimatedTimeInput/EstimatedTimeInput';
-import BufferTime from './_components/bufferTime/BufferTime';
-import TaskTypeInput from './_components/taskTypeInput/TaskTypeInput';
+import EstimatedTimeInput from '../_components/estimatedTimeInput/EstimatedTimeInput';
+import BufferTime from '../_components/bufferTime/BufferTime';
+import TaskTypeInput from '../_components/taskTypeInput/TaskTypeInput';
 import { useMutation } from '@tanstack/react-query';
 
 type FormState = {
@@ -42,7 +42,7 @@ const steps = createFunnelSteps<FormState>()
   .extends('taskTypeInput', { requiredKeys: ['taskType', 'moodType'] })
   .build();
 
-const TaskCreate = () => {
+const ScheduledTaskCreate = () => {
   const funnel = useFunnel<{
     taskForm: TaskInputType;
     smallActionInput: SmallActionInputType;
@@ -250,4 +250,4 @@ const TaskCreate = () => {
   );
 };
 
-export default TaskCreate;
+export default ScheduledTaskCreate;
