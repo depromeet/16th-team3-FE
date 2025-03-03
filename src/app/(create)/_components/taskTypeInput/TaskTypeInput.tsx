@@ -50,10 +50,25 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
     moodType: moodType || '',
   });
 
-  const { finalHours, finalMinutes } = getBufferTime(
+  const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    context.estimatedDay,
     context.estimatedHour,
     context.estimatedMinute,
   );
+
+  const timeParts = [];
+
+  if (finalDays > 0) {
+    timeParts.push(`${finalDays}일`);
+  }
+  if (finalHours > 0) {
+    timeParts.push(`${finalHours}시간`);
+  }
+  if (finalMinutes > 0) {
+    timeParts.push(`${finalMinutes}분`);
+  }
+
+  const timeString = timeParts.length ? timeParts.join(' ') : '0분';
 
   // * TODO: Dialog 홈 화면으로 옮기기
 
@@ -74,7 +89,7 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
             <span className="text-strong t2 mt-1">정말 마지막단계에요!</span>
             <div className="flex flex-col">
               <span className="b2 text-neutral">
-                {`${finalHours}시간 ${finalMinutes}분 동안, 몰입을 도울`}
+                {`${timeString} 동안, 몰입을 도울`}
               </span>
               <span className="b2 text-neutral">
                 캐릭터와 플레이리스트를 만들어 드릴게요.

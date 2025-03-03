@@ -5,6 +5,7 @@ import { BufferTimeDataType } from '@/types/create';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import getBufferTime from '@/utils/getBufferTime';
+import formatBufferTime from '@/utils/formatBufferTime';
 
 interface BufferTimeProps {
   context: BufferTimeDataType;
@@ -33,10 +34,17 @@ const BufferTime = ({
 
   const formattedDate = format(deadlineDate, 'M월 d일 (E)', { locale: ko });
 
-  const { finalHours, finalMinutes } = getBufferTime(
+  const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    estimatedDay,
     estimatedHour,
     estimatedMinute,
   );
+
+  const timeString = formatBufferTime({
+    days: finalDays,
+    hours: finalHours,
+    minutes: finalMinutes,
+  });
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
@@ -50,14 +58,7 @@ const BufferTime = ({
         <div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] blur-[75px]" />
         <div className="mt-10 flex flex-col items-center">
           <div>
-            <span className="t2 text-primary">
-              {[
-                finalHours > 0 && `${finalHours}시간`,
-                finalMinutes > 0 && `${finalMinutes}분`,
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            </span>
+            <span className="t2 text-primary">{timeString}</span>
             <span className="t2 text-strong"> 전에는</span>
           </div>
           <span className="t2 text-strong">시작할 수 있게</span>

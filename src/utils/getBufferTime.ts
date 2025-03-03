@@ -1,18 +1,21 @@
 const getBufferTime = (
-  estimatedHour: string,
-  estimatedMinute: string,
+  estimatedDay?: string,
+  estimatedHour?: string,
+  estimatedMinute?: string,
   scale: number = 1.5,
 ) => {
-  const hours = Number(estimatedHour);
-  const minutes = Number(estimatedMinute);
-  const totalMinutes = hours * 60 + minutes;
-
+  const days = Number(estimatedDay) || 0;
+  const hours = Number(estimatedHour) || 0;
+  const minutes = Number(estimatedMinute) || 0;
+  const totalMinutes = days * 1440 + hours * 60 + minutes;
   const scaledMinutes = totalMinutes * scale;
 
-  const finalHours = Math.floor(scaledMinutes / 60);
-  const finalMinutes = Math.round(scaledMinutes % 60);
+  const finalDays = Math.floor(scaledMinutes / 1440);
+  const remainder = scaledMinutes % 1440;
+  const finalHours = Math.floor(remainder / 60);
+  const finalMinutes = Math.round(remainder % 60);
 
-  return { finalHours, finalMinutes };
+  return { finalDays, finalHours, finalMinutes };
 };
 
 export default getBufferTime;
