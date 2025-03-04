@@ -47,6 +47,7 @@ const EstimatedTimeInput = ({
   onNext,
   onEdit,
 }: EstimatedTimeInputProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const hourInputRef = useRef<HTMLInputElement>(null);
   const minuteInputRef = useRef<HTMLInputElement>(null);
   const dayInputRef = useRef<HTMLInputElement>(null);
@@ -200,9 +201,24 @@ const EstimatedTimeInput = ({
     }
   }, [estimatedDay, deadlineDate, deadlineTime]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setFocusedTab(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // ! TODO feat: 일 탭 선택 시, 일 Input 바로 focus 되도록
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
-      <div>
+      <div ref={containerRef}>
         <HeaderTitle title="할일이 얼마나 걸릴 것 같나요?" />
         <div>
           <div className="flex gap-1">
