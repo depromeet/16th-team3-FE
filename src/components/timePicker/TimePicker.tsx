@@ -5,36 +5,31 @@ import Wheel from './Wheel';
 
 interface TimePickerProps {
   time: TimePickerType | undefined;
-  handleTime: (time: TimePickerType) => void;
+  handleMeridiem: (meridiem: string) => void;
+  handleHour: (hour: string) => void;
+  handleMinute: (minute: string) => void;
 }
 
-const TimePicker = ({ time, handleTime }: TimePickerProps) => {
+const TimePicker = ({
+  time,
+  handleMeridiem,
+  handleHour,
+  handleMinute,
+}: TimePickerProps) => {
   const meridiemInitIdx = time ? (time.meridiem === '오후' ? 1 : 0) : 0;
   const hourInitIdx = time ? Number(time.hour) - 1 : 0;
   const minuteInitIdx = time ? Number(time.minute) : 0;
 
   const handleSelectedMeridiem = (deadlineTime: string) => {
-    handleTime({
-      meridiem: deadlineTime,
-      hour: time?.hour || '01',
-      minute: time?.minute || '00',
-    });
+    handleMeridiem(deadlineTime);
   };
 
   const handleSelectedHour = (deadlineTime: string) => {
-    handleTime({
-      meridiem: time?.meridiem || '오전',
-      hour: deadlineTime,
-      minute: time?.minute || '00',
-    });
+    handleHour(deadlineTime);
   };
 
   const handleSelectedMinute = (deadlineTime: string) => {
-    handleTime({
-      meridiem: time?.meridiem || '오전',
-      hour: time?.hour || '01',
-      minute: deadlineTime,
-    });
+    handleMinute(deadlineTime);
   };
 
   return (

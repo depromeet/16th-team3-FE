@@ -315,7 +315,7 @@ const EstimatedTimeInput = ({
                   className={`b3 ${
                     !minuteError.isValid
                       ? 'text-red'
-                      : focusedTab === '분' || estimatedMinute.length > 0
+                      : focusedTab === '분'
                         ? 'text-primary'
                         : 'text-neutral'
                   }`}
@@ -326,7 +326,7 @@ const EstimatedTimeInput = ({
                   className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
                     !minuteError.isValid
                       ? 'border-b-2 border-line-error'
-                      : focusedTab === '분' || estimatedMinute.length > 0
+                      : focusedTab === '분'
                         ? 'border-b-2 border-b-component-accent-primary'
                         : 'border-gray-300'
                   }`}
@@ -445,7 +445,7 @@ const EstimatedTimeInput = ({
               />
             ) : (
               <Image
-                src="/icons/UncheckedBox.svg"
+                src="/icons/UnCheckedBox.svg"
                 alt="uncheckedBox"
                 width={20}
                 height={20}

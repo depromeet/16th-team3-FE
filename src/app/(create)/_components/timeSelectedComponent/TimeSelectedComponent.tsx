@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 import {
@@ -18,7 +18,7 @@ import Toast from '@/components/toast/Toast';
 import Image from 'next/image';
 
 interface TimeSelectedComponentProps {
-  deadlineTime: TimePickerType | undefined;
+  deadlineTime: TimePickerType;
   deadlineDate: Date;
   handleTimeChange: (time: TimePickerType) => void;
 }
@@ -29,57 +29,34 @@ const TimeSelectedComponent = ({
   handleTimeChange,
 }: TimeSelectedComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [temporaryTime, setTemporaryTime] = useState<
-    TimePickerType | undefined
-  >(deadlineTime);
+  const [temporaryTime, setTemporaryTime] =
+    useState<TimePickerType>(deadlineTime);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isMidnight, setIsMidnight] = useState<boolean>(false);
-
-  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleTemporaryTime = (time: TimePickerType) => {
-    const now = new Date();
+  const handleMeridiem = (newMeridiem: string) => {
+    setTemporaryTime((prev) => ({
+      ...prev,
+      meridiem: newMeridiem,
+    }));
+  };
 
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-      toastTimeoutRef.current = null;
-    }
-    setToastMessage(null);
+  const handleHour = (newHour: string) => {
+    setTemporaryTime((prev) => ({
+      ...prev,
+      hour: newHour,
+    }));
+  };
 
-    setTemporaryTime(time);
-
-    const selectedHour = parseInt(time.hour, 10);
-    const selectedMinute = parseInt(time.minute, 10);
-    let selected24Hour = selectedHour;
-
-    if (time.meridiem === '오후' && selectedHour !== 12) {
-      selected24Hour += 12;
-    }
-    if (time.meridiem === '오전' && selectedHour === 12) {
-      selected24Hour = 0;
-    }
-
-    const selectedDate = new Date(
-      deadlineDate.getFullYear(),
-      deadlineDate?.getMonth(),
-      deadlineDate?.getDate(),
-      selected24Hour,
-      selectedMinute,
-      0,
-    );
-
-    if (selectedDate < now) {
-      setToastMessage('현재 시간보다 이전 시간을 선택할 수 없어요.');
-      setTimeout(() => {
-        setToastMessage(null);
-        toastTimeoutRef.current = null;
-      }, 3000);
-      return;
-    }
+  const handleMinute = (newMinute: string) => {
+    setTemporaryTime((prev) => ({
+      ...prev,
+      minute: newMinute,
+    }));
   };
 
   const handleConfirmButtonClick = () => {
@@ -94,6 +71,34 @@ const TimeSelectedComponent = ({
   const displayedTime = deadlineTime
     ? `${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`
     : '';
+
+  useEffect(() => {
+    const selectedHour12 = parseInt(temporaryTime.hour, 10);
+    let selected24Hour = selectedHour12;
+
+    if (temporaryTime.meridiem === '오후' && selectedHour12 !== 12) {
+      selected24Hour = selectedHour12 + 12;
+    } else if (temporaryTime.meridiem === '오전' && selectedHour12 === 12) {
+      selected24Hour = 0;
+    }
+
+    const selectedMinute = parseInt(temporaryTime.minute, 10);
+
+    const selectedDate = new Date(
+      deadlineDate.getFullYear(),
+      deadlineDate.getMonth(),
+      deadlineDate.getDate(),
+      selected24Hour,
+      selectedMinute,
+      0,
+    );
+
+    if (selectedDate < new Date()) {
+      setToastMessage('현재 시간보다 이전 시간을 선택할 수 없어요.');
+    } else {
+      setToastMessage(null);
+    }
+  }, [temporaryTime, deadlineDate]);
 
   return (
     <>
@@ -130,7 +135,12 @@ const TimeSelectedComponent = ({
               마감시간을 선택해주세요
             </DrawerTitle>
           </DrawerHeader>
-          <TimePicker time={temporaryTime} handleTime={handleTemporaryTime} />
+          <TimePicker
+            time={temporaryTime}
+            handleMeridiem={handleMeridiem}
+            handleHour={handleHour}
+            handleMinute={handleMinute}
+          />
           {toastMessage && <Toast message={toastMessage} />}
           <DrawerFooter className="px-0">
             <div className="flex items-center justify-center space-x-2">
@@ -148,12 +158,12 @@ const TimeSelectedComponent = ({
                   height={20}
                   onClick={() => {
                     setIsMidnight(false);
-                    setTemporaryTime(undefined);
+                    setTemporaryTime(deadlineTime);
                   }}
                 />
               ) : (
                 <Image
-                  src="/icons/UncheckedBox.svg"
+                  src="/icons/UnCheckedBox.svg"
                   alt="uncheckedBox"
                   width={20}
                   height={20}

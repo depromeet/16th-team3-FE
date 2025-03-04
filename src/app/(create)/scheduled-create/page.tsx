@@ -127,6 +127,8 @@ const ScheduledTaskCreate = () => {
 
   if (!isMounted) return null;
 
+  console.log('funnel', funnel);
+
   return (
     <div className="background-primary flex h-screen w-full flex-col items-center justify-start overflow-y-auto px-5">
       <BackHeader onClick={handleHistoryBack} />
