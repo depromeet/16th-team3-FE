@@ -157,12 +157,8 @@ const EstimatedTimeInput = ({
         isValid: false,
         message: '예상 소요시간이 마감 시간보다 길어요.',
       });
+      setMinuteError({ isValid: false, message: '' });
 
-      if (minute > 60) {
-        setMinuteError({ isValid: false, message: '' });
-      } else {
-        setMinuteError({ isValid: true, message: '' });
-      }
       return;
     }
 
@@ -197,6 +193,8 @@ const EstimatedTimeInput = ({
         isValid: false,
         message: '예상 소요시간이 마감 시간보다 길어요.',
       });
+    } else {
+      setDayError({ isValid: true, message: '' });
     }
   }, [estimatedDay, deadlineDate, deadlineTime]);
 
