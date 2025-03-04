@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import TaskItem from '@/components/home/TaskItem';
-import TaskDetailSheet from '@/components/home/TaskDetailSheet';
-import AllTaskItem from '@/components/home/AllTaskItem';
-import InProgressTaskItem from '@/components/home/InProgressTaskItem';
+import TaskItem from '@/app/(home)/_components/TaskItem';
+import TaskDetailSheet from '@/app/(home)/_components/TaskDetailSheet';
+import AllTaskItem from '@/app/(home)/_components/AllTaskItem';
+import InProgressTaskItem from '@/app/(home)/_components/InProgressTaskItem';
 
 // 오늘 할일 샘플 데이터
 const SAMPLE_TODAY_TASKS = [

@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/ui/header';
 import Image from 'next/image';
-import TaskDetailSheet from '@/components/home/TaskDetailSheet';
-import WeeklyTaskItem from '@/components/home/WeeklyTaskItem';
+import TaskDetailSheet from '@/app/(home)/_components/TaskDetailSheet';
+import WeeklyTaskItem from '@/app/(home)/_components/WeeklyTaskItem';
 
 interface Task {
     id: number;
