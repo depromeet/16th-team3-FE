@@ -62,7 +62,9 @@ const EstimatedTimeInput = ({
   );
 
   const [focusedTab, setFocusedTab] = useState<string | null>('시간');
-  const [currentTab, setCurrentTab] = useState('시간');
+  const [currentTab, setCurrentTab] = useState(
+    Boolean(historyDayData) ? '일' : '시간',
+  );
   const [isOnlyMinute, setIsOnlyMinute] = useState(false);
 
   const [hourError, setHourError] = useState<{
