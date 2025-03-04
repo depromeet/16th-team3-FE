@@ -119,6 +119,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 
           {deadlineDate !== undefined && (
             <TimeSelectedComponent
+              lastStep={lastStep}
               deadlineTime={deadlineTime}
               deadlineDate={deadlineDate}
               handleTimeChange={handleTimeChange}

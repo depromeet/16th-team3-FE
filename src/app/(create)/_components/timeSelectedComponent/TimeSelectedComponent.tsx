@@ -18,12 +18,14 @@ import Toast from '@/components/toast/Toast';
 import Image from 'next/image';
 
 interface TimeSelectedComponentProps {
+  lastStep?: string;
   deadlineTime: TimePickerType;
   deadlineDate: Date;
   handleTimeChange: (time: TimePickerType) => void;
 }
 
 const TimeSelectedComponent = ({
+  lastStep,
   deadlineTime,
   deadlineDate,
   handleTimeChange,
@@ -33,9 +35,12 @@ const TimeSelectedComponent = ({
     useState<TimePickerType>(deadlineTime);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isMidnight, setIsMidnight] = useState<boolean>(false);
+  const [isFirstTouched, setIsFirstTouched] = useState(lastStep ? false : true);
+  // !! TODO fix: 마감 시간 undefined 속성 복원시키기 -> isFirstTouched 상태 제거
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
+    setIsFirstTouched(false);
   };
 
   const handleMeridiem = (newMeridiem: string) => {
@@ -111,14 +116,14 @@ const TimeSelectedComponent = ({
             >
               <span
                 className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-                  !temporaryTime ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
+                  isFirstTouched ? 't3 top-1' : 'text-neutral b3 top-[-8px]'
                 }`}
               >
                 마감시간 선택
               </span>
               <div className="flex w-full items-center justify-between pt-4">
                 <span className="t3 text-base font-semibold">
-                  {!temporaryTime ? '' : displayedTime}
+                  {isFirstTouched ? '' : displayedTime}
                 </span>
                 <ChevronDown
                   className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
