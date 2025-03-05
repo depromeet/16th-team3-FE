@@ -12,15 +12,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const oauthResponse = await fetch('https://app.spurt.site/v1/oauth/login', {
+    const oauthResponse = await fetch('https://app.spurt.site/v1/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ authCode, provider: 'KAKAO' }),
+      body: JSON.stringify({
+        authCode,
+        provider: 'KAKAO',
+        deviceId: '0f365b39-c33d-39be-bdfc-74aaf55', // !! TODO 기기 id 불러오기
+        deviceType: 'IOS', // !! TODO 기기 타입 불러오기
+      }),
     });
 
     const data = await oauthResponse.json();
-    const accessToken = data.accessToken;
-    const refreshToken = data.refreshToken;
+    const accessToken = data.jwtTokenDto.accessToken;
+    const refreshToken = data.jwtTokenDto.refreshToken;
 
     const nextResponse = NextResponse.json({
       success: true,

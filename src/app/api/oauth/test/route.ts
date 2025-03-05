@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: 'No accessToken' }, { status: 401 });
   }
 
-  const testResponse = await fetch('https://app.spurt.site/v1/oauth/test', {
+  const testResponse = await fetch('https://app.spurt.site/v1/auth/test', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
