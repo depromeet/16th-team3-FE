@@ -12,20 +12,38 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const deviceId = '0f365b39-c33d-39be-bdfc-74aaf55'; // ! TODO: 기기 id 동적 처리
+    const deviceType = 'IOS'; // ! TODO: 기기 타입 동적 처리
+
     const oauthResponse = await fetch('https://app.spurt.site/v1/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         authCode,
         provider: 'KAKAO',
-        deviceId: '0f365b39-c33d-39be-bdfc-74aaf55', // ! TODO 기기 id 불러오기
-        deviceType: 'IOS', // ! TODO 기기 타입 불러오기
+        deviceId,
+        deviceType,
       }),
     });
+
+    if (!oauthResponse.ok) {
+      const errorData = await oauthResponse.json();
+      return NextResponse.json(
+        { error: 'Failed to authenticate', details: errorData },
+        { status: oauthResponse.status },
+      );
+    }
 
     const data = await oauthResponse.json();
     const accessToken = data.jwtTokenDto.accessToken;
     const refreshToken = data.jwtTokenDto.refreshToken;
+
+    if (!accessToken || !refreshToken) {
+      return NextResponse.json(
+        { error: 'Tokens not found in the response' },
+        { status: 500 },
+      );
+    }
 
     const nextResponse = NextResponse.json({
       success: true,
@@ -50,7 +68,7 @@ export async function POST(req: NextRequest) {
 
     return nextResponse;
   } catch (error) {
-    console.error('error:', error);
+    console.error('Error in POST /auth:', error);
     return NextResponse.json(
       { error: 'Failed to process request' },
       { status: 500 },
