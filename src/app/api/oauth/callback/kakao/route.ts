@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         authCode,
         provider: 'KAKAO',
-        deviceId: '0f365b39-c33d-39be-bdfc-74aaf55', // !! TODO 기기 id 불러오기
-        deviceType: 'IOS', // !! TODO 기기 타입 불러오기
+        deviceId: '0f365b39-c33d-39be-bdfc-74aaf55', // ! TODO 기기 id 불러오기
+        deviceType: 'IOS', // ! TODO 기기 타입 불러오기
       }),
     });
 

@@ -434,7 +434,7 @@ const EstimatedTimeInput = ({
             >
               분만 입력
             </label>
-            {/* !! TODO: Checkbox로 변환하기  */}
+            {/* ! TODO: Checkbox로 변환하기  */}
             {isOnlyMinute ? (
               <Image
                 src="/icons/CheckedBox.svg"

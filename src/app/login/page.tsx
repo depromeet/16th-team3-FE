@@ -9,8 +9,8 @@ declare global {
   }
 }
 
-const redirectUri = 'http://localhost:3000/oauth/callback/kakao';
-const scope = ['openid'].join(',');
+const REDIRECT_URI = 'http://localhost:3000/oauth/callback/kakao';
+const SCOPE = ['openid'].join(',');
 
 const LoginPage = () => {
   const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
@@ -22,8 +22,8 @@ const LoginPage = () => {
     }
 
     window.Kakao.Auth.authorize({
-      redirectUri,
-      scope,
+      redirectUri: REDIRECT_URI,
+      scope: SCOPE,
     });
   };
 

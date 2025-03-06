@@ -36,7 +36,7 @@ const TimeSelectedComponent = ({
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isMidnight, setIsMidnight] = useState<boolean>(false);
   const [isFirstTouched, setIsFirstTouched] = useState(lastStep ? false : true);
-  // !! TODO fix: 마감 시간 undefined 속성 복원시키기 -> isFirstTouched 상태 제거
+  // ! TODO fix: 마감 시간 undefined 속성 복원시키기 -> isFirstTouched 상태 제거
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
