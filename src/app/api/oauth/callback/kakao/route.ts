@@ -26,9 +26,11 @@ export async function POST(req: NextRequest) {
     const data = await oauthResponse.json();
     const accessToken = data.jwtTokenDto.accessToken;
     const refreshToken = data.jwtTokenDto.refreshToken;
+    const userData = data.memberInfo;
 
     const nextResponse = NextResponse.json({
       success: true,
+      userData: userData,
       message: 'Tokens stored in cookies',
     });
 

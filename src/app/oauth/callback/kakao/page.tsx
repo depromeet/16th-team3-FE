@@ -1,34 +1,41 @@
 'use client';
 
+import useUserStore from '@/store/useUserStore';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 const KakaoTalk = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authCode = searchParams.get('code');
 
-  const loginMutation = async (authCode: string) => {
-    const response = await fetch('/api/oauth/callback/kakao', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ authCode }),
-    }).then((res) => res.json());
+  const { setUser } = useUserStore();
 
-    if (response.success) {
-      router.push('/');
-    } else {
-      console.error('Failed to login');
-    }
-  };
+  const loginMutation = useCallback(
+    async (authCode: string) => {
+      const response = await fetch('/api/oauth/callback/kakao', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ authCode }),
+      }).then((res) => res.json());
+
+      if (response.success) {
+        router.push('/');
+        setUser(response.userData);
+      } else {
+        console.error('Failed to login');
+      }
+    },
+    [router, setUser],
+  );
 
   useEffect(() => {
     if (authCode) {
       loginMutation(authCode);
     }
-  }, [authCode]);
+  }, [authCode, loginMutation]);
 
   return (
     <div>
