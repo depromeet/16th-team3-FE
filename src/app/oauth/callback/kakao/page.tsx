@@ -1,5 +1,6 @@
 'use client';
 
+import useUserStore from '@/store/useUserStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 import { Suspense } from 'react';
@@ -8,6 +9,8 @@ const KakaoTalk = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authCode = searchParams.get('code');
+
+  const { setUser } = useUserStore();
 
   const loginMutation = useCallback(
     async (authCode: string) => {
@@ -21,11 +24,12 @@ const KakaoTalk = () => {
 
       if (response.success) {
         router.push('/');
+        setUser(response.userData);
       } else {
         console.error('Failed to login');
       }
     },
-    [router],
+    [router, setUser],
   );
 
   useEffect(() => {

@@ -15,16 +15,19 @@ export async function POST(req: NextRequest) {
     const deviceId = '0f365b39-c33d-39be-bdfc-74aaf55'; // ! TODO: 기기 id 동적 처리
     const deviceType = 'IOS'; // ! TODO: 기기 타입 동적 처리
 
-    const oauthResponse = await fetch('https://app.spurt.site/v1/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        authCode,
-        provider: 'KAKAO',
-        deviceId,
-        deviceType,
-      }),
-    });
+    const oauthResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          authCode,
+          provider: 'KAKAO',
+          deviceId,
+          deviceType,
+        }),
+      },
+    );
 
     if (!oauthResponse.ok) {
       const errorData = await oauthResponse.json();
@@ -37,6 +40,7 @@ export async function POST(req: NextRequest) {
     const data = await oauthResponse.json();
     const accessToken = data.jwtTokenDto.accessToken;
     const refreshToken = data.jwtTokenDto.refreshToken;
+    const userData = data.memberInfo;
 
     if (!accessToken || !refreshToken) {
       return NextResponse.json(
@@ -47,6 +51,7 @@ export async function POST(req: NextRequest) {
 
     const nextResponse = NextResponse.json({
       success: true,
+      userData: userData,
       message: 'Tokens stored in cookies',
     });
 
