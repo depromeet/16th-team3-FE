@@ -9,7 +9,7 @@ interface UserState {
   clearUser: () => void;
 }
 
-const useUserStore = create<UserState>()((set) => ({
+export const useUserStore = create<UserState>()((set) => ({
   userData: {
     memberId: -1,
     nickname: '',
@@ -32,5 +32,3 @@ const useUserStore = create<UserState>()((set) => ({
       },
     }),
 }));
-
-export default useUserStore;
