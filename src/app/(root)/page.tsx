@@ -1,6 +1,6 @@
 'use client';
 
-import useUserStore from '@/store/useUserStore';
+import { api } from '@/lib/ky';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
@@ -8,12 +8,7 @@ const HomePage = () => {
   const router = useRouter();
 
   const { mutate: test } = useMutation({
-    mutationFn: async () =>
-      await fetch('/api/oauth/test', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      }),
+    mutationFn: async () => await api.get('v1/auth/test'),
   });
 
   return (

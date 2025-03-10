@@ -8,6 +8,7 @@ import TaskInput from '../_components/taskInput/TaskInput';
 import InstantTaskTypeInput from '../_components/instantTaskTypeInput/InstantTaskTypeInput';
 import { useMutation } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
+import { api } from '@/lib/ky';
 
 type FormState = {
   task?: string;
@@ -47,12 +48,7 @@ const InstantTaskCreate = () => {
 
   const { mutate: createScheduledTaskMutation } = useMutation({
     mutationFn: async (data: InstantTaskType) => {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/tasks/urgent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEST_TOKEN_1! + process.env.NEXT_PUBLIC_TEST_TOKEN_2!}`,
-        },
+      await api.post(`v1/tasks/urgent`, {
         body: JSON.stringify(data),
       });
     },
