@@ -6,7 +6,7 @@ import TaskTypeChip from '../taskTypeChip/TaskTypeChip';
 import { InstantTaskType, MoodType, TaskType } from '@/types/create';
 import { useState } from 'react';
 import CharacterDialog from '../characterDialog/CharacterDialog';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/dialog';
 import { InstantTaskInputType } from '../../context';
 import { transformInstantScheduledTaskData } from '@/utils/transformTaskData';
 
@@ -118,7 +118,7 @@ const InstantTaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
             disabled={!taskType || !moodType}
             onClick={() => onClick(convertedData)}
           >
-            <DialogTrigger>확인</DialogTrigger>
+            확인
           </Button>
         </div>
       </div>

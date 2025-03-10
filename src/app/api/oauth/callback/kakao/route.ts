@@ -52,11 +52,10 @@ export async function POST(req: NextRequest) {
     const nextResponse = NextResponse.json({
       success: true,
       userData: userData,
-      message: 'Tokens stored in cookies',
     });
 
     nextResponse.cookies.set('accessToken', accessToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: 'none',
       path: '/',

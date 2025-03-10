@@ -73,7 +73,7 @@ export const TYPE_LABELS: { [key: string]: string } = {
   writing: '글쓰기',
   exercise: '운동',
   programming: '프로그래밍',
-  design: '그림ㆍ디자인',
+  design: '그림∙디자인',
   assignment: '과제',
   urgent: '긴급한',
   excited: '신나는',
