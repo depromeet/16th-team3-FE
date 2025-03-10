@@ -57,10 +57,9 @@ export async function middleware(request: NextRequest) {
   // ! Question: 이런 방식으로 accessToken의 만료 여부를 판단해도 괜찮을까?
   const isAccessTokenExpired = checkAccessTokenExpired(accessToken);
 
-  // ! Question: 리다이렉션 횟수가 너무 많다고 경고가 뜨는 상황인데 이 로직이 잘못된걸까?
-  // if (!accessToken || !refreshToken || isAccessTokenExpired) {
-  //   return NextResponse.redirect(new URL('/login', request.url));
-  // }
+  if (!accessToken || !refreshToken || isAccessTokenExpired) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 
   if (isAccessTokenExpired && refreshToken) {
     try {
@@ -101,7 +100,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // * Next.js 내부 리소스를 제외한 모든 경로에 middleware 적용
-  matcher: ['/', '/((?!_next/static|_next/image|favicon.ico).*)'],
+  // * 로그인 페이지는 제외 - 제외하지 않으면 무한 리다이렉트 발생
+  matcher: ['/', '/((?!_next/static|_next/image|favicon.ico|login).*)'],
 };
 
 export const runtime = 'nodejs';
