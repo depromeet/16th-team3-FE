@@ -2,7 +2,7 @@
 
 import { useUserStore } from '@/store/useUserStore';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Suspense } from 'react';
 
 const KakaoTalk = () => {
@@ -12,28 +12,25 @@ const KakaoTalk = () => {
 
   const { setUser } = useUserStore();
 
-  const loginMutation = useCallback(
-    async (authCode: string) => {
-      const response = await fetch('/api/oauth/callback/kakao', {
-        method: 'POST',
-        body: JSON.stringify({ authCode }),
-      }).then((res) => res.json());
+  const loginMutation = async (authCode: string) => {
+    const response = await fetch('/api/oauth/callback/kakao', {
+      method: 'POST',
+      body: JSON.stringify({ authCode }),
+    }).then((res) => res.json());
 
-      if (response.success) {
-        router.push('/');
-        setUser(response.userData);
-      } else {
-        console.error('Failed to login');
-      }
-    },
-    [router, setUser],
-  );
+    if (response.success) {
+      router.push('/');
+      setUser(response.userData);
+    } else {
+      console.error('Failed to login');
+    }
+  };
 
   useEffect(() => {
     if (authCode) {
       loginMutation(authCode);
     }
-  }, [authCode, loginMutation]);
+  }, [authCode]);
 
   return (
     <div>
