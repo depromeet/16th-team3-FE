@@ -4,7 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const body: AppleAuthorizationResponse = await req.json();
-    const { code, idToken, user } = body;
+    const {
+      authorization: { code, idToken, user },
+    } = body;
 
     if (!code || !idToken) {
       return NextResponse.json(
