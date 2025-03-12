@@ -17,6 +17,7 @@ import EstimatedTimeInput from '../_components/estimatedTimeInput/EstimatedTimeI
 import BufferTime from '../_components/bufferTime/BufferTime';
 import TaskTypeInput from '../_components/taskTypeInput/TaskTypeInput';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 type FormState = {
   task?: string;
@@ -73,6 +74,7 @@ const ScheduledTaskCreate = () => {
       ? funnel.historySteps[funnel.historySteps.length - 2].step
       : undefined;
 
+  const router = useRouter();
   const { isMounted } = useMount();
 
   const { mutate: createScheduledTaskMutation } = useMutation({
@@ -122,6 +124,8 @@ const ScheduledTaskCreate = () => {
         estimatedMinute: funnel.context.estimatedMinute,
         estimatedDay: funnel.context.estimatedDay,
       } as BufferTimeType);
+    } else {
+      router.push('/home-page');
     }
   };
 

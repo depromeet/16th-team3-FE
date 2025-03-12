@@ -9,6 +9,7 @@ import InstantTaskTypeInput from '../_components/instantTaskTypeInput/InstantTas
 import { useMutation } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
 import { api } from '@/lib/ky';
+import { useRouter } from 'next/navigation';
 
 type FormState = {
   task?: string;
@@ -44,6 +45,7 @@ const InstantTaskCreate = () => {
     },
   });
 
+  const router = useRouter();
   const { isMounted } = useMount();
 
   const { mutate: createScheduledTaskMutation } = useMutation({
@@ -60,11 +62,15 @@ const InstantTaskCreate = () => {
       : undefined;
 
   const handleHistoryBack = () => {
-    funnel.history.replace('taskForm', {
-      task: funnel.context.task,
-      deadlineDate: funnel.context.deadlineDate,
-      deadlineTime: funnel.context.deadlineTime,
-    });
+    if (funnel.step === 'taskTypeInput') {
+      funnel.history.replace('taskForm', {
+        task: funnel.context.task,
+        deadlineDate: funnel.context.deadlineDate,
+        deadlineTime: funnel.context.deadlineTime,
+      });
+    } else {
+      router.push('/home-page');
+    }
   };
 
   if (!isMounted) return null;
