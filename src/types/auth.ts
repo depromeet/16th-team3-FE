@@ -1,7 +1,7 @@
 export interface AppleAuthorizationResponse {
   authorization: {
     code: 'string';
-    idToken: 'string';
+    id_token: 'string';
     state?: 'string';
     user?: {
       name: { firstName: string; lastName: string } | null;

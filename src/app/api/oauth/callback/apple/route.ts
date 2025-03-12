@@ -5,10 +5,10 @@ export async function POST(req: NextRequest) {
   try {
     const body: AppleAuthorizationResponse = await req.json();
     const {
-      authorization: { code, idToken, user },
+      authorization: { code, id_token, user },
     } = body;
 
-    if (!code || !idToken) {
+    if (!code || !id_token) {
       return NextResponse.json(
         { error: 'Authorization code or id-token is missing' },
         { status: 400 },
