@@ -57,7 +57,10 @@ export async function middleware(request: NextRequest) {
   // ! Question: 이런 방식으로 accessToken의 만료 여부를 판단해도 괜찮을까?
   const isAccessTokenExpired = checkAccessTokenExpired(accessToken);
 
-  if (!accessToken || !refreshToken || isAccessTokenExpired) {
+  if (
+    (!accessToken || !refreshToken || isAccessTokenExpired) &&
+    process.env.NODE_ENV === 'production'
+  ) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

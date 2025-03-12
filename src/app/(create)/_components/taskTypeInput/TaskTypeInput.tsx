@@ -5,8 +5,6 @@ import Image from 'next/image';
 import TaskTypeChip from '../taskTypeChip/TaskTypeChip';
 import { MoodType, ScheduledTaskType, TaskType } from '@/types/create';
 import { useState } from 'react';
-import CharacterDialog from '../characterDialog/CharacterDialog';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { TaskTypeInputType } from '../../context';
 import getBufferTime from '@/utils/getBufferTime';
 import { transformScheduledTaskData } from '@/utils/transformTaskData';
