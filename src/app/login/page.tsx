@@ -42,7 +42,7 @@ const LoginPage = () => {
 
       const oauthResponse = await fetch('/api/oauth/callback/apple', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: JSON.stringify(response),
       }).then((res) => res.json());
 
