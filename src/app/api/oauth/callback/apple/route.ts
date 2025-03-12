@@ -5,7 +5,8 @@ export async function POST(req: NextRequest) {
   try {
     const body: AppleAuthorizationResponse = await req.json();
     const {
-      authorization: { code, id_token, user },
+      authorization: { code, id_token },
+      user,
     } = body;
 
     if (!code || !id_token) {
@@ -25,11 +26,10 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           authCode: code,
-          nickname:
-            user && user.name
-              ? `${user.name.lastName}${user.name.firstName}`
-              : null,
-          email: user ? user.email : null,
+          nickname: user?.name
+            ? `${user.name.lastName}${user.name.firstName}`
+            : null,
+          email: user?.email ? user.email : null,
           deviceId,
           deviceType,
         }),
@@ -80,9 +80,6 @@ export async function POST(req: NextRequest) {
     return nextResponse;
   } catch (error) {
     console.error('Error in POST /auth:', error);
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
