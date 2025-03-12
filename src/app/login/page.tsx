@@ -38,7 +38,7 @@ const LoginPage = () => {
       const response: AppleAuthorizationResponse =
         await window.AppleID.auth.signIn();
 
-      console.log(response);
+      console.log('response:', response);
 
       // const oauthResponse = await fetch('/api/oauth/callback/apple', {
       //   method: 'POST',
@@ -67,7 +67,7 @@ const LoginPage = () => {
           clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
           scope: 'name email',
           redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!,
-          usePopup: true,
+          usePopup: false,
         });
       }
     }
