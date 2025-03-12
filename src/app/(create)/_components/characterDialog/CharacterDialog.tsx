@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-const CharacterDialog = () => {
+const CharacterDialog = ({ task }: { task: string }) => {
   return (
     <DialogContent className="w-[328px] rounded-[24px] border-none bg-component-gray-secondary px-4 py-6">
       <DialogHeader>
@@ -17,7 +17,7 @@ const CharacterDialog = () => {
           ‘발등에 불떨어진 소설가’ 디프만님!
         </DialogDescription>
         <DialogDescription className="max-w-[190px] flex-wrap self-center">
-          Ppt 만들고 대본작성
+          {task}
         </DialogDescription>
         <DialogDescription className="max-w-[190px] flex-wrap self-center">
           완료까지 도와드릴게요.

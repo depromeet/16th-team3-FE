@@ -54,6 +54,12 @@ const InstantTaskCreate = () => {
         body: JSON.stringify(data),
       });
     },
+    onSuccess: () => {
+      router.push(`/home-page?dialog=success&task=${funnel.context.task}`);
+    },
+    onError: (error) => {
+      console.error('Error creating instant task:', error);
+    },
   });
 
   const lastStep =

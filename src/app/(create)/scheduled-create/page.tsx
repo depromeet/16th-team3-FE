@@ -88,6 +88,12 @@ const ScheduledTaskCreate = () => {
         body: JSON.stringify(data),
       });
     },
+    onSuccess: () => {
+      router.push(`/home-page?dialog=success&task=${funnel.context.task}`);
+    },
+    onError: (error) => {
+      console.error('Error creating scheduled task:', error);
+    },
   });
 
   const handleHistoryBack = () => {
