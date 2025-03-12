@@ -65,7 +65,7 @@ const LoginPage = () => {
           clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
           scope: 'name email',
           redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI,
-          usePopup: false,
+          usePopup: true,
         });
       }
     }

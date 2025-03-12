@@ -6,6 +6,9 @@ export async function POST(req: NextRequest) {
     const formBody = await req.text();
     const params = new URLSearchParams(formBody);
 
+    console.log('formBody', formBody);
+    console.log('params', params);
+
     const code = params.get('code');
     const idToken = params.get('id_token');
     const state = params.get('state');
