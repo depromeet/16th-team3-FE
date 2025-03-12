@@ -46,6 +46,8 @@ const LoginPage = () => {
         body: JSON.stringify(response),
       }).then((res) => res.json());
 
+      console.log('oauthResponse:', oauthResponse);
+
       if (oauthResponse.success) {
         router.push('/');
         setUser(oauthResponse.userData);
