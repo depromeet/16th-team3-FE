@@ -3,25 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const formBody = await req.text();
-    const params = new URLSearchParams(formBody);
+    const body: AppleAuthorizationResponse = await req.json();
+    const { code, idToken, user } = body;
 
-    console.log('formBody', formBody);
-    console.log('params', params);
-
-    const code = params.get('code');
-    const idToken = params.get('id_token');
-    const state = params.get('state');
-    const userStr = params.get('user');
-
-    const user: {
-      name: { firstName: string; lastName: string };
-      email: string;
-    } = JSON.parse(userStr || '');
-
-    if (!code || !idToken || !state || !user) {
+    if (!code || !idToken) {
       return NextResponse.json(
-        { error: 'Authorization body is missing' },
+        { error: 'Authorization code or id-token is missing' },
         { status: 400 },
       );
     }
@@ -36,8 +23,11 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           authCode: code,
-          nickname: `${user.name.lastName}${user.name.firstName}`,
-          email: user.email,
+          nickname:
+            user && user.name
+              ? `${user.name.lastName}${user.name.firstName}`
+              : null,
+          email: user ? user.email : null,
           deviceId,
           deviceType,
         }),
