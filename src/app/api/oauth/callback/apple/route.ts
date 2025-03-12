@@ -3,10 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const body: AppleAuthorizationResponse = await req.json();
-    const { code, id_token, state, user } = body;
+    const formBody = await req.text();
+    const params = new URLSearchParams(formBody);
 
-    if (!code || !id_token || !state || !user) {
+    const code = params.get('code');
+    const idToken = params.get('id_token');
+    const state = params.get('state');
+    const userStr = params.get('user');
+
+    const user: {
+      name: { firstName: string; lastName: string };
+      email: string;
+    } = JSON.parse(userStr || '');
+
+    if (!code || !idToken || !state || !user) {
       return NextResponse.json(
         { error: 'Authorization body is missing' },
         { status: 400 },

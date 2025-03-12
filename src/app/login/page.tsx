@@ -38,18 +38,20 @@ const LoginPage = () => {
       const response: AppleAuthorizationResponse =
         await window.AppleID.auth.signIn();
 
-      const oauthResponse = await fetch('/api/oauth/callback/apple', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(response),
-      }).then((res) => res.json());
+      console.log(response);
 
-      if (oauthResponse.success) {
-        router.push('/');
-        setUser(oauthResponse.userData);
-      } else {
-        console.error('Failed to login');
-      }
+      // const oauthResponse = await fetch('/api/oauth/callback/apple', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(response),
+      // }).then((res) => res.json());
+
+      // if (oauthResponse.success) {
+      //   router.push('/');
+      //   setUser(oauthResponse.userData);
+      // } else {
+      //   console.error('Failed to login');
+      // }
     } catch (err) {
       console.error('Apple login error: ', err);
     }

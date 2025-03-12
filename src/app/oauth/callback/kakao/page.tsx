@@ -34,7 +34,7 @@ const KakaoTalk = () => {
 
   return (
     <div>
-      <span>로그인 중...</span>
+      <span>카카오 로그인 중...</span>
     </div>
   );
 };

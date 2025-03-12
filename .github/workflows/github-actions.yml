@@ -1,79 +1,79 @@
 name: git push into another repo to deploy to vercel
 
 on:
- push:
-   branches: [main, develop]
-   paths-ignore:
+  push:
+    branches: [main, develop]
+    paths-ignore:
       - 'output/**'
 
 jobs:
- build:
-  runs-on: ubuntu-latest
-  steps:
-   - uses: actions/checkout@v2
-   - name: Install Git
-     run: |
-       sudo apt-get update && sudo apt-get install -y git
-   - name: creates output
-     run: sh ./build.sh
-   
-   # 프로덕선 환경(main) 배포
-   - name: Pushes to production repository
-     id: push_directory_prod
-     if: github.ref == 'refs/heads/main' && github.actor != 'github-actions'
-     uses: cpina/github-action-push-to-another-repository@main
-     env:
-      API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
-     with:
-      source-directory: "output"
-      destination-github-username: "ljh130334"
-      destination-repository-name: "16th-team3-FE"
-      user-email: ${{ secrets.GIT_EMAIL }}
-      commit-message: ${{ github.event.head_commit.message || 'Auto commit [skip ci]' }}
-      target-branch: main
-      force: true
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Git
+        run: |
+          sudo apt-get update && sudo apt-get install -y git
+      - name: creates output
+        run: sh ./build.sh
 
-   # 개발 환경(develop) 배포
-   - name: Pushes to development repository
-     id: push_directory_dev
-     if: github.ref == 'refs/heads/develop' && github.actor != 'github-actions'
-     uses: cpina/github-action-push-to-another-repository@main
-     env:
-      API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
-     with:
-      source-directory: "output"
-      destination-github-username: "ljh130334"
-      destination-repository-name: "16th-team3-FE"
-      user-email: ${{ secrets.GIT_EMAIL }}
-      commit-message: ${{ github.event.head_commit.message || 'Dev:Auto commit [skip ci]' }}
-      target-branch: develop
-      force: true
-    
-   - name: Test get variable exported by push-to-another-repository
-     run: echo $DESTINATION_CLONED_DIRECTORY
+      # 프로덕선 환경(main) 배포
+      - name: Pushes to production repository
+        id: push_directory_prod
+        if: github.ref == 'refs/heads/main' && github.actor != 'github-actions'
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
+        with:
+          source-directory: 'output'
+          destination-github-username: 'ljh130334'
+          destination-repository-name: '16th-team3-FE'
+          user-email: ${{ secrets.GIT_EMAIL }}
+          commit-message: ${{ github.event.head_commit.message || 'Auto commit [skip ci]' }}
+          target-branch: main
+          force: true
 
-   # main 브랜치 푸시  
-   - name: Push to forked repository (main)
-     if: github.ref == 'refs/heads/main' && github.actor != 'github-actions'
-     run: |
-      git clone https://github.com/depromeet/16th-team3-FE.git deployed-repo
-      cd deployed-repo
-      git remote add forked-repo https://oauth2:${{ secrets.FORKED_REPO_TOKEN }}@github.com/ljh130334/16th-team3-FE.git
-      git config user.name "ljh130334"
-      git config user.email "${{ secrets.GIT_EMAIL }}"
-      git checkout main
-      git pull origin main
-      git push -f forked-repo main
+      # 개발 환경(develop) 배포
+      - name: Pushes to development repository
+        id: push_directory_dev
+        if: github.ref == 'refs/heads/develop' && github.actor != 'github-actions'
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
+        with:
+          source-directory: 'output'
+          destination-github-username: 'ljh130334'
+          destination-repository-name: '16th-team3-FE'
+          user-email: ${{ secrets.GIT_EMAIL }}
+          commit-message: ${{ github.event.head_commit.message || 'Dev:Auto commit [skip ci]' }}
+          target-branch: develop
+          force: true
 
-   # develop 브랜치 푸시  
-   - name: Push to forked repository (develop)
-     if: github.ref == 'refs/heads/develop' && github.actor != 'github-actions'
-     run: |
-      git clone https://github.com/depromeet/16th-team3-FE.git deployed-repo
-      cd deployed-repo
-      git remote add forked-repo https://oauth2:${{ secrets.FORKED_REPO_TOKEN }}@github.com/ljh130334/16th-team3-FE.git
-      git config user.name "ljh130334"
-      git config user.email "${{ secrets.GIT_EMAIL }}"
-      git checkout develop || git checkout -b develop
-      git pull origin develop || true
-      git push -f forked-repo develop
+      - name: Test get variable exported by push-to-another-repository
+        run: echo $DESTINATION_CLONED_DIRECTORY
+
+      # main 브랜치 푸시
+      - name: Push to forked repository (main)
+        if: github.ref == 'refs/heads/main' && github.actor != 'github-actions'
+        run: |
+          git clone https://github.com/depromeet/16th-team3-FE.git deployed-repo
+          cd deployed-repo
+          git remote add forked-repo https://oauth2:${{ secrets.FORKED_REPO_TOKEN }}@github.com/ljh130334/16th-team3-FE.git
+          git config user.name "ljh130334"
+          git config user.email "${{ secrets.GIT_EMAIL }}"
+          git checkout main
+          git pull origin main
+          git push -f forked-repo main
+
+      # develop 브랜치 푸시
+      - name: Push to forked repository (develop)
+        if: github.ref == 'refs/heads/develop' && github.actor != 'github-actions'
+        run: |
+          git clone https://github.com/depromeet/16th-team3-FE.git deployed-repo
+          cd deployed-repo
+          git remote add forked-repo https://oauth2:${{ secrets.FORKED_REPO_TOKEN }}@github.com/ljh130334/16th-team3-FE.git
+          git config user.name "ljh130334"
+          git config user.email "${{ secrets.GIT_EMAIL }}"
+          git checkout develop || git checkout -b develop
+          git pull origin develop || true
+          git push -f forked-repo develop
