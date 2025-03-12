@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ import {
 import CharacterDialog from '../(create)/_components/characterDialog/CharacterDialog';
 import { Drawer } from '@/components/ui/drawer';
 
-const HomePage = () => {
+const HomePageContent = () => {
   // 1. 홈 API를 통해 모든 데이터 한번에 가져오기
   const { data: homeData, isLoading: isLoadingHome, refetch } = useHomeData();
 
@@ -906,5 +906,11 @@ const HomePage = () => {
     </Drawer>
   );
 };
+
+const HomePage = () => (
+  <Suspense>
+    <HomePageContent />
+  </Suspense>
+);
 
 export default HomePage;
