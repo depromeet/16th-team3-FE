@@ -57,14 +57,16 @@ const LoginPage = () => {
     }
   };
 
+  console.log('clientId:', process.env.NEXT_PUBLIC_APPLE_CLIENT_ID);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const { AppleID } = window as any;
       if (AppleID) {
         AppleID.auth.init({
-          clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
+          clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
           scope: 'name email',
-          redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI,
+          redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!,
           usePopup: true,
         });
       }
