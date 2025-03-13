@@ -48,6 +48,15 @@ const LoginPage = () => {
       }).then((res) => res.json());
       console.log('🚀 ~ handleAppleLogin ~ oauthResponse:', oauthResponse);
 
+      if (!oauthResponse.ok) {
+        const errorText = await oauthResponse.text();
+        console.error('Error oauthResponse:', errorText);
+        // 에러 처리 로직
+        return;
+      }
+      const responseText = await oauthResponse.text();
+      console.log('Response text:', responseText);
+
       if (oauthResponse.success) {
         router.push('/home-page');
         setUser(oauthResponse.userData);
