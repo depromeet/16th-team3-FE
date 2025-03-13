@@ -113,7 +113,7 @@ const LoginPage = () => {
         >
           <Image
             src="/icons/login/kakao.svg"
-            alt="카카오"
+            alt="kakao"
             width={18}
             height={17}
           />
@@ -127,7 +127,7 @@ const LoginPage = () => {
         >
           <Image
             src="/icons/login/apple.svg"
-            alt="애플"
+            alt="apple"
             width={15}
             height={19}
           />
