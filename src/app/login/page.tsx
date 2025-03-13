@@ -1,7 +1,9 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/store';
 import { AppleAuthorizationResponse } from '@/types/auth';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -21,7 +23,7 @@ const LoginPage = () => {
 
   const { setUser } = useUserStore();
 
-  const kakaoLoginHandler = () => {
+  const handleKakaoLogin = () => {
     if (!isKakaoLoaded || !window.Kakao?.Auth) {
       console.error('Kakao SDK not loaded');
       return;
@@ -83,13 +85,47 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
-      <button onClick={kakaoLoginHandler} disabled={!isKakaoLoaded}>
-        카카오 로그인
-      </button>
-      <button onClick={handleAppleLogin} style={{ cursor: 'pointer' }}>
-        애플로 로그인
-      </button>
+    <div className="flex h-screen flex-col justify-between bg-background-primary px-5 py-12">
+      <div className="mt-[144px]">
+        <div className="t2 text-strong">
+          <p>
+            미루는 당신을 위한
+            <br />
+            스퍼트에 오신 걸<br />
+            환영합니다!
+          </p>
+        </div>
+      </div>
+
+      <div className="flex w-full flex-col gap-4">
+        <Button
+          variant="default"
+          className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
+          onClick={handleKakaoLogin}
+        >
+          <Image
+            src="/icons/login/kakao.svg"
+            alt="카카오"
+            width={18}
+            height={17}
+          />
+          <span className="pt-0.5">카카오로 계속하기</span>
+        </Button>
+
+        <Button
+          variant="default"
+          className="l2 i gap-2 rounded-[16px] bg-[#e6edf8] text-[#0f1114]"
+          onClick={handleAppleLogin}
+        >
+          <Image
+            src="/icons/login/apple.svg"
+            alt="애플"
+            width={15}
+            height={19}
+          />
+          <span className="pt-1">Apple로 계속하기</span>
+        </Button>
+      </div>
     </div>
   );
 };
