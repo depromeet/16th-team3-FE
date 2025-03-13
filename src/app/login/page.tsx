@@ -39,12 +39,14 @@ const LoginPage = () => {
     try {
       const response: AppleAuthorizationResponse =
         await window.AppleID.auth.signIn();
+      console.log('🚀 ~ handleAppleLogin ~ response:', response);
 
       const oauthResponse = await fetch('/api/oauth/callback/apple', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: JSON.stringify(response),
       }).then((res) => res.json());
+      console.log('🚀 ~ handleAppleLogin ~ oauthResponse:', oauthResponse);
 
       if (oauthResponse.success) {
         router.push('/home-page');

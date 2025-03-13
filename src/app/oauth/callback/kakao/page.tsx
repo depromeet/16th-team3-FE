@@ -3,7 +3,7 @@
 import Loader from '@/components/loader/Loader';
 import { useUserStore } from '@/store/useUserStore';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { Suspense } from 'react';
 
 const KakaoTalk = () => {
