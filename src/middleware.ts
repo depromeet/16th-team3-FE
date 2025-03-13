@@ -59,12 +59,12 @@ export async function middleware(request: NextRequest) {
 
   // const isAccessTokenExpired = checkAccessTokenExpired(accessToken);
 
-  if (
-    (!accessToken || !refreshToken) &&
-    process.env.NODE_ENV === 'production'
-  ) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  // if (
+  //   (!accessToken || !refreshToken) &&
+  //   process.env.NODE_ENV === 'production'
+  // ) {
+  //   return NextResponse.redirect(new URL('/login', request.url));
+  // }
 
   // if (isAccessTokenExpired && refreshToken) {
   //   try {
