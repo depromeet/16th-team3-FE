@@ -39,24 +39,20 @@ const LoginPage = () => {
     try {
       const response: AppleAuthorizationResponse =
         await window.AppleID.auth.signIn();
-      console.log('🚀 ~ handleAppleLogin ~ response:', response);
 
       const oauthResponse = await fetch('/api/oauth/callback/apple', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(response),
       });
-      console.log('🚀 ~ handleAppleLogin ~ oauthResponse:', oauthResponse);
 
       if (!oauthResponse.ok) {
         const errorText = await oauthResponse.text();
         console.error('Error oauthResponse:', errorText);
-        // 에러 처리 로직
         return;
       }
       const responseText = await oauthResponse.text();
       const oauthData = JSON.parse(responseText);
-      console.log('Response text:', responseText);
 
       if (oauthData.success) {
         router.push('/home-page');
