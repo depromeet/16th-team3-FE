@@ -2,7 +2,11 @@ name: git push into another repo to deploy to vercel
 
 on:
   push:
-    branches: [main, develop, SCRUM-153-온보딩-화면-연결]
+    branches:
+      - main
+      - develop
+      - SCRUM-153-온보딩-화면-연결
+
     paths-ignore:
       - 'output/**'
 
