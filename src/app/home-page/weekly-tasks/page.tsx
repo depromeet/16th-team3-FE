@@ -8,6 +8,7 @@ import TaskDetailSheet from '@/app/home-page/_components/TaskDetailSheet';
 import WeeklyTaskItem from '@/app/home-page/_components/WeeklyTaskItem';
 import { useWeeklyTasks, useStartTask } from '@/hooks/useTasks';
 import { Task } from '@/types/task';
+import Loader from '@/components/loader/Loader';
 
 const WeeklyTasksPage = () => {
   const router = useRouter();
@@ -52,7 +53,7 @@ const WeeklyTasksPage = () => {
       <div className="flex min-h-screen flex-col bg-background-primary">
         <Header title="이번주 할일" />
         <div className="mt-16 flex flex-1 items-center justify-center px-5 pb-24">
-          <p className="text-text-normal">로딩 중...</p>
+          <Loader />
         </div>
       </div>
     );

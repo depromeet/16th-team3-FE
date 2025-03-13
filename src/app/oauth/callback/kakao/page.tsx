@@ -1,5 +1,6 @@
 'use client';
 
+import Loader from '@/components/loader/Loader';
 import { useUserStore } from '@/store/useUserStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -34,15 +35,21 @@ const KakaoTalk = () => {
   }, [authCode]);
 
   return (
-    <div>
-      <span>카카오 로그인 중...</span>
+    <div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
+      <Loader />
     </div>
   );
 };
 
 const KakaoTalkPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
+          <Loader />
+        </div>
+      }
+    >
       <KakaoTalk />
     </Suspense>
   );
