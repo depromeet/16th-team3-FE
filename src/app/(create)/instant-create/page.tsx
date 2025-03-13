@@ -6,7 +6,7 @@ import useMount from '@/hooks/useMount';
 import BackHeader from '@/components/backHeader/BackHeader';
 import TaskInput from '../_components/taskInput/TaskInput';
 import InstantTaskTypeInput from '../_components/instantTaskTypeInput/InstantTaskTypeInput';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
 import { api } from '@/lib/ky';
 import { useRouter } from 'next/navigation';
@@ -46,6 +46,7 @@ const InstantTaskCreate = () => {
   });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { isMounted } = useMount();
 
   const { mutate: createScheduledTaskMutation } = useMutation({
@@ -55,6 +56,7 @@ const InstantTaskCreate = () => {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(`/home-page?dialog=success&task=${funnel.context.task}`);
     },
     onError: (error) => {
