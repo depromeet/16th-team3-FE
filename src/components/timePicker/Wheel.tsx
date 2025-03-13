@@ -53,9 +53,11 @@ const Wheel = (props: {
       const details = s.track.details;
       setSliderState(details);
       if (props.onChange) {
+        const normalizedAbs =
+          ((details.abs % props.length) + props.length) % props.length;
         const selected = props.setValue
-          ? props.setValue(details.abs, details.abs)
-          : details.abs;
+          ? props.setValue(normalizedAbs, normalizedAbs)
+          : normalizedAbs;
         props.onChange(selected);
       }
     },
@@ -89,7 +91,12 @@ const Wheel = (props: {
         WebkitTransform: `rotateX(${rotate}deg) translateZ(${radius}px)`,
       };
       const value = props.setValue
-        ? props.setValue(i, sliderState.abs + Math.round(distance))
+        ? props.setValue(
+            i,
+            (((sliderState.abs + Math.round(distance)) % props.length) +
+              props.length) %
+              props.length,
+          )
         : i;
       values.push({ style, value });
     }

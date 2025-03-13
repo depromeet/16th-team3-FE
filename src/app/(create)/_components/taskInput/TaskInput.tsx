@@ -46,12 +46,15 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
     minute: '00',
   });
   const [isFocused, setIsFocused] = useState(true);
+  const [isTimePickerFirstTouched, setIsTimePickerFirstTouched] = useState(
+    lastStep ? false : true,
+  );
 
   const isInvalid =
     task.length > MAX_TASK_LENGTH ||
     task.length === 0 ||
     !deadlineDate ||
-    !deadlineTime;
+    isTimePickerFirstTouched;
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
@@ -67,6 +70,10 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 
   const handleInputFocus = (value: boolean) => {
     setIsFocused(value);
+  };
+
+  const handleFirstTouchToFalse = () => {
+    setIsTimePickerFirstTouched(false);
   };
 
   useEffect(() => {
@@ -119,10 +126,11 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 
           {deadlineDate !== undefined && (
             <TimeSelectedComponent
-              lastStep={lastStep}
               deadlineTime={deadlineTime}
               deadlineDate={deadlineDate}
+              isTimePickerFirstTouched={isTimePickerFirstTouched}
               handleTimeChange={handleTimeChange}
+              handleFirstTouchToFalse={handleFirstTouchToFalse}
             />
           )}
         </div>
