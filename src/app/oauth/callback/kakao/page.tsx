@@ -21,8 +21,14 @@ const KakaoTalk = () => {
     }).then((res) => res.json());
 
     if (response.success) {
-      router.push('/home-page');
       setUser(response.userData);
+
+      if (response.isNewUser) {
+        router.push('/onboarding');
+        return;
+      }
+
+      router.push('/home-page'); // TODO(prgmr99): Redirect to the home page('/')
     } else {
       console.error('Failed to login');
     }

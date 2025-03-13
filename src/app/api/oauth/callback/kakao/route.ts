@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
     const accessToken = data.jwtTokenDto.accessToken;
     const refreshToken = data.jwtTokenDto.refreshToken;
     const userData = data.memberInfo;
+    const isNewUser = data.isNewUser;
 
     if (!accessToken || !refreshToken) {
       return NextResponse.json(
@@ -53,11 +54,12 @@ export async function POST(req: NextRequest) {
     const nextResponse = NextResponse.json({
       success: true,
       userData: userData,
+      isNewUser: isNewUser,
     });
 
     nextResponse.cookies.set('accessToken', accessToken, {
       httpOnly: false,
-      secure: false,
+      secure: false, // ! TODO: 앱 심사 받을 때, true로 변경
       sameSite: 'none',
       path: '/',
       maxAge: 60 * 60,

@@ -55,8 +55,14 @@ const LoginPage = () => {
       const oauthData = JSON.parse(responseText);
 
       if (oauthData.success) {
-        router.push('/home-page');
         setUser(oauthData.userData);
+
+        if (oauthData.isNewUser) {
+          router.push('/onboarding');
+          return;
+        }
+
+        router.push('/home-page'); // TODO(prgmr99): Redirect to the home page('/')
       } else {
         console.error('Failed to login');
       }
