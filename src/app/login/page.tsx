@@ -55,14 +55,15 @@ const LoginPage = () => {
         return;
       }
       const responseText = await oauthResponse.text();
+      const oauthData = JSON.parse(responseText);
       console.log('Response text:', responseText);
 
-      // if (oauthResponse.success) {
-      //   router.push('/home-page');
-      //   setUser(oauthResponse.userData);
-      // } else {
-      //   console.error('Failed to login');
-      // }
+      if (oauthData.success) {
+        router.push('/home-page');
+        setUser(oauthData.userData);
+      } else {
+        console.error('Failed to login');
+      }
     } catch (err) {
       console.error('Apple login error: ', err);
     }
