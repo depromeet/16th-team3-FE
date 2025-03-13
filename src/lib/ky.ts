@@ -14,7 +14,7 @@ export const api = ky.create({
     beforeRequest: [
       (request) => {
         const accessToken = Cookies.get('accessToken');
-        console.log(accessToken);
+
         if (accessToken) {
           request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
