@@ -2,7 +2,7 @@ name: git push into another repo to deploy to vercel
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, test-애플로그인-테스트-브랜치]
     paths-ignore:
       - 'output/**'
 

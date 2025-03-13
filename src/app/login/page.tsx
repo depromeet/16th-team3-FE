@@ -109,7 +109,7 @@ const LoginPage = () => {
             width={18}
             height={17}
           />
-          <span className="pt-0.5">카카오로 계속하기</span>
+          <span className="pt-0.5">카카오로 계속하기 1</span>
         </Button>
 
         <Button
@@ -123,7 +123,7 @@ const LoginPage = () => {
             width={15}
             height={19}
           />
-          <span className="pt-1">Apple로 계속하기</span>
+          <span className="pt-1">Apple로 계속하기 1</span>
         </Button>
       </div>
     </div>
