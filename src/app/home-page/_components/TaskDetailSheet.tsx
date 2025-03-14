@@ -7,19 +7,27 @@ import { useRouter } from 'next/navigation';
 import { parseDateAndTime, calculateRemainingTime } from '@/utils/dateFormat';
 import { Task } from '@/types/task';
 import { useTask } from '@/hooks/useTasks';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+} from '@/components/ui/drawer';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { DialogHeader } from '@/components/ui/dialog';
 
 type TaskDetailSheetProps = {
   isOpen: boolean;
-  onClose: () => void;
   task: Task;
+  onClose: () => void;
   onDelete?: (taskId: number) => void;
   onStart?: (taskId: number) => void;
 };
 
 const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   isOpen,
-  onClose,
   task,
+  onClose,
   onDelete,
   onStart,
 }) => {
@@ -132,31 +140,31 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
   const formatDueDatetime = () => {
     if (!task.dueDate) return '-';
-  
+
     // Date 객체로 변환해서 새롭게 포맷팅
     const dueDate = new Date(task.dueDate);
     const month = dueDate.getMonth() + 1;
     const day = dueDate.getDate();
     const dayOfWeek = task.dueDay || '';
-  
+
     // 시간 처리
     let timeDisplay = '';
-    
+
     if (task.dueDatetime) {
       const dueDateObj = new Date(task.dueDatetime);
       const hours = dueDateObj.getHours();
       const minutes = dueDateObj.getMinutes();
       const amPm = hours >= 12 ? '오후' : '오전';
       const hour12 = hours % 12 || 12;
-      
+
       // 자정인 경우
       if (hours === 0 && minutes === 0) {
         timeDisplay = '자정';
-      } 
+      }
       // 분이 0인 경우는 시간만
       else if (minutes === 0) {
         timeDisplay = `${amPm} ${hour12}시`;
-      } 
+      }
       // 아닌 경우는 분까지 표시
       else {
         timeDisplay = `${amPm} ${hour12}시 ${minutes}분`;
@@ -164,33 +172,34 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
     } else if (task.dueTime) {
       timeDisplay = task.dueTime.replace('까지', '');
     }
-  
+
     return `${month}월 ${day}일 ${dayOfWeek}, ${timeDisplay}`;
   };
 
   // 진행 중인 태스크인지 확인
   const isInProgress = task.status === 'inProgress';
-
   const personaName = task.persona?.name || '페르소나 없음';
   const personaTriggerAction = task.triggerAction || '노트북 켜기';
 
   // 이미지 URL 처리
   const personaImageUrl = '/icons/home/happy-character.png';
-  
+
   // 미리 시작 상태일 때만 화살표 표시 (지금 시작 또는 이어서 몰입일 때는 표시 안함)
   const showArrow = !isInProgress;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-black bg-opacity-50">
-      <div className="animate-slide-up w-full rounded-t-[20px] bg-[#1F2024]">
-        <div className="relative mb-5 flex items-center justify-between px-5 pt-10">
-          <div className="absolute inset-x-0 text-center">
-            <h3 className="t3 text-text-normal">{task.title}</h3>
-          </div>
+    <Drawer open={isOpen} onDrag={onClose} closeThreshold={100}>
+      <DrawerContent className="w-full rounded-t-[20px] border-0 bg-component-gray-secondary pb-[33px] pt-2">
+        <div className="relative mb-5 flex items-center justify-between pt-10">
+          <DialogHeader className="absolute inset-x-0 text-center">
+            <DialogTitle className="t3 text-text-normal">
+              {task.title}
+            </DialogTitle>
+          </DialogHeader>
           <div className="w-6"></div>
           <button
             ref={buttonRef}
-            className="z-10 px-2"
+            className="z-10 px-5"
             onClick={handleMoreClick}
           >
             <Image
@@ -322,57 +331,50 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             </div>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between py-2.5">
-              <div className="b2 text-text-alternative">첫 알림</div>
-              <div className="flex items-center">
-                <span
-                  className={`s2 text-text-neutral ${isInProgress ? 'mr-[12px]' : 'mr-[19px]'}`}
-                >
-                  {task.triggerActionAlarmTime
-                    ? `${new Date(task.triggerActionAlarmTime).getMonth() + 1}월 ${new Date(task.triggerActionAlarmTime).getDate()}일 (${['일', '월', '화', '수', '목', '금', '토'][new Date(task.triggerActionAlarmTime).getDay()]}), ${new Date(
-                        task.triggerActionAlarmTime,
-                      ).toLocaleTimeString('ko-KR', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                      })}`
-                    : '-'}
-                </span>
-              </div>
+          <div className="flex items-center justify-between py-2.5">
+            <div className="b2 text-text-alternative">첫 알림</div>
+            <div className="flex items-center justify-end">
+              <span className={`s2 text-text-neutral`}>
+                {task.triggerActionAlarmTime
+                  ? `${new Date(task.triggerActionAlarmTime).getMonth() + 1}월 ${new Date(task.triggerActionAlarmTime).getDate()}일 (${['일', '월', '화', '수', '목', '금', '토'][new Date(task.triggerActionAlarmTime).getDay()]}), ${new Date(
+                      task.triggerActionAlarmTime,
+                    ).toLocaleTimeString('ko-KR', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}`
+                  : '-'}
+              </span>
             </div>
           </div>
 
-          <div className="mt-6">
-            <Button
-              variant={isUrgent ? 'hologram' : 'primary'}
-              size="default"
-              className={`l2 z-10 w-full ${isUrgent ? 'text-text-inverse' : 'text-text-strong'} rounded-[20px] py-4`}
-              onClick={handleStartTask}
-            >
-              {isInProgress
-                ? '이어서 몰입'
-                : isUrgent
-                  ? '지금 시작'
-                  : '미리 시작'}
-            </Button>
-          </div>
-
-          <div className="mb-10">
-            <div
-              className="b2 flex w-full justify-center bg-none py-4 text-text-neutral"
-              onClick={onClose}
-            >
-              닫기
-            </div>
-          </div>
+          <DrawerFooter className="px-0">
+            <DrawerClose className="mt-1">
+              <Button
+                variant={isUrgent ? 'hologram' : 'primary'}
+                size="default"
+                className={`l2 w-full ${isUrgent ? 'text-text-inverse' : 'text-text-strong'} rounded-[20px] py-4`}
+                onClick={handleStartTask}
+              >
+                {isInProgress
+                  ? '이어서 몰입'
+                  : isUrgent
+                    ? '지금 시작'
+                    : '미리 시작'}
+              </Button>
+            </DrawerClose>
+            <DrawerClose>
+              <button
+                className="b2 flex w-full justify-center bg-none pt-4 text-text-neutral"
+                onClick={onClose}
+              >
+                닫기
+              </button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
-
-        <div className="w-full py-3">
-          <div className="mx-auto h-1 w-16 rounded-full bg-[#373A45]"></div>
-        </div>
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
