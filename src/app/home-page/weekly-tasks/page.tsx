@@ -28,13 +28,9 @@ const WeeklyTasksPage = () => {
   };
 
   const handleStartTask = (taskId: number) => {
-    // React Query mutation 실행
     startTaskMutation(taskId);
-
-    // 상세 시트 닫기
     setIsDetailSheetOpen(false);
 
-    // 몰입 화면으로 이동
     router.push(`/focus?taskId=${taskId}`);
   };
 

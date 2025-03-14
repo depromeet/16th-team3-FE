@@ -20,9 +20,9 @@ import Image from 'next/image';
 interface TimeSelectedComponentProps {
   deadlineTime: TimePickerType;
   deadlineDate: Date;
-  isTimePickerFirstTouched: boolean;
+  isTimePickerFirstTouched?: boolean;
   handleTimeChange: (time: TimePickerType) => void;
-  handleFirstTouchToFalse: () => void;
+  handleFirstTouchToFalse?: () => void;
 }
 
 const TimeSelectedComponent = ({
@@ -41,7 +41,10 @@ const TimeSelectedComponent = ({
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
-    handleFirstTouchToFalse();
+
+    if (handleFirstTouchToFalse) {
+      handleFirstTouchToFalse();
+    }
   };
 
   const handleMeridiem = (newMeridiem: string) => {

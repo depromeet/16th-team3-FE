@@ -1,5 +1,8 @@
+import { EditTaskInputType } from '@/app/(create)/context';
 import { create } from 'zustand';
+import { Task as TaskType } from '@/types/task';
 
+// ! TODO: task.ts 파일에 Task 타입 활용/통일 필요
 interface Task {
   id: number;
   name: string;
@@ -32,7 +35,17 @@ interface TaskProgressStore {
   setCurrentTask: (task: Task) => void;
 }
 
+type TaskStore = {
+  currentTask: TaskType | null;
+  setCurrentTask: (task: TaskType) => void;
+};
+
 export const useTaskProgressStore = create<TaskProgressStore>((set) => ({
+  currentTask: null,
+  setCurrentTask: (task) => set({ currentTask: task }),
+}));
+
+export const useThisWeekTaskStore = create<TaskStore>((set) => ({
   currentTask: null,
   setCurrentTask: (task) => set({ currentTask: task }),
 }));

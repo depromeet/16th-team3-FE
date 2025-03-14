@@ -68,6 +68,8 @@ export type InstantTaskInputType = {
   moodType?: string;
 };
 
+export type EditTaskInputType = Omit<TaskInputType, 'taskType' | 'moodType'>;
+
 export const TYPE_LABELS: { [key: string]: string } = {
   study: '공부',
   writing: '글쓰기',
