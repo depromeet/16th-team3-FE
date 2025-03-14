@@ -70,14 +70,10 @@ export const usePatchTaskHoldOff = (): UseMutationResult<
   return useMutation<TaskResponse, Error, HoldOffParams>({
     mutationFn: ({ taskId, data }) => patchTaskHoldOff({ taskId, data }),
     onSuccess: (data) => {
-      alert('onSuccess');
-      console.log('usePatchTaskHoldOff onSuccess', data);
       router.push('/home-page');
     },
     onError: (error) => {
-      // alert(error.message);
-      // 잘못된 접근이므로 홈으로 리다이렉트
-      console.log('usePatchTaskHoldOff onError', error);
+      console.error('usePatchTaskHoldOff onError', error);
       router.push('/home-page');
     },
   });

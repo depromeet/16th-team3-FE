@@ -64,7 +64,7 @@ const ClearableInput = ({
             } as React.ChangeEvent<HTMLInputElement>)
           }
         >
-          <Image src="icons/x-circle.svg" alt="제거" width={24} height={24} />
+          <Image src="/icons/x-circle.svg" alt="제거" width={24} height={24} />
         </button>
       )}
     </div>

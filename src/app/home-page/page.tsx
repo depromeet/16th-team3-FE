@@ -19,7 +19,6 @@ import {
 } from '@/hooks/useTasks';
 
 import CharacterDialog from '../(create)/_components/characterDialog/CharacterDialog';
-import { Drawer, DrawerContent, DrawerHeader } from '@/components/ui/drawer';
 import Loader from '@/components/loader/Loader';
 import { Dialog } from '@/components/ui/dialog';
 
@@ -949,15 +948,15 @@ const HomePageContent = () => {
           </div>
         </footer>
 
-        {/* 할 일 상세 바텀 시트 */}
-
-        <TaskDetailSheet
-          isOpen={isDetailSheetOpen}
-          onClose={handleCloseDetailSheet}
-          task={detailTask as Task}
-          onDelete={handleDeleteTask}
-          onStart={handleStartTask}
-        />
+        {detailTask && (
+          <TaskDetailSheet
+            isOpen={isDetailSheetOpen}
+            onClose={handleCloseDetailSheet}
+            task={detailTask}
+            onDelete={handleDeleteTask}
+            onStart={handleStartTask}
+          />
+        )}
 
         <CharacterDialog
           task={taskName}

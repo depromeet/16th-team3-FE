@@ -188,7 +188,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   const showArrow = !isInProgress;
 
   return (
-    <Drawer open={isOpen} onDrag={onClose} closeThreshold={100}>
+    <Drawer open={isOpen} onDrag={onClose} onAnimationEnd={() => onClose()}>
       <DrawerContent className="w-full rounded-t-[20px] border-0 bg-component-gray-secondary pb-[33px] pt-2">
         <div className="relative mb-5 flex items-center justify-between pt-10">
           <DialogHeader className="absolute inset-x-0 text-center">
@@ -275,7 +275,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
           </div>
 
           <div>
-            <div className="flex items-center justify-between py-2.5 pt-0">
+            <div
+              className="flex items-center justify-between py-2.5 pt-0"
+              onClick={() => {
+                if (!isInProgress) {
+                  router.push(`/edit/deadline-date/${task.id}`);
+                }
+              }}
+            >
               <div className="b2 text-text-alternative">마감일</div>
               <div className="flex items-center">
                 <span className="b2 mr-3 text-text-neutral">
@@ -294,7 +301,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
           </div>
 
           <div>
-            <div className="flex items-center justify-between py-2.5">
+            <div
+              className="flex items-center justify-between py-2.5"
+              onClick={() => {
+                if (!isInProgress) {
+                  router.push(`/edit/small-action/${task.id}`);
+                }
+              }}
+            >
               <div className="b2 text-text-alternative">작은 행동</div>
               <div className="flex items-center">
                 <span className="b2 mr-3 text-text-neutral">
@@ -313,7 +327,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
           </div>
 
           <div>
-            <div className="flex items-center justify-between py-2.5">
+            <div
+              className="flex items-center justify-between py-2.5"
+              onClick={() => {
+                if (!isInProgress) {
+                  router.push(`/edit/estimated-time/${task.id}`);
+                }
+              }}
+            >
               <div className="b2 text-text-alternative">예상 소요시간</div>
               <div className="flex items-center">
                 <span className="b2 mr-3 text-text-neutral">
