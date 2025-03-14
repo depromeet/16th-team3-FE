@@ -7,19 +7,27 @@ import { useRouter } from 'next/navigation';
 import { parseDateAndTime, calculateRemainingTime } from '@/utils/dateFormat';
 import { Task } from '@/types/task';
 import { useTask } from '@/hooks/useTasks';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+} from '@/components/ui/drawer';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import { DialogHeader } from '@/components/ui/dialog';
 
 type TaskDetailSheetProps = {
   isOpen: boolean;
-  onClose: () => void;
   task: Task;
+  onClose: () => void;
   onDelete?: (taskId: number) => void;
   onStart?: (taskId: number) => void;
 };
 
 const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   isOpen,
-  onClose,
   task,
+  onClose,
   onDelete,
   onStart,
 }) => {
@@ -35,7 +43,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   // 남은 시간 계산 함수
   const calculateRemainingTimeLocal = useCallback(() => {
     if (!task.dueDate) return '';
-  
+
     // dueDatetime이 있으면 사용, 없으면 dueDate와 dueTime에서 계산
     let dueDatetime;
     if (task.dueDatetime) {
@@ -45,17 +53,17 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
     } else {
       return '';
     }
-  
+
     const now = new Date();
     const diffMs = dueDatetime.getTime() - now.getTime();
-  
+
     // 1시간 이내인지 체크 또는 ignoredAlerts가 3 이상인지 확인 또는 status가 procrastinating인지 확인
     setIsUrgent(
       (diffMs <= 60 * 60 * 1000 && diffMs > 0) ||
         (task.ignoredAlerts || 0) >= 3 ||
         task.status === 'procrastinating',
     );
-  
+
     return calculateRemainingTime(dueDatetime);
   }, [task]);
 
@@ -148,7 +156,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 
   // 진행 중인 태스크인지 확인
   const isInProgress = task.status === 'inProgress';
-
   const personaName = task.persona?.name || '페르소나 없음';
   const personaTriggerAction = task.triggerAction || '노트북 켜기';
 
@@ -168,16 +175,18 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
   const showArrow = !isInProgress;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-black bg-opacity-50">
-      <div className="animate-slide-up w-full rounded-t-[20px] bg-[#1F2024]">
-        <div className="relative mb-5 flex items-center justify-between px-5 pt-10">
-          <div className="absolute inset-x-0 text-center">
-            <h3 className="t3 text-text-normal">{task.title}</h3>
-          </div>
+    <Drawer open={isOpen} onDrag={onClose} closeThreshold={100}>
+      <DrawerContent className="w-full rounded-t-[20px] border-0 bg-component-gray-secondary pb-[33px] pt-2">
+        <div className="relative mb-5 flex items-center justify-between pt-10">
+          <DialogHeader className="absolute inset-x-0 text-center">
+            <DialogTitle className="t3 text-text-normal">
+              {task.title}
+            </DialogTitle>
+          </DialogHeader>
           <div className="w-6"></div>
           <button
             ref={buttonRef}
-            className="z-10 px-2"
+            className="z-10 px-5"
             onClick={handleMoreClick}
           >
             <Image
@@ -256,7 +265,9 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
             <div className="flex items-center justify-between py-2.5 pt-0">
               <div className="b2 text-text-alternative">마감일</div>
               <div className="flex items-center">
-                <span className="b2 text-text-neutral mr-3">{formatDueDatetime()}</span>
+                <span className="b2 mr-3 text-text-neutral">
+                  {formatDueDatetime()}
+                </span>
                 {showArrow && (
                   <Image
                     src="/icons/home/arrow-right.svg"
@@ -268,12 +279,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               </div>
             </div>
           </div>
-          
+
           <div>
-            <div className="flex justify-between items-center py-2.5">
+            <div className="flex items-center justify-between py-2.5">
               <div className="b2 text-text-alternative">작은 행동</div>
               <div className="flex items-center">
-                <span className="b2 text-text-neutral mr-3">{personaTriggerAction}</span>
+                <span className="b2 mr-3 text-text-neutral">
+                  {personaTriggerAction}
+                </span>
                 {showArrow && (
                   <Image
                     src="/icons/home/arrow-right.svg"
@@ -285,12 +298,14 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               </div>
             </div>
           </div>
-          
+
           <div>
-            <div className="flex justify-between items-center py-2.5">
+            <div className="flex items-center justify-between py-2.5">
               <div className="b2 text-text-alternative">예상 소요시간</div>
               <div className="flex items-center">
-                <span className="b2 text-text-neutral mr-3">{task.timeRequired || '-'}</span>
+                <span className="b2 mr-3 text-text-neutral">
+                  {task.timeRequired || '-'}
+                </span>
                 {showArrow && (
                   <Image
                     src="/icons/home/arrow-right.svg"
@@ -302,54 +317,51 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
               </div>
             </div>
           </div>
-          
-          <div>
-            <div className="flex justify-between items-center py-2.5">
-              <div className="b2 text-text-alternative">첫 알림</div>
-              <div className="flex items-center">
-                <span className={`s2 text-text-neutral ${isInProgress ? 'mr-[12px]' : 'mr-[19px]'}`}>
-                {task.triggerActionAlarmTime ? 
-                  `${new Date(task.triggerActionAlarmTime).getMonth() + 1}월 ${new Date(task.triggerActionAlarmTime).getDate()}일 (${['일', '월', '화', '수', '목', '금', '토'][new Date(task.triggerActionAlarmTime).getDay()]}), ${new Date(task.triggerActionAlarmTime).toLocaleTimeString('ko-KR', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                  })}`
-                : '-'}
-                </span>
-              </div>
+
+          <div className="flex items-center justify-between py-2.5">
+            <div className="b2 text-text-alternative">첫 알림</div>
+            <div className="flex items-center justify-end">
+              <span className={`s2 text-text-neutral`}>
+                {task.triggerActionAlarmTime
+                  ? `${new Date(task.triggerActionAlarmTime).getMonth() + 1}월 ${new Date(task.triggerActionAlarmTime).getDate()}일 (${['일', '월', '화', '수', '목', '금', '토'][new Date(task.triggerActionAlarmTime).getDay()]}), ${new Date(
+                      task.triggerActionAlarmTime,
+                    ).toLocaleTimeString('ko-KR', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: true,
+                    })}`
+                  : '-'}
+              </span>
             </div>
           </div>
 
-          <div className="mt-6">
-            <Button
-              variant={isUrgent ? 'hologram' : 'primary'}
-              size="default"
-              className={`l2 z-10 w-full ${isUrgent ? 'text-text-inverse' : 'text-text-strong'} rounded-[20px] py-4`}
-              onClick={handleStartTask}
-            >
-              {isInProgress
-                ? '이어서 몰입'
-                : isUrgent
-                  ? '지금 시작'
-                  : '미리 시작'}
-            </Button>
-          </div>
-
-          <div className="mb-10">
-            <div
-              className="b2 flex w-full justify-center bg-none py-4 text-text-neutral"
-              onClick={onClose}
-            >
-              닫기
-            </div>
-          </div>
+          <DrawerFooter className="px-0">
+            <DrawerClose className="mt-1">
+              <Button
+                variant={isUrgent ? 'hologram' : 'primary'}
+                size="default"
+                className={`l2 w-full ${isUrgent ? 'text-text-inverse' : 'text-text-strong'} rounded-[20px] py-4`}
+                onClick={handleStartTask}
+              >
+                {isInProgress
+                  ? '이어서 몰입'
+                  : isUrgent
+                    ? '지금 시작'
+                    : '미리 시작'}
+              </Button>
+            </DrawerClose>
+            <DrawerClose>
+              <button
+                className="b2 flex w-full justify-center bg-none pt-4 text-text-neutral"
+                onClick={onClose}
+              >
+                닫기
+              </button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
-
-        <div className="w-full py-3">
-          <div className="mx-auto h-1 w-16 rounded-full bg-[#373A45]"></div>
-        </div>
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

@@ -107,97 +107,95 @@ const TimeSelectedComponent = ({
   }, [temporaryTime, deadlineDate]);
 
   return (
-    <>
-      <Drawer open={isOpen} dismissible={false}>
-        <DrawerTrigger>
-          <div className="relative mt-2 w-full">
-            <div
-              className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
-              onClick={handleToggle}
+    <Drawer open={isOpen} dismissible={false}>
+      <DrawerTrigger>
+        <div className="relative mt-2 w-full">
+          <div
+            className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
+            onClick={handleToggle}
+          >
+            <span
+              className={`absolute left-0 text-gray-500 transition-all duration-200 ${
+                isTimePickerFirstTouched
+                  ? 't3 top-1'
+                  : 'text-neutral b3 top-[-8px]'
+              }`}
             >
-              <span
-                className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-                  isTimePickerFirstTouched
-                    ? 't3 top-1'
-                    : 'text-neutral b3 top-[-8px]'
-                }`}
-              >
-                마감시간 선택
+              마감시간 선택
+            </span>
+            <div className="flex w-full items-center justify-between pt-4">
+              <span className="t3 text-base font-semibold">
+                {isTimePickerFirstTouched ? '' : displayedTime}
               </span>
-              <div className="flex w-full items-center justify-between pt-4">
-                <span className="t3 text-base font-semibold">
-                  {isTimePickerFirstTouched ? '' : displayedTime}
-                </span>
-                <ChevronDown
-                  className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
-                    isOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </div>
+              <ChevronDown
+                className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                  isOpen ? 'rotate-180' : ''
+                }`}
+              />
             </div>
           </div>
-        </DrawerTrigger>
-        <DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
-          <DrawerHeader className="px-0 pb-10 pt-6">
-            <DrawerTitle className="t3 text-left">
-              마감시간을 선택해주세요
-            </DrawerTitle>
-          </DrawerHeader>
-          <TimePicker
-            time={temporaryTime}
-            handleMeridiem={handleMeridiem}
-            handleHour={handleHour}
-            handleMinute={handleMinute}
-          />
-          {toastMessage && <Toast message={toastMessage} />}
-          <DrawerFooter className="px-0">
-            <div className="flex items-center justify-center space-x-2">
-              <label
-                htmlFor="midnight"
-                className="s2 text-strong mt-0.5 rounded-[2px] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                자정 마감 (11시 59분 59초)
-              </label>
-              {isMidnight ? (
-                <Image
-                  src="/icons/CheckedBox.svg"
-                  alt="checkedBox"
-                  width={20}
-                  height={20}
-                  onClick={() => {
-                    setIsMidnight(false);
-                    setTemporaryTime(deadlineTime);
-                  }}
-                />
-              ) : (
-                <Image
-                  src="/icons/UnCheckedBox.svg"
-                  alt="uncheckedBox"
-                  width={20}
-                  height={20}
-                  onClick={() => {
-                    setIsMidnight(true);
-                    setTemporaryTime({
-                      hour: '11',
-                      minute: '59',
-                      meridiem: '오후',
-                      second: '59',
-                    });
-                  }}
-                />
-              )}
-            </div>
-            <Button
-              variant="primary"
-              className="mt-4 flex w-full items-center justify-center"
-              onClick={handleConfirmButtonClick}
+        </div>
+      </DrawerTrigger>
+      <DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+        <DrawerHeader className="px-0 pb-10 pt-6">
+          <DrawerTitle className="t3 text-left">
+            마감시간을 선택해주세요
+          </DrawerTitle>
+        </DrawerHeader>
+        <TimePicker
+          time={temporaryTime}
+          handleMeridiem={handleMeridiem}
+          handleHour={handleHour}
+          handleMinute={handleMinute}
+        />
+        {toastMessage && <Toast message={toastMessage} />}
+        <DrawerFooter className="px-0">
+          <div className="flex items-center justify-center space-x-2">
+            <label
+              htmlFor="midnight"
+              className="s2 text-strong mt-0.5 rounded-[2px] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              확인
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </>
+              자정 마감 (11시 59분 59초)
+            </label>
+            {isMidnight ? (
+              <Image
+                src="/icons/CheckedBox.svg"
+                alt="checkedBox"
+                width={20}
+                height={20}
+                onClick={() => {
+                  setIsMidnight(false);
+                  setTemporaryTime(deadlineTime);
+                }}
+              />
+            ) : (
+              <Image
+                src="/icons/UnCheckedBox.svg"
+                alt="uncheckedBox"
+                width={20}
+                height={20}
+                onClick={() => {
+                  setIsMidnight(true);
+                  setTemporaryTime({
+                    hour: '11',
+                    minute: '59',
+                    meridiem: '오후',
+                    second: '59',
+                  });
+                }}
+              />
+            )}
+          </div>
+          <Button
+            variant="primary"
+            className="mt-4 flex w-full items-center justify-center"
+            onClick={handleConfirmButtonClick}
+          >
+            확인
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
