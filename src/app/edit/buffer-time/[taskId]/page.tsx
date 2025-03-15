@@ -18,22 +18,9 @@ import {
   convertToFormattedTime,
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
+import { EditPageProps } from '../../context';
 
-interface BufferTimeEditPageProps {
-  params: Promise<{ taskId: string }>;
-  searchParams: Promise<{
-    task?: string;
-    deadlineDate?: string;
-    meridiem?: string;
-    hour?: string;
-    minute?: string;
-  }>;
-}
-
-const BufferTimeEditPage = ({
-  params,
-  searchParams,
-}: BufferTimeEditPageProps) => {
+const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
   const { taskId } = use(params);
   const {
     task: taskQuery,
@@ -41,17 +28,25 @@ const BufferTimeEditPage = ({
     meridiem: meridiemQuery,
     hour: hourQuery,
     minute: minuteQuery,
+    triggerAction: triggerActionQuery,
   } = use(searchParams);
+
+  const query = new URLSearchParams({
+    task: taskQuery || '',
+    deadlineDate: deadlineDateQuery || '',
+    meridiem: meridiemQuery || '',
+    hour: hourQuery || '',
+    minute: minuteQuery || '',
+    triggerAction: triggerActionQuery || '',
+  }).toString();
 
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
-    queryFn: async () => {
-      const response = await api.get(`v1/tasks/${taskId}`);
-      return response.json<TaskResponse>();
-    },
+    queryFn: async () =>
+      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
   });
 
   const dateAtMidnight = clearTimeOnDueDatetime(
@@ -99,7 +94,7 @@ const BufferTimeEditPage = ({
       const body = {
         name: taskQuery || taskData?.name,
         dueDatetime: dueDatetime,
-        triggerAction: taskData?.triggerAction,
+        triggerAction: triggerActionQuery || taskData?.triggerAction,
         estimatedTime: taskData?.estimatedTime,
         triggerActionAlarmTime: taskData?.triggerActionAlarmTime.replace(
           'T',
@@ -133,16 +128,12 @@ const BufferTimeEditPage = ({
       <div className="flex h-full w-full flex-col justify-between">
         <div className="relative mt-[30px]">
           <div className="flex flex-col items-center gap-3">
-            <Image
-              src="/icons/yellowBell.svg"
-              alt="bell"
-              width={60}
-              height={60}
-            />
-            <div className="relative flex h-[26px] items-center justify-center overflow-hidden rounded-[8px] bg-component-gray-secondary px-[7px] py-[6px] text-black">
-              <span className="l6 text-alternative">1.5배의 여유시간 적용</span>
+            <Image src="/icons/Bell.svg" alt="bell" width={60} height={60} />
+            <div className="relative flex h-[26px] items-center justify-center overflow-hidden rounded-[8px] px-[7px] py-[6px] text-black before:absolute before:inset-0 before:-z-10 before:bg-[conic-gradient(from_220deg_at_50%_50%,_#F2F0E7_0%,_#BBBBF1_14%,_#B8E2FB_24%,_#F2EFE8_37%,_#CCE4FF_48%,_#BBBBF1_62%,_#C7EDEB_72%,_#E7F5EB_83%,_#F2F0E7_91%,_#F2F0E7_100%)] before:[transform:scale(4,1)]">
+              <span className="l6 text-inverse">1.5배의 여유시간 적용</span>
             </div>
           </div>
+          <div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] blur-[75px]" />
           <div className="mt-10 flex flex-col items-center">
             <div>
               <span className="t2 text-primary">{timeString}</span>
@@ -165,7 +156,9 @@ const BufferTimeEditPage = ({
               <span className="b2 text-alternative mt-[2px]">마감일</span>
               <div
                 className="flex items-center"
-                onClick={() => router.push(`/edit/deadline-date/${taskId}`)}
+                onClick={() =>
+                  router.push(`/edit/deadline-date/${taskId}?${query}`)
+                }
               >
                 <span className="b2 text-neutral mt-[2px]">
                   {`${formattedDate}, ${effectiveTime.meridiem} ${effectiveTime.hour}:${effectiveTime.minute}`}
@@ -181,10 +174,14 @@ const BufferTimeEditPage = ({
               <span className="b2 text-alternative mt-[2px]">작은 행동</span>
               <div
                 className="flex items-center"
-                onClick={() => router.push(`/edit/small-action/${taskId}`)}
+                onClick={() =>
+                  router.push(`/edit/small-action/${taskId}?${query}`)
+                }
               >
                 <span className="b2 text-neutral mt-[2px]">
-                  {taskData.triggerAction}
+                  {triggerActionQuery
+                    ? triggerActionQuery
+                    : taskData.triggerAction}
                 </span>
                 <ChevronRight
                   width={20}
@@ -199,7 +196,9 @@ const BufferTimeEditPage = ({
               </span>
               <div
                 className="flex items-center"
-                onClick={() => router.push(`/edit/estimated-time/${taskId}`)}
+                onClick={() =>
+                  router.push(`/edit/estimated-time/${taskId}?${query}`)
+                }
               >
                 <span className="b2 text-neutral mt-[2px]">
                   {[

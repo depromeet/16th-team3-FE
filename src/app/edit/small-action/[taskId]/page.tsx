@@ -1,34 +1,42 @@
 'use client';
 
+import { use, useEffect, useRef, useState } from 'react';
+import HeaderTitle from '@/app/(create)/_components/headerTitle/HeaderTitle';
+import SmallActionChip from '@/app/(create)/_components/smallActionChip/SmallActionChip';
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
-import { useEffect, useRef, useState } from 'react';
-import SmallActionChip from '../smallActionChip/SmallActionChip';
-import HeaderTitle from '../headerTitle/HeaderTitle';
-
-interface SmallActionInputProps {
-  smallAction?: string;
-  lastStep?: string;
-  onNext: (smallAction: string) => void;
-  onEdit: (smallAction: string) => void;
-}
+import { useQuery } from '@tanstack/react-query';
+import { TaskResponse } from '@/types/task';
+import { api } from '@/lib/ky';
+import { useRouter } from 'next/navigation';
+import { EditPageProps } from '../../context';
 
 const WAITING_TIME = 200;
 const MAX_SMALL_ACTION_LENGTH = 15;
 const SMALL_ACTION_LIST = ['SitAtTheDesk', 'TurnOnTheLaptop', 'DrinkWater'];
 
-const SmallActionInput = ({
-  smallAction: smallActionHistoryData,
-  lastStep,
-  onNext,
-  onEdit,
-}: SmallActionInputProps) => {
+const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
+  const { taskId } = use(params);
+  const {
+    task: taskQuery,
+    deadlineDate: deadlineDateQuery,
+    meridiem: meridiemQuery,
+    hour: hourQuery,
+    minute: minuteQuery,
+    triggerAction: triggerActionQuery,
+  } = use(searchParams);
+
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [isFocused, setIsFocused] = useState(true);
-  const [smallAction, setSmallAction] = useState<string>(
-    smallActionHistoryData || '',
-  );
+  const [smallAction, setSmallAction] = useState<string>('');
+
+  const { data: taskData } = useQuery<TaskResponse>({
+    queryKey: ['singleTask', taskId],
+    queryFn: async () =>
+      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
+  });
 
   const handleSmallActionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -44,6 +52,19 @@ const SmallActionInput = ({
     setSmallAction(action);
   };
 
+  const handleNextButtonClick = () => {
+    const query = new URLSearchParams({
+      task: taskQuery || '',
+      deadlineDate: deadlineDateQuery || '',
+      meridiem: meridiemQuery || '',
+      hour: hourQuery || '',
+      minute: minuteQuery || '',
+      triggerAction: smallAction,
+    }).toString();
+
+    router.push(`/edit/buffer-time/${taskId}?${query}`);
+  };
+
   useEffect(() => {
     if (inputRef.current)
       setTimeout(() => {
@@ -53,6 +74,14 @@ const SmallActionInput = ({
         }
       }, WAITING_TIME);
   }, []);
+
+  useEffect(() => {
+    if (taskData) {
+      setSmallAction(
+        triggerActionQuery ? triggerActionQuery : taskData.triggerAction,
+      );
+    }
+  }, [taskData, triggerActionQuery]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
@@ -88,7 +117,7 @@ const SmallActionInput = ({
         </div>
       </div>
       <div
-        className={`mt-auto transition-all duration-300 ${isFocused ? 'mb-[48vh]' : 'pb-[90px]'}`}
+        className={`transition-all duration-300 ${isFocused ? 'mb-[48vh]' : 'pb-[46px]'}`}
       >
         <Button
           variant="primary"
@@ -97,17 +126,13 @@ const SmallActionInput = ({
             smallAction.length === 0 ||
             smallAction.length > MAX_SMALL_ACTION_LENGTH
           }
-          onClick={
-            lastStep === 'bufferTime'
-              ? () => onEdit(smallAction)
-              : () => onNext(smallAction)
-          }
+          onClick={handleNextButtonClick}
         >
-          {lastStep === 'bufferTime' ? '확인' : '다음'}
+          확인
         </Button>
       </div>
     </div>
   );
 };
 
-export default SmallActionInput;
+export default SmallActionEditPage;
