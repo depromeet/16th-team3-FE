@@ -238,7 +238,9 @@ export const convertDeadlineToDate = (
   time: TimePickerType,
 ): Date => {
   let hour = parseInt(time.hour, 10);
-  const minute = parseInt(time.minute, 10);
+  if (isNaN(hour)) hour = 0;
+  let minute = parseInt(time.minute, 10);
+  if (isNaN(minute)) minute = 0;
 
   if (time.meridiem === '오전' && hour === 12) {
     hour = 0;
@@ -256,14 +258,28 @@ export const calculateTriggerActionAlarmTime = (
   finalHours: number,
   finalMinutes: number,
 ): string => {
+  if (isNaN(deadlineDate.getTime())) {
+    deadlineDate = new Date();
+  }
+
   const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
 
+  if (isNaN(deadlineDateTime.getTime())) {
+    throw new Error('Invalid deadline date/time provided.');
+  }
+
+  const subtractionMs =
+    finalDays * 24 * 60 * 60 * 1000 +
+    finalHours * 60 * 60 * 1000 +
+    finalMinutes * 60 * 1000;
+
   const triggerActionAlarmTime = new Date(
-    deadlineDateTime.getTime() -
-      (finalDays * 24 * 60 * 60 * 1000 +
-        finalHours * 60 * 60 * 1000 +
-        finalMinutes * 60 * 1000),
+    deadlineDateTime.getTime() - subtractionMs,
   );
+
+  if (isNaN(triggerActionAlarmTime.getTime())) {
+    throw new Error('Calculated trigger action alarm time is invalid.');
+  }
 
   return format(triggerActionAlarmTime, 'yyyy-MM-dd HH:mm:ss');
 };
@@ -278,4 +294,9 @@ export const convertEstimatedTimeToMinutes = (
   const minutes = parseInt(estimatedMinute as string, 10) || 0;
 
   return daysInMinutes + hoursInMinutes + minutes;
+};
+
+export const getValidDate = (dateInput?: string | Date): Date => {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  return date && !isNaN(date.getTime()) ? date : new Date();
 };
