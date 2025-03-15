@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     });
 
     nextResponse.cookies.set('refreshToken', refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: 'none',
       path: '/',

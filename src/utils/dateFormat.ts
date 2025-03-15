@@ -1,4 +1,7 @@
 import { TimePickerType } from '@/types/create';
+import { format, set } from 'date-fns';
+
+// ! 중복되는 함수 제거
 
 // ISO 문자열에서 '월 일 (요일)' 형식으로 변환
 export function formatDateWithDay(isoString: string): string {
@@ -181,16 +184,51 @@ export function combineDeadlineDateTime(
   date: Date,
   time: TimePickerType,
 ): string {
-  let hour24 = parseInt(time.hour, 10);
-  if (time.meridiem === '오전') {
-    if (hour24 === 12) hour24 = 0;
-  } else {
-    if (hour24 !== 12) {
-      hour24 += 12;
-    }
-  }
+  const deadlineDateObj = new Date(date);
+  let hour = Number(time.hour || 0);
+  const minute = Number(time.minute || 0);
+  const second = Number(time.second || 0);
 
-  const combinedDate = new Date(date);
-  combinedDate.setHours(hour24, parseInt(time.minute, 10), 0, 0);
-  return combinedDate.toISOString();
+  if (time.meridiem === '오후' && hour < 12) {
+    hour += 12;
+  } else if (time.meridiem === '오전' && hour === 12) {
+    hour = 0;
+  }
+  const dueDateTime = set(deadlineDateObj, {
+    hours: hour,
+    minutes: minute,
+    seconds: second,
+  });
+
+  const dueDatetimeStr = format(dueDateTime, 'yyyy-MM-dd HH:mm:ss');
+
+  return dueDatetimeStr;
+}
+
+export function clearTimeOnDueDatetime(dueDatetime: Date) {
+  const date = new Date(dueDatetime);
+  date.setHours(0, 0, 0, 0);
+
+  return date;
+}
+
+export function convertToFormattedTime(dueDatetime: Date) {
+  const hours24 = dueDatetime.getHours();
+  const minutes = dueDatetime.getMinutes();
+
+  const meridiem = hours24 < 12 ? '오전' : '오후';
+  const hour = (hours24 % 12 || 12).toString().padStart(2, '0');
+  const minute = minutes.toString().padStart(2, '0');
+
+  return { meridiem, hour, minute };
+}
+
+export function convertEstimatedTime(estimatedTime: number) {
+  const minutesInDay = 24 * 60;
+  const days = Math.floor(estimatedTime / minutesInDay);
+  const remainder = estimatedTime % minutesInDay;
+  const hours = Math.floor(remainder / 60);
+  const minutes = remainder % 60;
+
+  return { estimatedDay: days, estimatedHour: hours, estimatedMinute: minutes };
 }
