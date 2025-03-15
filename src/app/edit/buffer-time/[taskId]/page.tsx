@@ -17,6 +17,7 @@ import {
   combineDeadlineDateTime,
   convertEstimatedTime,
   convertToFormattedTime,
+  getValidDate,
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import { EditPageProps } from '../../context';
@@ -54,12 +55,11 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
       await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
   });
 
-  const dateAtMidnight = clearTimeOnDueDatetime(
-    deadlineDateQuery
-      ? new Date(deadlineDateQuery)
-      : new Date(taskData?.dueDatetime || ''),
-  );
+  const baseDate = deadlineDateQuery
+    ? getValidDate(deadlineDateQuery)
+    : getValidDate(taskData?.dueDatetime);
 
+  const dateAtMidnight = clearTimeOnDueDatetime(baseDate);
   const formattedDate = format(dateAtMidnight, 'M월 d일 (E)', { locale: ko });
 
   const { meridiem, hour, minute } = convertToFormattedTime(
@@ -90,6 +90,10 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     finalMinutes,
   );
 
+  console.log(
+    'calculatedTriggerActionAlarmTime',
+    calculatedTriggerActionAlarmTime,
+  );
   const formattedAlarmTime = format(
     calculatedTriggerActionAlarmTime,
     'M월 d일 (EEE) a hh:mm',
@@ -125,7 +129,9 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', 'home'],
+      });
       router.push('/home-page');
     },
   });
