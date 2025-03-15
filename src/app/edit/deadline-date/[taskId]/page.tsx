@@ -9,10 +9,13 @@ import TimeSelectedComponent from '@/app/(create)/_components/timeSelectedCompon
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
 import { TimePickerType } from '@/types/create';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/ky';
 import { TaskResponse } from '@/types/task';
-import { combineDeadlineDateTime } from '@/utils/dateFormat';
+import {
+  clearTimeOnDueDatetime,
+  convertToFormattedTime,
+} from '@/utils/dateFormat';
 
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
@@ -25,7 +28,7 @@ const DeadlineDateEditPage = ({
   const { taskId } = use(params);
 
   const router = useRouter();
-  const queryClient = useQueryClient();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
@@ -42,25 +45,6 @@ const DeadlineDateEditPage = ({
     queryFn: async () => {
       const response = await api.get(`v1/tasks/${taskId}`);
       return response.json<TaskResponse>();
-    },
-  });
-
-  const { mutate: editTaskDataMutation } = useMutation({
-    mutationFn: async () => {
-      if (!deadlineDate) {
-        throw new Error('마감 날짜가 선택되지 않았습니다.');
-      }
-
-      const dueDatetime = combineDeadlineDateTime(deadlineDate, deadlineTime);
-      const body = JSON.stringify({
-        name: task,
-        dueDatetime: dueDatetime,
-      });
-      return await api.post(`v1/tasks/${taskId}`, { body });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
-      router.push('/edit/buffer-time');
     },
   });
 
@@ -83,7 +67,17 @@ const DeadlineDateEditPage = ({
   };
 
   const handleConfirmButtonClick = () => {
-    editTaskDataMutation();
+    if (!deadlineDate) return;
+
+    const query = new URLSearchParams({
+      task,
+      deadlineDate: deadlineDate.toISOString(),
+      meridiem: deadlineTime.meridiem,
+      hour: deadlineTime.hour,
+      minute: deadlineTime.minute,
+    }).toString();
+
+    router.push(`/edit/buffer-time/${taskId}?${query}`);
   };
 
   useEffect(() => {
@@ -100,16 +94,11 @@ const DeadlineDateEditPage = ({
     if (taskData) {
       setTask(taskData.name);
 
-      const dateObj = new Date(taskData.dueDatetime);
-      setDeadlineDate(dateObj);
+      const originalDate = new Date(taskData.dueDatetime);
+      const dateAtMidnight = clearTimeOnDueDatetime(originalDate);
+      setDeadlineDate(dateAtMidnight);
 
-      const hours24 = dateObj.getHours();
-      const minutes = dateObj.getMinutes();
-
-      const meridiem = hours24 < 12 ? '오전' : '오후';
-      const hour = (hours24 % 12 || 12).toString().padStart(2, '0');
-      const minute = minutes.toString().padStart(2, '0');
-
+      const { meridiem, hour, minute } = convertToFormattedTime(originalDate);
       setDeadlineTime({ meridiem, hour, minute });
     }
   }, [taskData]);
@@ -154,7 +143,7 @@ const DeadlineDateEditPage = ({
         <Button
           variant="primary"
           className="mt-6"
-          onClick={() => router.push('/edit/buffer-time')}
+          onClick={handleConfirmButtonClick}
           disabled={isInvalid}
         >
           확인
