@@ -7,5 +7,7 @@ export interface EditPageProps {
     hour?: string;
     minute?: string;
     triggerAction?: string;
+    estimatedTime?: number;
+    triggerActionAlarmTime?: string;
   }>;
 }

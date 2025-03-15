@@ -12,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskResponse } from '@/types/task';
 import { api } from '@/lib/ky';
 import {
+  calculateTriggerActionAlarmTime,
   clearTimeOnDueDatetime,
   combineDeadlineDateTime,
   convertEstimatedTime,
@@ -29,6 +30,8 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     hour: hourQuery,
     minute: minuteQuery,
     triggerAction: triggerActionQuery,
+    estimatedTime: estimatedTimeQuery,
+    triggerActionAlarmTime: triggerActionAlarmTimeQuery,
   } = use(searchParams);
 
   const query = new URLSearchParams({
@@ -38,6 +41,8 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     hour: hourQuery || '',
     minute: minuteQuery || '',
     triggerAction: triggerActionQuery || '',
+    estimatedTime: estimatedTimeQuery ? estimatedTimeQuery.toString() : '',
+    triggerActionAlarmTime: triggerActionAlarmTimeQuery || '',
   }).toString();
 
   const router = useRouter();
@@ -67,16 +72,30 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     minute: minuteQuery ?? minute,
   };
 
-  // ! 예상소요시간 query로 받을 때 수정필요
   const { estimatedDay, estimatedHour, estimatedMinute } = convertEstimatedTime(
-    taskData?.estimatedTime ?? 0,
+    estimatedTimeQuery ? estimatedTimeQuery : (taskData?.estimatedTime ?? 0),
   );
 
-  // ! 예상소요시간 query로 받을 때 수정필요
   const { finalDays, finalHours, finalMinutes } = getBufferTime(
-    taskData && estimatedDay.toString(),
-    taskData && estimatedHour.toString(),
-    taskData && estimatedMinute.toString(),
+    estimatedDay.toString(),
+    estimatedHour.toString(),
+    estimatedMinute.toString(),
+  );
+
+  const calculatedTriggerActionAlarmTime = calculateTriggerActionAlarmTime(
+    dateAtMidnight,
+    effectiveTime,
+    finalDays,
+    finalHours,
+    finalMinutes,
+  );
+
+  const formattedAlarmTime = format(
+    calculatedTriggerActionAlarmTime,
+    'M월 d일 (EEE) a hh:mm',
+    {
+      locale: ko,
+    },
   );
 
   const { mutate: editTaskDataMutation } = useMutation({
@@ -95,11 +114,10 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
         name: taskQuery || taskData?.name,
         dueDatetime: dueDatetime,
         triggerAction: triggerActionQuery || taskData?.triggerAction,
-        estimatedTime: taskData?.estimatedTime,
-        triggerActionAlarmTime: taskData?.triggerActionAlarmTime.replace(
-          'T',
-          ' ',
-        ),
+        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
+        triggerActionAlarmTime:
+          triggerActionAlarmTimeQuery ||
+          taskData?.triggerActionAlarmTime.replace('T', ' '),
       };
 
       return await api.patch(`v1/tasks/${taskId}`, {
@@ -112,7 +130,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     },
   });
 
-  // ! 예상소요시간 query로 받을 때 수정필요
   const timeString = formatBufferTime({
     days: finalDays,
     hours: finalHours,
@@ -142,8 +159,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
             <span className="t2 text-strong">시작할 수 있게</span>
             <span className="t2 text-strong">작은 행동 알림을 보낼게요</span>
             <span className="b3 text-neutral mt-6">
-              {`${formattedDate} ${effectiveTime.meridiem} ${effectiveTime.hour}:${effectiveTime.minute}`}{' '}
-              첫 알림
+              {formattedAlarmTime} 첫 알림
             </span>
           </div>
         </div>

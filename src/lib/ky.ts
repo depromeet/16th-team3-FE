@@ -21,6 +21,7 @@ export const api = ky.create({
     ],
     afterResponse: [
       async (request, options, response) => {
+        console.log(response.body);
         if (response.status === UNAUTHORIZED_CODE) {
           try {
             console.log(Cookies.get('refreshToken'));
