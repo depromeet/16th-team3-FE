@@ -9,26 +9,31 @@ import TimeSelectedComponent from '@/app/(create)/_components/timeSelectedCompon
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
 import { TimePickerType } from '@/types/create';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/ky';
 import { TaskResponse } from '@/types/task';
 import {
   clearTimeOnDueDatetime,
   convertToFormattedTime,
 } from '@/utils/dateFormat';
+import { EditPageProps } from '../../context';
 
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
 
-const DeadlineDateEditPage = ({
-  params,
-}: {
-  params: Promise<{ taskId: string }>;
-}) => {
+const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
   const { taskId } = use(params);
+  const {
+    task: taskQuery,
+    deadlineDate: deadlineDateQuery,
+    meridiem: meridiemQuery,
+    hour: hourQuery,
+    minute: minuteQuery,
+  } = use(searchParams);
+
+  console.log(taskQuery);
 
   const router = useRouter();
-
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
@@ -42,10 +47,8 @@ const DeadlineDateEditPage = ({
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
-    queryFn: async () => {
-      const response = await api.get(`v1/tasks/${taskId}`);
-      return response.json<TaskResponse>();
-    },
+    queryFn: async () =>
+      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
   });
 
   const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
@@ -77,6 +80,8 @@ const DeadlineDateEditPage = ({
       minute: deadlineTime.minute,
     }).toString();
 
+    console.log('query', query);
+
     router.push(`/edit/buffer-time/${taskId}?${query}`);
   };
 
@@ -92,16 +97,33 @@ const DeadlineDateEditPage = ({
 
   useEffect(() => {
     if (taskData) {
-      setTask(taskData.name);
+      setTask(taskQuery ? taskQuery : taskData.name);
 
-      const originalDate = new Date(taskData.dueDatetime);
+      const originalDate = new Date(
+        deadlineDateQuery ? deadlineDateQuery : taskData.dueDatetime,
+      );
       const dateAtMidnight = clearTimeOnDueDatetime(originalDate);
       setDeadlineDate(dateAtMidnight);
 
-      const { meridiem, hour, minute } = convertToFormattedTime(originalDate);
-      setDeadlineTime({ meridiem, hour, minute });
+      if (meridiemQuery && hourQuery && minuteQuery) {
+        setDeadlineTime({
+          meridiem: meridiemQuery,
+          hour: hourQuery,
+          minute: minuteQuery,
+        });
+      } else {
+        const { meridiem, hour, minute } = convertToFormattedTime(originalDate);
+        setDeadlineTime({ meridiem, hour, minute });
+      }
     }
-  }, [taskData]);
+  }, [
+    deadlineDateQuery,
+    hourQuery,
+    meridiemQuery,
+    minuteQuery,
+    taskData,
+    taskQuery,
+  ]);
 
   return (
     <div className="flex h-full w-full flex-col justify-between">
