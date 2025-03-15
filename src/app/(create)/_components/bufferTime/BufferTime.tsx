@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import getBufferTime from '@/utils/getBufferTime';
 import formatBufferTime from '@/utils/formatBufferTime';
+import { calculateTriggerActionAlarmTime } from '@/utils/dateFormat';
 
 interface BufferTimeProps {
   context: BufferTimeDataType;
@@ -40,6 +41,22 @@ const BufferTime = ({
     estimatedMinute,
   );
 
+  const calculatedTriggerActionAlarmTime = calculateTriggerActionAlarmTime(
+    deadlineDate,
+    deadlineTime,
+    finalDays,
+    finalHours,
+    finalMinutes,
+  );
+
+  const formattedAlarmTime = format(
+    calculatedTriggerActionAlarmTime,
+    'M월 d일 (EEE) a hh:mm',
+    {
+      locale: ko,
+    },
+  );
+
   const timeString = formatBufferTime({
     days: finalDays,
     hours: finalHours,
@@ -64,8 +81,7 @@ const BufferTime = ({
           <span className="t2 text-strong">시작할 수 있게</span>
           <span className="t2 text-strong">작은 행동 알림을 보낼게요</span>
           <span className="b3 text-neutral mt-6">
-            {`${formattedDate} ${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`}
-            첫 알림
+            {formattedAlarmTime} 첫 알림
           </span>
         </div>
       </div>

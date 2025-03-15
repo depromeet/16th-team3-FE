@@ -232,3 +232,50 @@ export function convertEstimatedTime(estimatedTime: number) {
 
   return { estimatedDay: days, estimatedHour: hours, estimatedMinute: minutes };
 }
+
+export const convertDeadlineToDate = (
+  date: Date,
+  time: TimePickerType,
+): Date => {
+  let hour = parseInt(time.hour, 10);
+  const minute = parseInt(time.minute, 10);
+
+  if (time.meridiem === '오전' && hour === 12) {
+    hour = 0;
+  } else if (time.meridiem === '오후' && hour !== 12) {
+    hour += 12;
+  }
+
+  return set(date, { hours: hour, minutes: minute, seconds: 0 });
+};
+
+export const calculateTriggerActionAlarmTime = (
+  deadlineDate: Date,
+  deadlineTime: TimePickerType,
+  finalDays: number,
+  finalHours: number,
+  finalMinutes: number,
+): string => {
+  const deadlineDateTime = convertDeadlineToDate(deadlineDate, deadlineTime);
+
+  const triggerActionAlarmTime = new Date(
+    deadlineDateTime.getTime() -
+      (finalDays * 24 * 60 * 60 * 1000 +
+        finalHours * 60 * 60 * 1000 +
+        finalMinutes * 60 * 1000),
+  );
+
+  return format(triggerActionAlarmTime, 'yyyy-MM-dd HH:mm:ss');
+};
+
+export const convertEstimatedTimeToMinutes = (
+  estimatedDay: string,
+  estimatedHour: string,
+  estimatedMinute: string,
+): number => {
+  const daysInMinutes = (parseInt(estimatedDay as string, 10) || 0) * 24 * 60;
+  const hoursInMinutes = (parseInt(estimatedHour as string, 10) || 0) * 60;
+  const minutes = parseInt(estimatedMinute as string, 10) || 0;
+
+  return daysInMinutes + hoursInMinutes + minutes;
+};
