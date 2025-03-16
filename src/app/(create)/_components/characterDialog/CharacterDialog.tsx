@@ -25,6 +25,7 @@ const CharacterDialog = ({
   onClick: () => void;
 }) => {
   const { userData } = useUserStore();
+  console.log('🚀 ~ userData:', userData);
 
   return (
     <DialogContent className="w-[328px] rounded-[24px] border-none bg-component-gray-secondary px-4 py-6">

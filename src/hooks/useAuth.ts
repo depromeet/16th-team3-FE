@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  useCallback,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/ky';
 import { User } from '@/types/user';
@@ -33,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = userData && userData.memberId !== -1;
 
-  const loadUserProfile = async () => {
+  const loadUserProfile = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await api.get('v1/members/me').json<User>();
@@ -41,12 +47,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(response);
     } catch (error) {
       clearUser();
-      // 인증 오류시 로그인 페이지로 리다이렉트
       router.push('/login');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router, clearUser, setUser]);
 
   // 쿠키 및 사용자 정보 초기화 함수
   const clearAuthData = () => {
@@ -72,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     checkAuth();
-  }, []);
+  }, [loadUserProfile]);
 
   const logout = async () => {
     try {
