@@ -15,7 +15,10 @@ declare global {
   }
 }
 
-const REDIRECT_URI_KAKAO = 'http://localhost:3000/oauth/callback/kakao';
+const REDIRECT_URI_KAKAO =
+  process.env.NODE_ENV === 'production'
+    ? 'https://spurt.site/oauth/callback/kakao'
+    : 'http://localhost:3000/oauth/callback/kakao';
 const SCOPE_KAKAO = ['openid'].join(',');
 
 const LoginPage = () => {
