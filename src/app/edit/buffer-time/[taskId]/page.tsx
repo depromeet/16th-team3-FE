@@ -55,8 +55,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
       await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
   });
 
-  console.log(taskData);
-
   const baseDate = deadlineDateQuery
     ? getValidDate(deadlineDateQuery)
     : getValidDate(taskData?.dueDatetime);
