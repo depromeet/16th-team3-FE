@@ -13,10 +13,15 @@ import Image from 'next/image';
 const CharacterDialog = ({
   task,
   personaName,
+  personaType,
   onClick,
 }: {
   task: string;
   personaName: string;
+  personaType: {
+    taskType: string;
+    taskMode: string;
+  };
   onClick: () => void;
 }) => {
   const { userData } = useUserStore();
@@ -28,7 +33,7 @@ const CharacterDialog = ({
           할일 등록 완료!
         </DialogTitle>
         <DialogDescription className="max-w-[190px] flex-wrap self-center">
-          {`‘발등에 불떨어진’ ${userData.nickname}님!`}
+          {`‘${personaType.taskMode} ${personaType.taskType}’ ${userData.nickname}님!`}
         </DialogDescription>
         <DialogDescription className="max-w-[190px] flex-wrap self-center">
           {task}

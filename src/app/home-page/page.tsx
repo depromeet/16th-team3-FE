@@ -20,7 +20,7 @@ import {
 
 import CharacterDialog from '../(create)/_components/characterDialog/CharacterDialog';
 import Loader from '@/components/loader/Loader';
-import { Dialog, DialogOverlay } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/dialog';
 
 const HomePageContent = () => {
   // 홈 API를 통해 모든 데이터 한번에 가져오기
@@ -171,6 +171,10 @@ const HomePageContent = () => {
   const searchParams = useSearchParams();
   const [taskName, setTaskName] = useState('');
   const [personaName, setPersonaName] = useState('');
+  const [personaType, setPersonaType] = useState({
+    taskType: '',
+    taskMode: '',
+  });
 
   const handleNavigateToMyPage = () => {
     router.push('/my-page');
@@ -364,6 +368,13 @@ const HomePageContent = () => {
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.delete('task');
       router.replace(`/home-page?${newParams.toString()}`, { scroll: false });
+    }
+
+    if (searchParams.get('taskType') && searchParams.get('taskMode')) {
+      setPersonaType({
+        taskType: searchParams.get('taskType') || '',
+        taskMode: searchParams.get('taskMode') || '',
+      });
     }
   }, [searchParams, router]);
 
@@ -949,6 +960,7 @@ const HomePageContent = () => {
         <CharacterDialog
           task={taskName}
           personaName={personaName}
+          personaType={personaType}
           onClick={() => setIsDialogOpen(false)}
         />
 

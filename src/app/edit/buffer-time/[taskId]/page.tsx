@@ -90,10 +90,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     finalMinutes,
   );
 
-  console.log(
-    'calculatedTriggerActionAlarmTime',
-    calculatedTriggerActionAlarmTime,
-  );
   const formattedAlarmTime = format(
     calculatedTriggerActionAlarmTime,
     'M월 d일 (EEE) a hh:mm',

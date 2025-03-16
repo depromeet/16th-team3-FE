@@ -91,9 +91,12 @@ const ScheduledTaskCreate = () => {
     },
     onSuccess: (data: TaskResponse) => {
       const personaName = data.persona.name;
+      const taskMode = data.persona.taskKeywordsCombination.taskMode.name;
+      const taskType = data.persona.taskKeywordsCombination.taskType.name;
+
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(
-        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}`,
+        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
     },
     onError: (error) => {

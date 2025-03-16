@@ -3,17 +3,23 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 
 export default function SplashPage() {
   const router = useRouter();
+  const accessToken = Cookies.get('accessToken');
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (accessToken) {
+        router.push('/home-page');
+        return;
+      }
       router.push('/login');
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, accessToken]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-background-primary">

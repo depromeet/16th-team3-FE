@@ -10,7 +10,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
 import { api } from '@/lib/ky';
 import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/store';
 import { TaskResponse } from '@/types/task';
 
 type FormState = {
@@ -61,9 +60,12 @@ const InstantTaskCreate = () => {
     },
     onSuccess: (data: TaskResponse) => {
       const personaName = data.persona.name;
+      const taskMode = data.persona.taskKeywordsCombination.taskMode.name;
+      const taskType = data.persona.taskKeywordsCombination.taskType.name;
+
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(
-        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}`,
+        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
     },
     onError: (error) => {
