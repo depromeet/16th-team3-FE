@@ -21,7 +21,6 @@ import {
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import { EditPageProps } from '../../context';
-import { useUserStore } from '@/store';
 
 const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
   const { taskId } = use(params);
@@ -49,13 +48,14 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { userData } = useUserStore();
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
     queryFn: async () =>
       await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
   });
+
+  console.log(taskData);
 
   const baseDate = deadlineDateQuery
     ? getValidDate(deadlineDateQuery)
@@ -69,9 +69,9 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
   );
 
   const effectiveTime = {
-    meridiem: meridiemQuery ?? meridiem,
-    hour: hourQuery ?? hour,
-    minute: minuteQuery ?? minute,
+    meridiem: meridiemQuery || meridiem,
+    hour: hourQuery || hour,
+    minute: minuteQuery || minute,
   };
 
   const { estimatedDay, estimatedHour, estimatedMinute } = convertEstimatedTime(

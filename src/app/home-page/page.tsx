@@ -20,7 +20,7 @@ import {
 
 import CharacterDialog from '../(create)/_components/characterDialog/CharacterDialog';
 import Loader from '@/components/loader/Loader';
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog, DialogOverlay } from '@/components/ui/dialog';
 
 const HomePageContent = () => {
   // 홈 API를 통해 모든 데이터 한번에 가져오기
@@ -957,6 +957,7 @@ const HomePageContent = () => {
           />
         )}
 
+        {/* TODO(prgmr99): 모달 띄워지는 애니메이션 확인 필요 */}
         <CharacterDialog
           task={taskName}
           personaName={personaName}
