@@ -10,16 +10,20 @@ export interface HomeResponse {
 }
 
 // 기본 fetch 래퍼 함수
-const fetchWithError = async <T>(url: string, options?: RequestInit): Promise<T> => {
+const fetchWithError = async <T>(
+  url: string,
+  options?: RequestInit,
+): Promise<T> => {
   const response = await fetch(url, options);
-  
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
     throw new Error(
-      errorData?.error || `API 요청 실패 (${response.status}): ${response.statusText}`
+      errorData?.error ||
+        `API 요청 실패 (${response.status}): ${response.statusText}`,
     );
   }
-  
+
   return response.json();
 };
 
@@ -38,38 +42,39 @@ export const fetchHomeData = async (): Promise<{
 }> => {
   try {
     const data: HomeResponse = await fetchWithError('/api/tasks/home');
-    
+
+    // ! TODO(fr0gydev): 페이지 이동 시 매번 호출되는 것 확인
     console.log('Home API 응답 데이터:', data);
-    
+
     // 각 배열이 없는 경우 빈 배열로, 있는 경우 변환 처리
-    const todayTasks = Array.isArray(data?.todayTasks) 
-      ? data.todayTasks.map((task: TaskResponse) => convertTask(task)) 
+    const todayTasks = Array.isArray(data?.todayTasks)
+      ? data.todayTasks.map((task: TaskResponse) => convertTask(task))
       : [];
-      
-    const weeklyTasks = Array.isArray(data?.weeklyTasks) 
-      ? data.weeklyTasks.map((task: TaskResponse) => convertTask(task)) 
+
+    const weeklyTasks = Array.isArray(data?.weeklyTasks)
+      ? data.weeklyTasks.map((task: TaskResponse) => convertTask(task))
       : [];
-      
-    const allTasks = Array.isArray(data?.allTasks) 
-      ? data.allTasks.map((task: TaskResponse) => convertTask(task)) 
+
+    const allTasks = Array.isArray(data?.allTasks)
+      ? data.allTasks.map((task: TaskResponse) => convertTask(task))
       : [];
-      
+
     // inProgressTasks가 응답에 없으면 allTasks에서 필터링
     const inProgressTasks = Array.isArray(data?.inProgressTasks)
       ? data.inProgressTasks.map((task: TaskResponse) => convertTask(task))
-      : allTasks.filter(task => task.status === 'inProgress');
-      
+      : allTasks.filter((task) => task.status === 'inProgress');
+
     // futureTasks가 응답에 없으면 allTasks에서 필터링
     const futureTasks = Array.isArray(data?.futureTasks)
-    ? data.futureTasks.map((task: TaskResponse) => convertTask(task))
-    : allTasks.filter(task => task.type === 'future');
-    
+      ? data.futureTasks.map((task: TaskResponse) => convertTask(task))
+      : allTasks.filter((task) => task.type === 'future');
+
     return {
       todayTasks,
       weeklyTasks,
       allTasks,
       inProgressTasks,
-      futureTasks
+      futureTasks,
     };
   } catch (error) {
     console.error('Home API 호출 오류:', error);
@@ -79,7 +84,7 @@ export const fetchHomeData = async (): Promise<{
       weeklyTasks: [],
       allTasks: [],
       inProgressTasks: [],
-      futureTasks: []
+      futureTasks: [],
     };
   }
 };
@@ -125,25 +130,27 @@ export const fetchAllTodosApi = async (): Promise<Task[]> => {
 // 오늘 할일 필터링
 export const fetchTodayTasks = async (): Promise<Task[]> => {
   const allTasks = await fetchAllTasks();
-  return allTasks.filter(task => task.type === 'today' && task.status !== 'inProgress');
+  return allTasks.filter(
+    (task) => task.type === 'today' && task.status !== 'inProgress',
+  );
 };
 
 // 진행 중인 할일 필터링
 export const fetchInProgressTasks = async (): Promise<Task[]> => {
   const allTasks = await fetchAllTasks();
-  return allTasks.filter(task => task.status === 'inProgress');
+  return allTasks.filter((task) => task.status === 'inProgress');
 };
 
 // 이번주 할일 필터링
 export const fetchWeeklyTasks = async (): Promise<Task[]> => {
   const allTasks = await fetchAllTasks();
-  return allTasks.filter(task => task.type === 'weekly');
+  return allTasks.filter((task) => task.type === 'weekly');
 };
 
 // 미래 할일 필터링
 export const fetchFutureTasks = async (): Promise<Task[]> => {
   const allTasks = await fetchAllTasks();
-  return allTasks.filter(task => task.type === 'future');
+  return allTasks.filter((task) => task.type === 'future');
 };
 
 // 상태 변경: 진행 중으로 변경
@@ -153,10 +160,16 @@ export const startTask = async (taskId: number): Promise<Task> => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ status: 'FOCUSED', startedAt: new Date().toISOString() }),
+    body: JSON.stringify({
+      status: 'FOCUSED',
+      startedAt: new Date().toISOString(),
+    }),
   };
-  
-  const data: TaskResponse = await fetchWithError(`/api/tasks/${taskId}/status`, options);
+
+  const data: TaskResponse = await fetchWithError(
+    `/api/tasks/${taskId}/status`,
+    options,
+  );
   return convertApiResponseToTask(data);
 };
 
@@ -169,8 +182,11 @@ export const completeTask = async (taskId: number): Promise<Task> => {
     },
     body: JSON.stringify({ status: 'COMPLETED' }),
   };
-  
-  const data: TaskResponse = await fetchWithError(`/api/tasks/${taskId}/status`, options);
+
+  const data: TaskResponse = await fetchWithError(
+    `/api/tasks/${taskId}/status`,
+    options,
+  );
   return convertApiResponseToTask(data);
 };
 
@@ -183,19 +199,22 @@ export const reflectTask = async (taskId: number): Promise<Task> => {
     },
     body: JSON.stringify({ status: 'REFLECTED' }),
   };
-  
-  const data: TaskResponse = await fetchWithError(`/api/tasks/${taskId}/status`, options);
+
+  const data: TaskResponse = await fetchWithError(
+    `/api/tasks/${taskId}/status`,
+    options,
+  );
   return convertApiResponseToTask(data);
 };
 
 // 할일 삭제 기능
 export const deleteTask = async (taskId: number): Promise<void> => {
-    const options = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    
-    await fetchWithError(`/api/tasks/${taskId}`, options);
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
+
+  await fetchWithError(`/api/tasks/${taskId}`, options);
+};

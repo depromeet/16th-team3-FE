@@ -24,18 +24,7 @@ import { Dialog, DialogOverlay } from '@/components/ui/dialog';
 
 const HomePageContent = () => {
   // 홈 API를 통해 모든 데이터 한번에 가져오기
-  const { data: homeData, isLoading: isLoadingHome, refetch } = useHomeData();
-
-  useEffect(() => {
-    const handleFocus = () => {
-      refetch();
-    };
-
-    window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [refetch]);
+  const { data: homeData, isLoading: isLoadingHome } = useHomeData();
 
   // 데이터 구조 분해
   const allTasks = useMemo(
@@ -313,7 +302,6 @@ const HomePageContent = () => {
 
   const handleCloseCreateSheet = () => {
     setIsCreateSheetOpen(false);
-    refetch();
   };
 
   // 툴팁 표시 관련 로직
