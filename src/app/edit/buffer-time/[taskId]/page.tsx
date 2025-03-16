@@ -21,6 +21,7 @@ import {
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import { EditPageProps } from '../../context';
+import { useUserStore } from '@/store';
 
 const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
   const { taskId } = use(params);
@@ -48,6 +49,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { userData } = useUserStore();
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
@@ -124,11 +126,14 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
           taskData?.triggerActionAlarmTime.replace('T', ' '),
       };
 
-      return await api.patch(`v1/tasks/${taskId}`, {
+      const response = await api.patch(`v1/tasks/${taskId}`, {
         body: JSON.stringify(body),
       });
+
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Mutation response:', data);
       queryClient.invalidateQueries({
         queryKey: ['tasks', 'home'],
       });

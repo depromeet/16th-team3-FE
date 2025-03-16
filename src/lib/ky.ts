@@ -21,10 +21,10 @@ export const api = ky.create({
     ],
     afterResponse: [
       async (request, options, response) => {
-        console.log(response.body);
-        if (response.status === UNAUTHORIZED_CODE) {
+        const accessToken = Cookies.get('accessToken');
+
+        if (response.status === UNAUTHORIZED_CODE || !accessToken) {
           try {
-            console.log(Cookies.get('refreshToken'));
             const refreshResponse = await ky.post(
               `${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
               {

@@ -10,6 +10,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
 import { api } from '@/lib/ky';
 import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store';
+import { TaskResponse } from '@/types/task';
 
 type FormState = {
   task?: string;
@@ -50,14 +52,19 @@ const InstantTaskCreate = () => {
   const { isMounted } = useMount();
 
   const { mutate: createScheduledTaskMutation } = useMutation({
-    mutationFn: async (data: InstantTaskType) => {
-      await api.post(`v1/tasks/urgent`, {
+    mutationFn: async (data: InstantTaskType): Promise<TaskResponse> => {
+      const response = await api.post(`v1/tasks/urgent`, {
         body: JSON.stringify(data),
       });
+
+      return response.json() as Promise<TaskResponse>;
     },
-    onSuccess: () => {
+    onSuccess: (data: TaskResponse) => {
+      const personaName = data.persona.name;
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
-      router.push(`/home-page?dialog=success&task=${funnel.context.task}`);
+      router.push(
+        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}`,
+      );
     },
     onError: (error) => {
       console.error('Error creating instant task:', error);

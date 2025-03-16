@@ -136,15 +136,6 @@ const HomePageContent = () => {
       const isPastToday = dueDate > today;
       const isAfterThisWeek = dueDate > sundayOfThisWeek;
 
-      console.log(
-        'Task:',
-        task.title,
-        'Is past today:',
-        isPastToday,
-        'Is after this week:',
-        isAfterThisWeek,
-      );
-
       if (task.status === 'inProgress' || task.status === 'INPROGRESS') {
         return false;
       }
@@ -190,6 +181,7 @@ const HomePageContent = () => {
 
   const searchParams = useSearchParams();
   const [taskName, setTaskName] = useState('');
+  const [personaName, setPersonaName] = useState('');
 
   const handleNavigateToMyPage = () => {
     router.push('/my-page');
@@ -267,7 +259,6 @@ const HomePageContent = () => {
   useEffect(() => {
     // 재진입 상태이고, 만료된 작업이 있을 때 바텀시트 표시
     if (isReentry && expiredTasks.length > 0) {
-      console.log('재진입 감지 및 만료된 작업 발견:', expiredTasks);
       setExpiredTask(expiredTasks[0]);
       setShowExpiredTaskSheet(true);
     }
@@ -403,6 +394,14 @@ const HomePageContent = () => {
     if (taskParam) {
       setTaskName(taskParam);
       newParams.delete('task');
+      shouldReplace = true;
+    }
+
+    const personaParam = searchParams.get('personaName');
+
+    if (personaParam) {
+      setPersonaName(personaParam);
+      newParams.delete('personaName');
       shouldReplace = true;
     }
 
@@ -960,6 +959,7 @@ const HomePageContent = () => {
 
         <CharacterDialog
           task={taskName}
+          personaName={personaName}
           onClick={() => setIsDialogOpen(false)}
         />
 
