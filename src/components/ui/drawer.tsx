@@ -8,11 +8,13 @@ import { cn } from '@/lib/utils';
 const Drawer = ({
   modal = false,
   preventScrollRestoration = false,
+  setBackgroundColorOnScale = true,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
     modal={modal}
     preventScrollRestoration={preventScrollRestoration}
+    setBackgroundColorOnScale={setBackgroundColorOnScale}
     {...props}
   />
 );
@@ -45,7 +47,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[10px] bg-component-gray-secondary',
+        'fixed inset-x-0 bottom-0 z-50 flex h-auto flex-col rounded-t-[20px] bg-component-gray-secondary',
         className,
       )}
       {...props}

@@ -18,7 +18,14 @@ import {
   convertToFormattedTime,
 } from '@/utils/dateFormat';
 import { EditPageProps } from '../../context';
-import { Drawer } from '@/components/ui/drawer';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer';
 
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
@@ -40,8 +47,9 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
-  const [isFocused, setIsFocused] = useState(true);
+  const [isFocused, setIsFocused] = useState<boolean>(true);
   const [isUrgent, setIsUrgent] = useState<boolean>(false);
+  const [isUrgentDrawerOpen, setIsUrgentDrawerOpen] = useState<boolean>(false);
   const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
   const [deadlineTime, setDeadlineTime] = useState<TimePickerType>({
     meridiem: '오전',
@@ -88,6 +96,7 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
         : taskData?.estimatedTime?.toString() || '',
       triggerActionAlarmTime:
         triggerActionAlarmTimeQuery || taskData?.triggerActionAlarmTime || '',
+      isUrgent: isUrgent.toString(),
     }).toString();
 
     router.push(`/edit/buffer-time/${taskId}?${query}`);
@@ -142,15 +151,21 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
       const diffMinutes = diffMs / (1000 * 60);
 
       if (diffMinutes < currentEstimatedTime) {
+        setIsUrgentDrawerOpen(true);
         setIsUrgent(true);
       } else {
-        setIsUrgent(false);
+        setIsUrgentDrawerOpen(false);
       }
     }
   }, [taskData, deadlineDate, deadlineTime]);
 
   return (
-    <Drawer>
+    <Drawer
+      open={isUrgentDrawerOpen}
+      dismissible
+      setBackgroundColorOnScale
+      onOpenChange={setIsUrgentDrawerOpen}
+    >
       <div className="flex h-screen w-full flex-col justify-between">
         <div>
           <HeaderTitle title="어떤 일의 마감이 급하신가요?" />
@@ -197,6 +212,23 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
           </Button>
         </div>
       </div>
+
+      <DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+        <DrawerHeader className="px-0 pb-4 pt-6">
+          <DrawerTitle>
+            <p className="t3 text-gray-normal">
+              PPT 만들고 대본 작성의 <br />
+              마감일이 바뀌었어요. <br />
+              할일을 즉시 시작으로 전환할게요.
+            </p>
+          </DrawerTitle>
+        </DrawerHeader>
+        <DrawerFooter>
+          <DrawerClose>
+            <Button variant="primary">확인</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
     </Drawer>
   );
 };

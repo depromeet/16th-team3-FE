@@ -33,6 +33,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     triggerAction: triggerActionQuery,
     estimatedTime: estimatedTimeQuery,
     triggerActionAlarmTime: triggerActionAlarmTimeQuery,
+    isUrgent: isUrgentQuery,
   } = use(searchParams);
 
   const query = new URLSearchParams({
@@ -44,6 +45,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     triggerAction: triggerActionQuery || '',
     estimatedTime: estimatedTimeQuery ? estimatedTimeQuery.toString() : '',
     triggerActionAlarmTime: triggerActionAlarmTimeQuery || '',
+    isUrgent: isUrgentQuery ? isUrgentQuery.toString() : '',
   }).toString();
 
   const router = useRouter();
@@ -118,6 +120,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
         triggerActionAlarmTime:
           triggerActionAlarmTimeQuery ||
           taskData?.triggerActionAlarmTime.replace('T', ' '),
+        isUrgent: Boolean(isUrgentQuery) || false,
       };
 
       const response = await api.patch(`v1/tasks/${taskId}`, {
