@@ -16,15 +16,15 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const res = await api.get('v1/members/me');
-        if (!res.ok) {
+        const response = await api.get('v1/members/me');
+        if (!response.ok) {
           setUser({});
           return;
         }
-        const data = await res.json<User>();
+        const data = await response.json<User>();
         setUser(data);
       } catch (error) {
-        console.error('API 호출 중 오류 발생:', error);
+        console.error('authProvider error:', error);
         setUser({});
       }
     }

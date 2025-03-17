@@ -24,6 +24,8 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
     hour: hourQuery,
     minute: minuteQuery,
     triggerAction: triggerActionQuery,
+    estimatedTime: estimatedTimeQuery,
+    triggerActionAlarmTime: triggerActionAlarmTimeQuery,
   } = use(searchParams);
 
   const router = useRouter();
@@ -53,6 +55,7 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
   };
 
   const handleNextButtonClick = () => {
+    // ! TODO(prgmr99): '' 문자열만 할당해도 되는지 판단 필요
     const query = new URLSearchParams({
       task: taskQuery || '',
       deadlineDate: deadlineDateQuery || '',
@@ -60,6 +63,8 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
       hour: hourQuery || '',
       minute: minuteQuery || '',
       triggerAction: smallAction,
+      estimatedTime: estimatedTimeQuery ? estimatedTimeQuery.toString() : '',
+      triggerActionAlarmTime: triggerActionAlarmTimeQuery || '',
     }).toString();
 
     router.push(`/edit/buffer-time/${taskId}?${query}`);
