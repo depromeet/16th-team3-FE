@@ -41,6 +41,14 @@ const BufferTime = ({
     estimatedMinute,
   );
 
+  console.log('finalDays', finalDays);
+  console.log('finalHours', finalHours);
+  console.log('finalMinutes', finalMinutes);
+
+  console.log('estimatedDay', estimatedDay);
+  console.log('estimatedHour', estimatedHour);
+  console.log('estimatedMinute', estimatedMinute);
+
   const calculatedTriggerActionAlarmTime = calculateTriggerActionAlarmTime(
     deadlineDate,
     deadlineTime,
