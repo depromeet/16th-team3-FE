@@ -15,6 +15,7 @@ import {
   calculateTriggerActionAlarmTime,
   clearTimeOnDueDatetime,
   combineDeadlineDateTime,
+  combineDeadlineDateTimeToDate,
   convertEstimatedTime,
   convertToFormattedTime,
   getValidDate,
@@ -74,11 +75,17 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     minute: minuteQuery || minute,
   };
 
+  const deadlineDateTime = combineDeadlineDateTimeToDate({
+    deadlineDate: dateAtMidnight,
+    deadlineTime: effectiveTime,
+  });
+
   const { estimatedDay, estimatedHour, estimatedMinute } = convertEstimatedTime(
     estimatedTimeQuery ? estimatedTimeQuery : (taskData?.estimatedTime ?? 0),
   );
 
   const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    deadlineDateTime,
     estimatedDay.toString(),
     estimatedHour.toString(),
     estimatedMinute.toString(),
@@ -116,11 +123,12 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
         name: taskQuery || taskData?.name,
         dueDatetime: dueDatetime,
         triggerAction: triggerActionQuery || taskData?.triggerAction,
-        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
+        estimatedTime:
+          Number(estimatedTimeQuery) || Number(taskData?.estimatedTime),
         triggerActionAlarmTime:
-          triggerActionAlarmTimeQuery ||
+          (triggerActionAlarmTimeQuery?.replace('T', ' ') ?? '') ||
           taskData?.triggerActionAlarmTime.replace('T', ' '),
-        isUrgent: Boolean(isUrgentQuery) || false,
+        isUrgent: isUrgentQuery ? JSON.parse(isUrgentQuery.toString()) : false,
       };
 
       const response = await api.patch(`v1/tasks/${taskId}`, {
@@ -130,7 +138,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
       return response.json();
     },
     onSuccess: (data) => {
-      console.log('Mutation response:', data);
       queryClient.invalidateQueries({
         queryKey: ['tasks', 'home'],
       });

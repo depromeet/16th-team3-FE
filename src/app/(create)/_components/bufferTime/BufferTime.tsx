@@ -6,7 +6,10 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import getBufferTime from '@/utils/getBufferTime';
 import formatBufferTime from '@/utils/formatBufferTime';
-import { calculateTriggerActionAlarmTime } from '@/utils/dateFormat';
+import {
+  calculateTriggerActionAlarmTime,
+  combineDeadlineDateTimeToDate,
+} from '@/utils/dateFormat';
 
 interface BufferTimeProps {
   context: BufferTimeDataType;
@@ -35,7 +38,13 @@ const BufferTime = ({
 
   const formattedDate = format(deadlineDate, 'M월 d일 (E)', { locale: ko });
 
+  const deadlineDateTime = combineDeadlineDateTimeToDate({
+    deadlineDate,
+    deadlineTime,
+  });
+
   const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    deadlineDateTime,
     estimatedDay,
     estimatedHour,
     estimatedMinute,

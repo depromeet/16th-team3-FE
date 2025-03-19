@@ -9,12 +9,16 @@ import TimeSelectedComponent from '@/app/(create)/_components/timeSelectedCompon
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
 import { TimePickerType } from '@/types/create';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/ky';
 import { TaskResponse } from '@/types/task';
 import {
+  calculateTriggerActionAlarmTime,
   clearTimeOnDueDatetime,
+  combineDeadlineDateTime,
+  combineDeadlineDateTimeToDate,
   convertDeadlineToDate,
+  convertEstimatedTime,
   convertToFormattedTime,
 } from '@/utils/dateFormat';
 import { EditPageProps } from '../../context';
@@ -26,6 +30,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import getBufferTime from '@/utils/getBufferTime';
 
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
@@ -41,9 +46,11 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
     triggerAction: triggerActionQuery,
     estimatedTime: estimatedTimeQuery,
     triggerActionAlarmTime: triggerActionAlarmTimeQuery,
+    isUrgent: isUrgentQuery,
   } = use(searchParams);
 
   const router = useRouter();
+  const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [task, setTask] = useState<string>('');
@@ -64,6 +71,32 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
   });
 
   const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
+
+  const { estimatedDay, estimatedHour, estimatedMinute } = convertEstimatedTime(
+    estimatedTimeQuery ? estimatedTimeQuery : (taskData?.estimatedTime ?? 0),
+  );
+
+  const deadlineDateTime = combineDeadlineDateTimeToDate({
+    deadlineDate,
+    deadlineTime,
+  });
+
+  const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    deadlineDateTime,
+    estimatedDay.toString(),
+    estimatedHour.toString(),
+    estimatedMinute.toString(),
+  );
+
+  const newTriggerActionAlarmTime = deadlineDate
+    ? calculateTriggerActionAlarmTime(
+        deadlineDate,
+        deadlineTime,
+        finalDays,
+        finalHours,
+        finalMinutes,
+      )
+    : triggerActionQuery || '';
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
@@ -94,13 +127,58 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
       estimatedTime: estimatedTimeQuery
         ? estimatedTimeQuery.toString()
         : taskData?.estimatedTime?.toString() || '',
-      triggerActionAlarmTime:
-        triggerActionAlarmTimeQuery || taskData?.triggerActionAlarmTime || '',
+      triggerActionAlarmTime: newTriggerActionAlarmTime,
       isUrgent: isUrgent.toString(),
     }).toString();
 
     router.push(`/edit/buffer-time/${taskId}?${query}`);
   };
+
+  // TODO(prgmr99): 즉시 시작을 클릭했을 때, 실행할 mutation
+  const { mutate: editTaskDataMutation } = useMutation({
+    mutationFn: async () => {
+      if (!deadlineDate) {
+        throw new Error('마감 날짜가 선택되지 않았습니다.');
+      }
+
+      const dueDatetime = combineDeadlineDateTime(deadlineDate, {
+        meridiem: meridiemQuery ? meridiemQuery : deadlineTime.meridiem,
+        hour: hourQuery ? hourQuery : deadlineTime.hour,
+        minute: minuteQuery ? minuteQuery : deadlineTime.minute,
+      });
+
+      const body = {
+        name: taskQuery || taskData?.name,
+        dueDatetime: dueDatetime,
+        triggerAction: triggerActionQuery || taskData?.triggerAction,
+        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
+        triggerActionAlarmTime: newTriggerActionAlarmTime,
+        isUrgent: false,
+      };
+
+      const urgentBody = {
+        name: taskQuery || taskData?.name,
+        dueDatetime: dueDatetime,
+        triggerAction: triggerActionQuery || taskData?.triggerAction,
+        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
+        isUrgent: true,
+      };
+
+      const response = await api.patch(`v1/tasks/${taskId}`, {
+        body: isUrgent ? JSON.stringify(urgentBody) : JSON.stringify(body),
+      });
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      // TODO(prgmr99): data를 이용해서 홈화면에서 모달 띄우기
+      console.log('data', data);
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', 'home'],
+      });
+      router.push('/home-page');
+    },
+  });
 
   useEffect(() => {
     if (inputRef.current)
@@ -142,9 +220,14 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
     taskQuery,
   ]);
 
+  // * Task 2
+  // * 아래의 두 가지 경우에 대해서, 다르게 처리가 필요하다.
+  // * A 같은 경우는 버퍼타임으로 이동하고, B같은 경우는 바로 즉시 시작을 유도한다.
+  // A: taskData.estimatedTime || estimatedTimeQuery 의 버퍼타임(예상소요시간의 1.5배)이 마감일을 지나는 경우
+  // B: taskData.estimatedTime || estimatedTimeQuery 예상소요시간이 마감일을 지나는 경우
   useEffect(() => {
     if (taskData && deadlineDate) {
-      const currentEstimatedTime = taskData.estimatedTime;
+      const currentEstimatedTime = estimatedTimeQuery || taskData.estimatedTime;
       const changedDeadline = convertDeadlineToDate(deadlineDate, deadlineTime);
 
       const diffMs = changedDeadline.getTime() - new Date().getTime();
@@ -155,9 +238,10 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
         setIsUrgent(true);
       } else {
         setIsUrgentDrawerOpen(false);
+        setIsUrgent(false);
       }
     }
-  }, [taskData, deadlineDate, deadlineTime]);
+  }, [taskData, deadlineDate, deadlineTime, estimatedTimeQuery]);
 
   return (
     <Drawer
@@ -225,7 +309,9 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
         </DrawerHeader>
         <DrawerFooter>
           <DrawerClose>
-            <Button variant="primary">확인</Button>
+            <Button variant="primary" onClick={() => editTaskDataMutation()}>
+              확인
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

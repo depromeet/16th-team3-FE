@@ -205,6 +205,33 @@ export function combineDeadlineDateTime(
   return dueDatetimeStr;
 }
 
+export function combineDeadlineDateTimeToDate({
+  deadlineDate,
+  deadlineTime,
+}: {
+  deadlineDate?: Date;
+  deadlineTime?: TimePickerType;
+}): Date {
+  if (!deadlineDate || !deadlineTime) {
+    return new Date();
+  }
+
+  const combinedDate = new Date(deadlineDate);
+
+  let hour = parseInt(deadlineTime.hour, 10);
+  const minute = parseInt(deadlineTime.minute, 10);
+
+  if (deadlineTime.meridiem === '오후' && hour < 12) {
+    hour += 12;
+  } else if (deadlineTime.meridiem === '오전' && hour === 12) {
+    hour = 0;
+  }
+
+  combinedDate.setHours(hour, minute, 0, 0);
+
+  return combinedDate;
+}
+
 export function clearTimeOnDueDatetime(dueDatetime: Date) {
   const date = new Date(dueDatetime);
   date.setHours(0, 0, 0, 0);
