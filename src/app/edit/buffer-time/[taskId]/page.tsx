@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import getBufferTime from '@/utils/getBufferTime';
@@ -35,6 +34,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     estimatedTime: estimatedTimeQuery,
     triggerActionAlarmTime: triggerActionAlarmTimeQuery,
     isUrgent: isUrgentQuery,
+    type,
   } = use(searchParams);
 
   const query = new URLSearchParams({
@@ -48,6 +48,8 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     triggerActionAlarmTime: triggerActionAlarmTimeQuery || '',
     isUrgent: isUrgentQuery ? isUrgentQuery.toString() : '',
   }).toString();
+
+  console.log(type);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -119,17 +121,18 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
         minute: minuteQuery ? minuteQuery : minute,
       });
 
-      const body = {
-        name: taskQuery || taskData?.name,
-        dueDatetime: dueDatetime,
-        triggerAction: triggerActionQuery || taskData?.triggerAction,
-        estimatedTime:
-          Number(estimatedTimeQuery) || Number(taskData?.estimatedTime),
-        triggerActionAlarmTime:
-          (triggerActionAlarmTimeQuery?.replace('T', ' ') ?? '') ||
-          taskData?.triggerActionAlarmTime.replace('T', ' '),
-        isUrgent: isUrgentQuery ? JSON.parse(isUrgentQuery.toString()) : false,
-      };
+      let body = {};
+
+      if (type === 'firstStep') {
+        body = {
+          name: taskQuery,
+          dueDatetime: dueDatetime,
+          triggerActionAlarmTime: triggerActionAlarmTimeQuery,
+          isUrgent: isUrgentQuery
+            ? JSON.parse(isUrgentQuery.toString())
+            : false,
+        };
+      }
 
       const response = await api.patch(`v1/tasks/${taskId}`, {
         body: JSON.stringify(body),
@@ -194,11 +197,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
                 <span className="b2 text-neutral mt-[2px]">
                   {`${formattedDate}, ${effectiveTime.meridiem} ${effectiveTime.hour}:${effectiveTime.minute}`}
                 </span>
-                <ChevronRight
-                  width={20}
-                  height={20}
-                  className="text-icon-secondary"
-                />
               </div>
             </div>
             <div className="flex w-full items-center justify-between">
@@ -214,11 +212,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
                     ? triggerActionQuery
                     : taskData.triggerAction}
                 </span>
-                <ChevronRight
-                  width={20}
-                  height={20}
-                  className="text-icon-secondary"
-                />
               </div>
             </div>
             <div className="flex w-full items-center justify-between">
@@ -240,11 +233,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
                     .filter(Boolean)
                     .join(' ')}
                 </span>
-                <ChevronRight
-                  width={20}
-                  height={20}
-                  className="text-icon-secondary"
-                />
               </div>
             </div>
           </div>

@@ -10,5 +10,6 @@ export interface EditPageProps {
     estimatedTime?: number;
     triggerActionAlarmTime?: string;
     isUrgent?: boolean;
+    type?: string;
   }>;
 }

@@ -35,19 +35,8 @@ import getBufferTime from '@/utils/getBufferTime';
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
 
-const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
+const DeadlineDateEditPage = ({ params }: EditPageProps) => {
   const { taskId } = use(params);
-  const {
-    task: taskQuery,
-    deadlineDate: deadlineDateQuery,
-    meridiem: meridiemQuery,
-    hour: hourQuery,
-    minute: minuteQuery,
-    triggerAction: triggerActionQuery,
-    estimatedTime: estimatedTimeQuery,
-    triggerActionAlarmTime: triggerActionAlarmTimeQuery,
-    isUrgent: isUrgentQuery,
-  } = use(searchParams);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -73,7 +62,7 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
   const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;
 
   const { estimatedDay, estimatedHour, estimatedMinute } = convertEstimatedTime(
-    estimatedTimeQuery ? estimatedTimeQuery : (taskData?.estimatedTime ?? 0),
+    taskData?.estimatedTime ?? 0,
   );
 
   const deadlineDateTime = combineDeadlineDateTimeToDate({
@@ -96,7 +85,7 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
         finalHours,
         finalMinutes,
       )
-    : triggerActionQuery || '';
+    : '';
 
   const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value);
@@ -123,15 +112,11 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
       meridiem: deadlineTime.meridiem,
       hour: deadlineTime.hour,
       minute: deadlineTime.minute,
-      triggerAction: triggerActionQuery || taskData?.triggerAction || '',
-      estimatedTime: estimatedTimeQuery
-        ? estimatedTimeQuery.toString()
-        : taskData?.estimatedTime?.toString() || '',
       triggerActionAlarmTime: newTriggerActionAlarmTime,
       isUrgent: isUrgent.toString(),
     }).toString();
 
-    router.push(`/edit/buffer-time/${taskId}?${query}`);
+    router.push(`/edit/buffer-time/${taskId}?${query}&type=firstStep`);
   };
 
   // TODO(prgmr99): 즉시 시작을 클릭했을 때, 실행할 mutation
@@ -142,25 +127,21 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
       }
 
       const dueDatetime = combineDeadlineDateTime(deadlineDate, {
-        meridiem: meridiemQuery ? meridiemQuery : deadlineTime.meridiem,
-        hour: hourQuery ? hourQuery : deadlineTime.hour,
-        minute: minuteQuery ? minuteQuery : deadlineTime.minute,
+        meridiem: deadlineTime.meridiem,
+        hour: deadlineTime.hour,
+        minute: deadlineTime.minute,
       });
 
       const body = {
-        name: taskQuery || taskData?.name,
+        name: taskData?.name,
         dueDatetime: dueDatetime,
-        triggerAction: triggerActionQuery || taskData?.triggerAction,
-        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
         triggerActionAlarmTime: newTriggerActionAlarmTime,
         isUrgent: false,
       };
 
       const urgentBody = {
-        name: taskQuery || taskData?.name,
+        name: taskData?.name,
         dueDatetime: dueDatetime,
-        triggerAction: triggerActionQuery || taskData?.triggerAction,
-        estimatedTime: estimatedTimeQuery || taskData?.estimatedTime,
         isUrgent: true,
       };
 
@@ -192,42 +173,20 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
 
   useEffect(() => {
     if (taskData) {
-      setTask(taskQuery ? taskQuery : taskData.name);
+      setTask(taskData.name);
 
-      const originalDate = new Date(
-        deadlineDateQuery ? deadlineDateQuery : taskData.dueDatetime,
-      );
+      const originalDate = new Date(taskData.dueDatetime);
       const dateAtMidnight = clearTimeOnDueDatetime(originalDate);
       setDeadlineDate(dateAtMidnight);
 
-      if (meridiemQuery && hourQuery && minuteQuery) {
-        setDeadlineTime({
-          meridiem: meridiemQuery,
-          hour: hourQuery,
-          minute: minuteQuery,
-        });
-      } else {
-        const { meridiem, hour, minute } = convertToFormattedTime(originalDate);
-        setDeadlineTime({ meridiem, hour, minute });
-      }
+      const { meridiem, hour, minute } = convertToFormattedTime(originalDate);
+      setDeadlineTime({ meridiem, hour, minute });
     }
-  }, [
-    deadlineDateQuery,
-    hourQuery,
-    meridiemQuery,
-    minuteQuery,
-    taskData,
-    taskQuery,
-  ]);
+  }, [taskData]);
 
-  // * Task 2
-  // * 아래의 두 가지 경우에 대해서, 다르게 처리가 필요하다.
-  // * A 같은 경우는 버퍼타임으로 이동하고, B같은 경우는 바로 즉시 시작을 유도한다.
-  // A: taskData.estimatedTime || estimatedTimeQuery 의 버퍼타임(예상소요시간의 1.5배)이 마감일을 지나는 경우
-  // B: taskData.estimatedTime || estimatedTimeQuery 예상소요시간이 마감일을 지나는 경우
   useEffect(() => {
     if (taskData && deadlineDate) {
-      const currentEstimatedTime = estimatedTimeQuery || taskData.estimatedTime;
+      const currentEstimatedTime = taskData.estimatedTime;
       const changedDeadline = convertDeadlineToDate(deadlineDate, deadlineTime);
 
       const diffMs = changedDeadline.getTime() - new Date().getTime();
@@ -241,7 +200,7 @@ const DeadlineDateEditPage = ({ params, searchParams }: EditPageProps) => {
         setIsUrgent(false);
       }
     }
-  }, [taskData, deadlineDate, deadlineTime, estimatedTimeQuery]);
+  }, [taskData, deadlineDate, deadlineTime]);
 
   return (
     <Drawer
