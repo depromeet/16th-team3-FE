@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect, useRef, useState } from 'react';
+import { Suspense, use, useEffect, useRef, useState } from 'react';
 import HeaderTitle from '@/app/(create)/_components/headerTitle/HeaderTitle';
 import SmallActionChip from '@/app/(create)/_components/smallActionChip/SmallActionChip';
 import ClearableInput from '@/components/clearableInput/ClearableInput';
@@ -10,23 +10,14 @@ import { TaskResponse } from '@/types/task';
 import { api } from '@/lib/ky';
 import { useRouter } from 'next/navigation';
 import { EditPageProps } from '../../context';
+import { Loader } from 'lucide-react';
 
 const WAITING_TIME = 200;
 const MAX_SMALL_ACTION_LENGTH = 15;
 const SMALL_ACTION_LIST = ['SitAtTheDesk', 'TurnOnTheLaptop', 'DrinkWater'];
 
-const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
+const SmallActionEdit = ({ params }: EditPageProps) => {
   const { taskId } = use(params);
-  const {
-    task: taskQuery,
-    deadlineDate: deadlineDateQuery,
-    meridiem: meridiemQuery,
-    hour: hourQuery,
-    minute: minuteQuery,
-    triggerAction: triggerActionQuery,
-    estimatedTime: estimatedTimeQuery,
-    triggerActionAlarmTime: triggerActionAlarmTimeQuery,
-  } = use(searchParams);
 
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -34,7 +25,7 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
   const [isFocused, setIsFocused] = useState(true);
   const [smallAction, setSmallAction] = useState<string>('');
 
-  const { data: taskData } = useQuery<TaskResponse>({
+  const { data: taskData, isPending } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
     queryFn: async () =>
       await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
@@ -55,19 +46,11 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
   };
 
   const handleNextButtonClick = () => {
-    // ! TODO(prgmr99): '' 문자열만 할당해도 되는지 판단 필요
     const query = new URLSearchParams({
-      task: taskQuery || '',
-      deadlineDate: deadlineDateQuery || '',
-      meridiem: meridiemQuery || '',
-      hour: hourQuery || '',
-      minute: minuteQuery || '',
       triggerAction: smallAction,
-      estimatedTime: estimatedTimeQuery ? estimatedTimeQuery.toString() : '',
-      triggerActionAlarmTime: triggerActionAlarmTimeQuery || '',
     }).toString();
 
-    router.push(`/edit/buffer-time/${taskId}?${query}`);
+    router.push(`/edit/buffer-time/${taskId}?${query}&type=smallAction`);
   };
 
   useEffect(() => {
@@ -82,61 +65,81 @@ const SmallActionEditPage = ({ params, searchParams }: EditPageProps) => {
 
   useEffect(() => {
     if (taskData) {
-      setSmallAction(
-        triggerActionQuery ? triggerActionQuery : taskData.triggerAction,
-      );
+      setSmallAction(taskData.triggerAction);
     }
-  }, [taskData, triggerActionQuery]);
+  }, [taskData]);
 
   return (
-    <div className="flex h-full w-full flex-col justify-between">
-      <div>
-        <HeaderTitle title="어떤 작은 행동부터 시작할래요?" />
-        <div className="flex flex-col gap-6">
-          <div>
-            <ClearableInput
-              value={smallAction}
-              ref={inputRef}
-              title="작은 행동 입력"
-              isFocused={isFocused}
-              onChange={handleSmallActionChange}
-              handleInputFocus={handleInputFocus}
-            />
-            {smallAction.length > MAX_SMALL_ACTION_LENGTH && (
-              <p className="mt-2 text-sm text-red-500">
-                최대 16자 이내로 입력할 수 있어요.
-              </p>
-            )}
-            {smallAction.length === 0 && (
-              <div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
-                {SMALL_ACTION_LIST.map((action, index) => (
-                  <SmallActionChip
-                    key={index}
-                    smallAction={action}
-                    onClick={handleSmallActionClick}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+    <div className="flex h-screen w-full flex-col justify-between">
+      {isPending ? (
+        <div className="flex h-screen w-full items-center justify-center bg-background-primary px-5 py-12">
+          <Loader />
         </div>
-      </div>
-      <div
-        className={`transition-all duration-300 ${isFocused ? 'mb-[48vh]' : 'pb-[46px]'}`}
-      >
-        <Button
-          variant="primary"
-          className="w-full"
-          disabled={
-            smallAction.length === 0 ||
-            smallAction.length > MAX_SMALL_ACTION_LENGTH
-          }
-          onClick={handleNextButtonClick}
-        >
-          확인
-        </Button>
-      </div>
+      ) : (
+        <>
+          <div>
+            <HeaderTitle title="어떤 작은 행동부터 시작할래요?" />
+            <div className="flex flex-col gap-6">
+              <div>
+                <ClearableInput
+                  value={smallAction}
+                  ref={inputRef}
+                  title="작은 행동 입력"
+                  isFocused={isFocused}
+                  onChange={handleSmallActionChange}
+                  handleInputFocus={handleInputFocus}
+                />
+                {smallAction.length > MAX_SMALL_ACTION_LENGTH && (
+                  <p className="mt-2 text-sm text-red-500">
+                    최대 16자 이내로 입력할 수 있어요.
+                  </p>
+                )}
+                {smallAction.length === 0 && (
+                  <div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
+                    {SMALL_ACTION_LIST.map((action, index) => (
+                      <SmallActionChip
+                        key={index}
+                        smallAction={action}
+                        onClick={handleSmallActionClick}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          <div
+            className={`transition-all duration-300 ${isFocused ? 'mb-[48vh]' : 'pb-[46px]'}`}
+          >
+            <Button
+              variant="primary"
+              className="w-full"
+              disabled={
+                smallAction.length === 0 ||
+                smallAction.length > MAX_SMALL_ACTION_LENGTH
+              }
+              onClick={handleNextButtonClick}
+            >
+              확인
+            </Button>
+          </div>
+        </>
+      )}
     </div>
+  );
+};
+
+const SmallActionEditPage = (props: EditPageProps) => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
+          <Loader />
+        </div>
+      }
+    >
+      <SmallActionEdit {...props} />
+    </Suspense>
   );
 };
 

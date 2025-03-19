@@ -49,8 +49,6 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     isUrgent: isUrgentQuery ? isUrgentQuery.toString() : '',
   }).toString();
 
-  console.log(type);
-
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -131,6 +129,12 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
           isUrgent: isUrgentQuery
             ? JSON.parse(isUrgentQuery.toString())
             : false,
+        };
+      }
+
+      if (type === 'smallAction') {
+        body = {
+          triggerAction: triggerActionQuery,
         };
       }
 
