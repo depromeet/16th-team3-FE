@@ -9,7 +9,7 @@ import TimeSelectedComponent from '@/app/(create)/_components/timeSelectedCompon
 import ClearableInput from '@/components/clearableInput/ClearableInput';
 import { Button } from '@/components/ui/button';
 import { TimePickerType } from '@/types/create';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/ky';
 import { TaskResponse } from '@/types/task';
 import {
@@ -119,47 +119,44 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
     router.push(`/edit/buffer-time/${taskId}?${query}&type=firstStep`);
   };
 
-  // TODO(prgmr99): 즉시 시작을 클릭했을 때, 실행할 mutation
-  const { mutate: editTaskDataMutation } = useMutation({
-    mutationFn: async () => {
-      if (!deadlineDate) {
-        throw new Error('마감 날짜가 선택되지 않았습니다.');
-      }
+  const editTaskDataMutation = async () => {
+    if (!deadlineDate) {
+      throw new Error('마감 날짜가 선택되지 않았습니다.');
+    }
 
-      const dueDatetime = combineDeadlineDateTime(deadlineDate, {
-        meridiem: deadlineTime.meridiem,
-        hour: deadlineTime.hour,
-        minute: deadlineTime.minute,
-      });
+    const dueDatetime = combineDeadlineDateTime(deadlineDate, {
+      meridiem: deadlineTime.meridiem,
+      hour: deadlineTime.hour,
+      minute: deadlineTime.minute,
+    });
 
-      const body = {
-        name: taskData?.name,
-        dueDatetime: dueDatetime,
-        triggerActionAlarmTime: newTriggerActionAlarmTime,
-        isUrgent: false,
-      };
+    const body = {
+      name: taskData?.name,
+      dueDatetime: dueDatetime,
+      triggerActionAlarmTime: newTriggerActionAlarmTime,
+      isUrgent: false,
+    };
 
-      const urgentBody = {
-        name: taskData?.name,
-        dueDatetime: dueDatetime,
-        isUrgent: true,
-      };
+    const urgentBody = {
+      name: taskData?.name,
+      dueDatetime: dueDatetime,
+      isUrgent: true,
+    };
 
-      const response = await api.patch(`v1/tasks/${taskId}`, {
-        body: isUrgent ? JSON.stringify(urgentBody) : JSON.stringify(body),
-      });
+    const res = await fetch(`/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: isUrgent ? JSON.stringify(urgentBody) : JSON.stringify(body),
+    });
 
-      return response.json();
-    },
-    onSuccess: (data) => {
-      // TODO(prgmr99): data를 이용해서 홈화면에서 모달 띄우기
-      console.log('data', data);
-      queryClient.invalidateQueries({
-        queryKey: ['tasks', 'home'],
-      });
+    const text = await res.text();
+    const response = text ? JSON.parse(text) : {};
+
+    if (response.success) {
+      queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push('/home-page');
-    },
-  });
+    }
+  };
 
   useEffect(() => {
     if (inputRef.current)

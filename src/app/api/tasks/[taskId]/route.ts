@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverApi } from '@/lib/serverKy';
+import { TaskResponse } from '@/types/task';
 
 export async function GET(
   request: NextRequest,
@@ -33,7 +34,7 @@ export async function GET(
         { status: 408 },
       );
     }
-    
+
     return NextResponse.json(
       { error: '할일을 가져오는 중 오류가 발생했습니다.' },
       { status: 500 },
@@ -49,7 +50,7 @@ export async function DELETE(
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);    
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     const response = await serverApi.delete(`v1/tasks/${taskId}`);
 
     clearTimeout(timeoutId);
@@ -86,6 +87,48 @@ export async function DELETE(
       {
         error: `할일을 삭제하는 중 서버 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`,
       },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ taskId: string }> },
+) {
+  try {
+    const data = await req.json();
+    const { taskId } = await params;
+
+    const apiResponse = await serverApi.patch(`v1/tasks/${taskId}`, {
+      body: JSON.stringify(data),
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      return NextResponse.json(
+        { error: 'Failed to POST request', details: errorData },
+        { status: apiResponse.status },
+      );
+    }
+
+    const taskResponse: TaskResponse = await apiResponse.json();
+
+    const personaName = taskResponse.persona.name;
+    const taskMode = taskResponse.persona.taskKeywordsCombination.taskMode.name;
+    const taskType = taskResponse.persona.taskKeywordsCombination.taskType.name;
+
+    const nextResponse = NextResponse.json({
+      success: true,
+      personaName: personaName,
+      taskMode: taskMode,
+      taskType: taskType,
+    });
+
+    return nextResponse;
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Error patch task data' },
       { status: 500 },
     );
   }
