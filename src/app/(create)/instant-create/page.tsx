@@ -6,11 +6,9 @@ import useMount from '@/hooks/useMount';
 import BackHeader from '@/components/backHeader/BackHeader';
 import TaskInput from '../_components/taskInput/TaskInput';
 import InstantTaskTypeInput from '../_components/instantTaskTypeInput/InstantTaskTypeInput';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { InstantTaskType, TimePickerType } from '@/types/create';
-import { api } from '@/lib/ky';
 import { useRouter } from 'next/navigation';
-import { TaskResponse } from '@/types/task';
 
 type FormState = {
   task?: string;
@@ -50,45 +48,27 @@ const InstantTaskCreate = () => {
   const queryClient = useQueryClient();
   const { isMounted } = useMount();
 
-  const { mutate: createScheduledTaskMutation } = useMutation({
-    mutationFn: async (data: InstantTaskType): Promise<TaskResponse> => {
-      try {
-        alert('Step 1: 요청 시작');
-        const response = await api.post(`v1/tasks/urgent`, {
-          body: JSON.stringify(data),
-        });
-        alert('Step 2: 응답 수신, JSON 파싱 시작');
+  const instantTaskMutation = async (data: InstantTaskType) => {
+    const res = await fetch('/api/tasks/urgent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-        const result = await response.json();
-        alert('Step 3: JSON 파싱 완료');
+    const text = await res.text();
+    const response = text ? JSON.parse(text) : {};
 
-        return result as TaskResponse;
-      } catch (err) {
-        alert('mutationFn 에러 발생: ' + JSON.stringify(err));
-        throw err;
-      }
-    },
-    onSuccess: (data: TaskResponse) => {
-      alert('Step 4: 요청 성공, 데이터 처리 시작');
-      const personaName = data.persona.name;
-      const taskMode = data.persona.taskKeywordsCombination.taskMode.name;
-      const taskType = data.persona.taskKeywordsCombination.taskType.name;
+    if (response.success) {
+      const personaName = response.personaName;
+      const taskMode = response.taskMode;
+      const taskType = response.taskType;
 
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
-      alert('Step 5: 홈 페이지로 리디렉션');
       router.push(
         `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
-    },
-    onError: (error) => {
-      alert('Step X: onError 호출됨');
-      console.error('Error creating instant task:', error);
-      alert('에러 상세: ' + JSON.stringify(error));
-      if (error.message) {
-        alert('에러 메시지: ' + error.message);
-      }
-    },
-  });
+    }
+  };
 
   const lastStep =
     funnel.historySteps.length > 1
@@ -129,7 +109,7 @@ const InstantTaskCreate = () => {
         taskTypeInput={({ context }) => (
           <InstantTaskTypeInput
             context={context}
-            onClick={(data) => createScheduledTaskMutation(data)}
+            onClick={(data) => instantTaskMutation(data)}
           />
         )}
       />
