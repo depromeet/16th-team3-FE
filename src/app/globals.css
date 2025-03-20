@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css');
+@theme {
+  --font-pretendard: 'Pretendard Variable';
+}
 
 :root {
-  --font-pretendard: 'Pretendard', sans-serif;
-
   --point-gradient: linear-gradient(
     269deg,
     #ddd9f8 6.08%,
@@ -45,11 +45,11 @@
 }
 
 html {
-  font-family: var(--font-pretendard);
 }
 
 body {
   @apply bg-background-primary text-text-normal;
+  font-family: var(--font-pretendard);
 }
 
 /* 기본 헤더 스타일 */

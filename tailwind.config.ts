@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard', 'sans-serif'],
+        pretendard: ['var(--font-pretendard)'],
       },
       fontSize: {
         /* Header */
