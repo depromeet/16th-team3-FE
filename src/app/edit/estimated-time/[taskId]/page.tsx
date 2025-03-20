@@ -172,7 +172,7 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
       estimatedTime: totalEstimatedMinutes.toString(),
     }).toString();
 
-    router.push(`/edit/buffer-time/${taskId}?${query}`);
+    router.push(`/edit/buffer-time/${taskId}?${query}&type=estimatedTime`);
   };
 
   useEffect(() => {

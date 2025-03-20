@@ -7,9 +7,8 @@ import { ko } from 'date-fns/locale';
 import getBufferTime from '@/utils/getBufferTime';
 import formatBufferTime from '@/utils/formatBufferTime';
 import { use } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { TaskResponse } from '@/types/task';
-import { api } from '@/lib/ky';
 import {
   calculateTriggerActionAlarmTime,
   clearTimeOnDueDatetime,
@@ -21,6 +20,7 @@ import {
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import { EditPageProps } from '../../context';
+import { fetchSingleTask } from '@/services/taskService';
 
 const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
   const { taskId } = use(params);
@@ -54,8 +54,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
-    queryFn: async () =>
-      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
+    queryFn: () => fetchSingleTask(taskId),
   });
 
   const baseDate = deadlineDateQuery
@@ -107,50 +106,61 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     },
   );
 
-  const { mutate: editTaskDataMutation } = useMutation({
-    mutationFn: async () => {
-      if (!dateAtMidnight) {
-        throw new Error('마감 날짜가 선택되지 않았습니다.');
-      }
+  const editTaskDataMutation = async () => {
+    if (!dateAtMidnight) {
+      throw new Error('마감 날짜가 선택되지 않았습니다.');
+    }
 
-      const dueDatetime = combineDeadlineDateTime(dateAtMidnight, {
-        meridiem: meridiemQuery ? meridiemQuery : meridiem,
-        hour: hourQuery ? hourQuery : hour,
-        minute: minuteQuery ? minuteQuery : minute,
-      });
+    const dueDatetime = combineDeadlineDateTime(dateAtMidnight, {
+      meridiem: meridiemQuery ? meridiemQuery : meridiem,
+      hour: hourQuery ? hourQuery : hour,
+      minute: minuteQuery ? minuteQuery : minute,
+    });
 
-      let body = {};
+    let body = {};
 
-      if (type === 'firstStep') {
-        body = {
-          name: taskQuery,
-          dueDatetime: dueDatetime,
-          triggerActionAlarmTime: triggerActionAlarmTimeQuery,
-          isUrgent: isUrgentQuery
-            ? JSON.parse(isUrgentQuery.toString())
-            : false,
-        };
-      }
+    if (type === 'deadline') {
+      body = {
+        name: taskQuery,
+        dueDatetime: dueDatetime,
+        triggerActionAlarmTime: triggerActionAlarmTimeQuery,
+        isUrgent: isUrgentQuery ? JSON.parse(isUrgentQuery.toString()) : false,
+      };
+    }
 
-      if (type === 'smallAction') {
-        body = {
-          triggerAction: triggerActionQuery,
-        };
-      }
+    if (type === 'smallAction') {
+      body = {
+        triggerAction: triggerActionQuery,
+      };
+    }
 
-      const response = await api.patch(`v1/tasks/${taskId}`, {
-        body: JSON.stringify(body),
-      });
+    if (type === 'estimatedTime') {
+      body = {
+        estimatedTime: estimatedTimeQuery,
+        triggerActionAlarmTime: triggerActionAlarmTimeQuery,
+      };
+    }
 
-      return response.json();
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ['tasks', 'home'],
-      });
-      router.push('/home-page');
-    },
-  });
+    const res = await fetch(`/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const text = await res.text();
+    const response = text ? JSON.parse(text) : {};
+
+    if (response.success) {
+      const personaName = response.personaName;
+      const taskMode = response.taskMode;
+      const taskType = response.taskType;
+
+      queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
+      router.push(
+        `/home-page?dialog=success&task=${taskQuery || taskData?.name}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+      );
+    }
+  };
 
   const timeString = formatBufferTime({
     days: finalDays,

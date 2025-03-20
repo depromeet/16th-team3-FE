@@ -116,7 +116,7 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
       isUrgent: isUrgent.toString(),
     }).toString();
 
-    router.push(`/edit/buffer-time/${taskId}?${query}&type=firstStep`);
+    router.push(`/edit/buffer-time/${taskId}?${query}&type=deadline`);
   };
 
   const editTaskDataMutation = async () => {
