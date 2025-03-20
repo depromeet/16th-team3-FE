@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverApi } from '@/lib/serverKy';
 import { TaskResponse } from '@/types/task';
+import { cookies } from 'next/headers';
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +38,9 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { error: '할일을 가져오는 중 오류가 발생했습니다.' },
+      {
+        error: '할일을 가져오는 중 오류가 발생했습니다.',
+      },
       { status: 500 },
     );
   }

@@ -18,12 +18,10 @@ const getBufferTime = (
     : 0;
 
   let bufferMinutes: number;
-  if (remainingMinutes >= desiredBufferMinutes) {
-    bufferMinutes = desiredBufferMinutes;
-  } else if (remainingMinutes > estimatedTotalMinutes) {
+  if (remainingMinutes < desiredBufferMinutes) {
     bufferMinutes = remainingMinutes;
   } else {
-    bufferMinutes = remainingMinutes;
+    bufferMinutes = desiredBufferMinutes;
   }
 
   const finalDays = Math.floor(bufferMinutes / 1440);

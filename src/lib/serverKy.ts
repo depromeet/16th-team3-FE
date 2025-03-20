@@ -27,6 +27,7 @@ export const serverApi = ky.create({
       async (request, options, response) => {
         const cookieStore = await cookies();
         const accessToken = cookieStore.get('accessToken')?.value;
+        const refreshToken = cookieStore.get('refreshToken')?.value;
 
         if (response.status === UNAUTHORIZED_CODE || !accessToken) {
           try {
@@ -35,7 +36,7 @@ export const serverApi = ky.create({
               {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  refreshToken: cookieStore.get('refreshToken')?.value,
+                  refreshToken: refreshToken,
                 }),
                 credentials: 'include',
               },

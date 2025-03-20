@@ -1,5 +1,6 @@
 import { serverApi } from '@/lib/serverKy';
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,6 +30,19 @@ export async function GET(request: NextRequest) {
         { status: 408 },
       );
     }
+
+    // ! 지금 serverApi는 refresh token 로직이 돌지 않고 있음.
+    // const cookieStore = await cookies();
+    // const accessToken = cookieStore.get('accessToken')?.value;
+
+    // if (!accessToken) {
+    //   return NextResponse.json(
+    //     {
+    //       error: 'Unauthorized',
+    //     },
+    //     { status: 401 },
+    //   );
+    // }
 
     return NextResponse.json(
       {
