@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ taskId: string }> | { taskId: string } },
+  { params }: { params: Promise<{ taskId: string }> },
 ) {
   const { taskId } = await params;
 

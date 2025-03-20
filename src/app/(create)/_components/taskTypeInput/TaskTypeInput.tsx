@@ -49,6 +49,7 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
   });
 
   const { finalDays, finalHours, finalMinutes } = getBufferTime(
+    context.deadlineDate,
     context.estimatedDay,
     context.estimatedHour,
     context.estimatedMinute,
