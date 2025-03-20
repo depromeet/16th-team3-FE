@@ -31,6 +31,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import getBufferTime from '@/utils/getBufferTime';
+import { fetchSingleTask } from '@/services/taskService';
 
 const MAX_TASK_LENGTH = 15;
 const WAITING_TIME = 200;
@@ -55,8 +56,7 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
-    queryFn: async () =>
-      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
+    queryFn: () => fetchSingleTask(taskId),
   });
 
   const isInvalid = task.length > MAX_TASK_LENGTH || task.length === 0;

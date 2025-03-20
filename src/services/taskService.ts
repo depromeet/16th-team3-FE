@@ -218,3 +218,13 @@ export const deleteTask = async (taskId: number): Promise<void> => {
 
   await fetchWithError(`/api/tasks/${taskId}`, options);
 };
+
+// * 작업 수정 페이지에서 할 일에 대한 정보를 가져오는 함수
+export const fetchSingleTask = async (taskId: string) => {
+  const response = await fetch(`/api/tasks/${taskId}`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || '에러 발생');
+  }
+  return response.json();
+};

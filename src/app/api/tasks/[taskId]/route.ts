@@ -4,7 +4,7 @@ import { TaskResponse } from '@/types/task';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ taskId: string }> },
+  { params }: { params: Promise<{ taskId: string }> | { taskId: string } },
 ) {
   const { taskId } = await params;
 
@@ -26,6 +26,7 @@ export async function GET(
     }
 
     const data = await response.json();
+
     return NextResponse.json(data);
   } catch (error: any) {
     if (error.name === 'AbortError') {

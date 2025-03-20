@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import HeaderTitle from '@/app/(create)/_components/headerTitle/HeaderTitle';
@@ -9,12 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList } from '@/components/ui/tabs';
 import { TabsContent, TabsTrigger } from '@radix-ui/react-tabs';
 import { TimePickerType } from '@/types/create';
-import { formatDistanceStrict, set } from 'date-fns';
+import { formatDistanceStrict } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useQuery } from '@tanstack/react-query';
-import { TaskResponse } from '@/types/task';
 import { EditPageProps } from '../../context';
-import { api } from '@/lib/ky';
 import {
   calculateTriggerActionAlarmTime,
   clearTimeOnDueDatetime,
@@ -25,18 +22,13 @@ import {
 } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import getBufferTime from '@/utils/getBufferTime';
+import Loader from '@/components/loader/Loader';
+import { useQuery } from '@tanstack/react-query';
+import { TaskResponse } from '@/types/task';
+import { fetchSingleTask } from '@/services/taskService';
 
-const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
+const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
   const { taskId } = use(params);
-  const {
-    task: taskQuery,
-    deadlineDate: deadlineDateQuery,
-    meridiem: meridiemQuery,
-    hour: hourQuery,
-    minute: minuteQuery,
-    triggerAction: triggerActionQuery,
-    estimatedTime: estimatedTimeQuery,
-  } = use(searchParams);
 
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,40 +38,17 @@ const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const { data: taskData } = useQuery<TaskResponse>({
     queryKey: ['singleTask', taskId],
-    queryFn: async () =>
-      await api.get(`v1/tasks/${taskId}`).json<TaskResponse>(),
+    queryFn: () => fetchSingleTask(taskId),
   });
-
-  const {
-    estimatedDay: estimatedDayQuery,
-    estimatedHour: estimatedHourQuery,
-    estimatedMinute: estimatedMinuteQuery,
-  } = convertEstimatedTime(estimatedTimeQuery || 0);
-
-  const {
-    estimatedDay: estimatedDayUseQuery,
-    estimatedHour: estimatedHourUseQuery,
-    estimatedMinute: estimatedMinuteUseQuery,
-  } = convertEstimatedTime(taskData?.estimatedTime || 0);
 
   const [estimatedHour, setEstimatedHour] = useState<string>('');
 
-  const [estimatedMinute, setEstimatedMinute] = useState<string>(
-    estimatedTimeQuery && estimatedHourQuery !== 0
-      ? `${estimatedMinuteQuery}`
-      : `${estimatedMinuteUseQuery || ''}`,
-  );
+  const [estimatedMinute, setEstimatedMinute] = useState<string>('');
 
-  const [estimatedDay, setEstimatedDay] = useState<string>(
-    estimatedTimeQuery && estimatedDayQuery !== 0
-      ? `${estimatedDayQuery}`
-      : `${estimatedDayUseQuery || ''}`,
-  );
+  const [estimatedDay, setEstimatedDay] = useState<string>('');
 
   const [focusedTab, setFocusedTab] = useState<string | null>('시간');
-  const [currentTab, setCurrentTab] = useState(
-    Boolean(estimatedDayQuery) ? '일' : '시간',
-  );
+  const [currentTab, setCurrentTab] = useState('시간');
   const [isOnlyMinute, setIsOnlyMinute] = useState(false);
   const [hourError, setHourError] = useState<{
     isValid: boolean;
@@ -120,49 +89,44 @@ const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const deadlineDate = useMemo(
     () =>
-      clearTimeOnDueDatetime(
-        deadlineDateQuery
-          ? new Date(deadlineDateQuery)
-          : taskData?.dueDatetime
-            ? new Date(taskData.dueDatetime)
-            : new Date(),
-      ) as Date,
-    [deadlineDateQuery, taskData?.dueDatetime],
+      taskData?.dueDatetime
+        ? clearTimeOnDueDatetime(new Date(taskData.dueDatetime))
+        : new Date(),
+    [taskData?.dueDatetime],
   );
 
   const deadlineTime = useMemo(
     () => ({
-      meridiem: meridiemQuery ?? meridiem,
-      hour: hourQuery ?? hour,
-      minute: minuteQuery ?? minute,
+      meridiem: meridiem,
+      hour: hour,
+      minute: minute,
     }),
-    [meridiemQuery, meridiem, hourQuery, hour, minuteQuery, minute],
+    [meridiem, hour, minute],
   );
 
   const formattedDeadline = formatDistanceStrict(
     new Date(),
     convertDeadlineToDate(
-      clearTimeOnDueDatetime(
-        deadlineDateQuery
-          ? new Date(deadlineDateQuery)
-          : taskData?.dueDatetime
-            ? new Date(taskData.dueDatetime)
-            : new Date(),
-      ) as Date,
+      taskData?.dueDatetime
+        ? clearTimeOnDueDatetime(new Date(taskData.dueDatetime))
+        : new Date(),
       {
-        meridiem: meridiemQuery ?? meridiem,
-        hour: hourQuery ?? hour,
-        minute: minuteQuery ?? minute,
+        meridiem: meridiem,
+        hour: hour,
+        minute: minute,
       } as TimePickerType,
     ),
     { addSuffix: true, locale: ko },
   );
 
-  const { finalDays, finalHours, finalMinutes } = getBufferTime(
-    estimatedDay,
-    estimatedHour,
-    estimatedMinute,
-  );
+  const { finalDays, finalHours, finalMinutes } = taskData
+    ? getBufferTime(
+        new Date(taskData.dueDatetime),
+        estimatedDay,
+        estimatedHour,
+        estimatedMinute,
+      )
+    : { finalDays: 0, finalHours: 0, finalMinutes: 0 };
 
   const triggerActionAlarmTime = calculateTriggerActionAlarmTime(
     deadlineDate,
@@ -204,51 +168,26 @@ const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
   const handleNextButtonClick = () => {
     const query = new URLSearchParams({
-      task: taskQuery || '',
-      deadlineDate: deadlineDateQuery || '',
-      meridiem: meridiemQuery || '',
-      hour: hourQuery || '',
-      minute: minuteQuery || '',
-      triggerAction: triggerActionQuery || '',
       triggerActionAlarmTime: triggerActionAlarmTime,
-      estimatedTime:
-        totalEstimatedMinutes !== undefined
-          ? `${totalEstimatedMinutes}`
-          : `${estimatedTimeQuery || ''}`,
+      estimatedTime: totalEstimatedMinutes.toString(),
     }).toString();
 
     router.push(`/edit/buffer-time/${taskId}?${query}`);
   };
 
-  // ! TODO(prgmr99): 코드 너무 안 좋음 -> 사이드 이펙트 주의
   useEffect(() => {
     if (taskData) {
-      setEstimatedHour(
-        estimatedTimeQuery && estimatedTimeQuery !== 0
-          ? `${estimatedHourQuery}`
-          : `${estimatedHourUseQuery || ''}`,
-      );
-      setEstimatedMinute(
-        estimatedTimeQuery && estimatedTimeQuery !== 0
-          ? `${estimatedMinuteQuery}`
-          : `${estimatedMinuteUseQuery || ''}`,
-      );
-      setEstimatedDay(
-        estimatedTimeQuery && estimatedTimeQuery !== 0
-          ? `${estimatedDayQuery}`
-          : `${estimatedDayUseQuery || ''}`,
-      );
+      const {
+        estimatedDay: convertedEstimatedDay,
+        estimatedHour: convertedEstimatedHour,
+        estimatedMinute: convertedEstimatedMinute,
+      } = convertEstimatedTime(taskData.estimatedTime);
+
+      setEstimatedHour(convertedEstimatedHour.toString());
+      setEstimatedMinute(convertedEstimatedMinute.toString());
+      setEstimatedDay(convertedEstimatedDay.toString());
     }
-  }, [
-    estimatedDayQuery,
-    estimatedDayUseQuery,
-    estimatedHourQuery,
-    estimatedHourUseQuery,
-    estimatedMinuteQuery,
-    estimatedMinuteUseQuery,
-    estimatedTimeQuery,
-    taskData,
-  ]);
+  }, [taskData]);
 
   useEffect(() => {
     const hour = parseInt(estimatedHour, 10) || 0;
@@ -327,6 +266,10 @@ const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  if (!taskData) {
+    return <Loader />;
+  }
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div ref={containerRef}>
@@ -334,9 +277,7 @@ const EstimatedTimeEditPage = ({ params, searchParams }: EditPageProps) => {
         <div>
           <div className="flex gap-1">
             <span className="b2 text-text-alternative">할일:</span>
-            <span className="text-text-neutral">
-              {taskQuery ?? taskData?.name}
-            </span>
+            <span className="text-text-neutral">{taskData.name}</span>
           </div>
           <div className="flex gap-1">
             <span className="b2 text-text-alternative">마감:</span>
