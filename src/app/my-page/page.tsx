@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserStore } from '@/store/useUserStore';
 import ProfileImage from '@/components/ProfileImage';
@@ -12,7 +12,7 @@ import { api } from '@/lib/ky';
 export default function MyPage() {
   const router = useRouter();
 
-  const { logout } = useAuth();
+  const { logout, loadUserProfile } = useAuth();
   const userData = useUserStore((state) => state.userData);
   const clearUser = useUserStore((state) => state.clearUser);
 
@@ -79,6 +79,22 @@ export default function MyPage() {
     setShowWithdrawModal(false);
   };
 
+  useEffect(() => {
+    const initPage = async () => {
+      if (userData.memberId === -1) {
+        try {
+          await loadUserProfile();
+        } catch (error) {
+          console.error('사용자 정보 로드 실패:', error);
+        }
+      }
+
+      setPageLoading(false);
+    };
+
+    initPage();
+  }, [loadUserProfile, userData.memberId]);
+
   return (
     <div className="flex min-h-screen flex-col">
       {/* 헤더 부분 */}
@@ -95,7 +111,7 @@ export default function MyPage() {
       </div>
 
       {/* 프로필 정보 */}
-      {!pageLoading ? (
+      {pageLoading ? (
         <div className="mb-8 mt-[23px] flex flex-col items-center justify-center">
           <div className="mb-[14px] h-20 w-20 animate-pulse rounded-full bg-gray-200"></div>
           <div className="h-6 w-24 animate-pulse rounded bg-gray-200"></div>

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { TaskTypeInputType } from '../../context';
 import getBufferTime from '@/utils/getBufferTime';
 import { transformScheduledTaskData } from '@/utils/transformTaskData';
+import { combineDeadlineDateTimeToDate } from '@/utils/dateFormat';
 
 interface TaskTypeInputProps {
   context: TaskTypeInputType;
@@ -48,14 +49,19 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
     moodType: moodType || '',
   });
 
+  const deadlineDateTime = combineDeadlineDateTimeToDate({
+    deadlineDate: context.deadlineDate,
+    deadlineTime: context.deadlineTime,
+  });
+
   const { finalDays, finalHours, finalMinutes } = getBufferTime(
-    context.deadlineDate,
+    deadlineDateTime,
     context.estimatedDay,
     context.estimatedHour,
     context.estimatedMinute,
   );
 
-  const timeParts = [];
+  const timeParts = [] as string[];
 
   if (finalDays > 0) {
     timeParts.push(`${finalDays}일`);
@@ -70,7 +76,7 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
   const timeString = timeParts.length ? timeParts.join(' ') : '0분';
 
   return (
-    <div className="flex h-full w-full flex-col justify-between">
+    <div className="flex h-full flex-col justify-between">
       <div>
         <div className="flex flex-col gap-3 pb-6 pt-4">
           <div className="flex h-[26px] w-auto items-center gap-1 self-start rounded-[8px] bg-component-accent-secondary px-[7px] py-[6px]">

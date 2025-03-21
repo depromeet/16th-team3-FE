@@ -72,6 +72,8 @@ const BufferTime = ({
     minutes: finalMinutes,
   });
 
+  console.log('timeString', timeString);
+
   return (
     <div className="flex h-full w-full flex-col justify-between">
       <div className="relative mt-[30px]">
@@ -81,8 +83,8 @@ const BufferTime = ({
             <span className="l6 text-inverse">1.5배의 여유시간 적용</span>
           </div>
         </div>
-        <div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] blur-[75px]" />
-        <div className="mt-10 flex flex-col items-center">
+        <div className="bg-blur-purple absolute left-0 right-0 top-20 z-0 h-[240px] w-[100vw] blur-[75px]" />
+        <div className="z-100 mt-10 flex flex-col items-center">
           <div>
             <span className="t2 text-primary">{timeString}</span>
             <span className="t2 text-strong"> 전에는</span>
