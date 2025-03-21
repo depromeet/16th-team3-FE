@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import { api } from '@/lib/ky';
 import { useUserStore } from '@/store';
 import { User } from '@/types/user';
 
@@ -16,12 +15,15 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await api.get('v1/members/me');
+        const response = await fetch('/api/oauth/members/me');
+
         if (!response.ok) {
           setUser({});
           return;
         }
-        const data = await response.json<User>();
+
+        const data = await response.json();
+
         setUser(data);
       } catch (error) {
         console.error('authProvider error:', error);

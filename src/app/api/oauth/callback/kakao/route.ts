@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     });
 
     nextResponse.cookies.set('accessToken', accessToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true, // ! TODO: 앱 심사 받을 때, true로 변경 / 로컬(웹)에서 테스트할 떄, true로 변경 / 로컬(앱)에서 테스트할 때, false로 변경
       sameSite: 'none',
       path: '/',
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     });
 
     nextResponse.cookies.set('refreshToken', refreshToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
       sameSite: 'none',
       path: '/',
