@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'k.kakaocdn.net',
+        hostname: 'img1.kakaocdn.net',
         pathname: '/**',
       },
     ],

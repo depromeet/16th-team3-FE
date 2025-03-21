@@ -11,30 +11,15 @@ import { api } from '@/lib/ky';
 
 export default function MyPage() {
   const router = useRouter();
-  const { logout, loadUserProfile } = useAuth();
+
+  const { logout } = useAuth();
   const userData = useUserStore((state) => state.userData);
   const clearUser = useUserStore((state) => state.clearUser);
+
   const [appVersion] = useState('V.0.0.1');
   const [pageLoading, setPageLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
-
-  useEffect(() => {
-    const initPage = async () => {
-      // 사용자 데이터가 없으면 로드 시도
-      if (userData.memberId === -1) {
-        try {
-          await loadUserProfile();
-        } catch (error) {
-          console.error('사용자 정보 로드 실패:', error);
-        }
-      }
-
-      setPageLoading(false);
-    };
-
-    initPage();
-  }, []);
 
   const handleGoBack = () => {
     router.push('/');
@@ -94,8 +79,6 @@ export default function MyPage() {
     setShowWithdrawModal(false);
   };
 
-  const showLoading = pageLoading;
-
   return (
     <div className="flex min-h-screen flex-col">
       {/* 헤더 부분 */}
@@ -112,7 +95,7 @@ export default function MyPage() {
       </div>
 
       {/* 프로필 정보 */}
-      {showLoading ? (
+      {!pageLoading ? (
         <div className="mb-8 mt-[23px] flex flex-col items-center justify-center">
           <div className="mb-[14px] h-20 w-20 animate-pulse rounded-full bg-gray-200"></div>
           <div className="h-6 w-24 animate-pulse rounded bg-gray-200"></div>
@@ -121,11 +104,7 @@ export default function MyPage() {
         <>
           <div className="mb-8 mt-[23px] flex flex-col items-center justify-center">
             <div className="mb-[14px]">
-              <ProfileImage
-                imageUrl={userData?.profileImageUrl}
-                width={72}
-                height={72}
-              />
+              <ProfileImage imageUrl={userData.profileImageUrl} />
             </div>
             <div className="t3 text-gray-normal">
               {userData?.nickname || '사용자'}

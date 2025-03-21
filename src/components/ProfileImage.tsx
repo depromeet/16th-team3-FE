@@ -1,78 +1,69 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface ProfileImageProps {
-  imageUrl: string | null | undefined;
+  imageUrl: string;
   alt?: string;
   width?: number;
   height?: number;
   className?: string;
 }
 
+// ! 기본 이미지가 사용되는 경우가 있을까? - 에러 상황일 때?
+const DEFAULT_IMAGE = '/icons/mypage/default-profile.png';
+
 const ProfileImage: React.FC<ProfileImageProps> = ({
   imageUrl,
-  alt = "프로필 이미지",
+  alt = '프로필 이미지',
   width = 72,
   height = 72,
-  className = "rounded-full",
+  className = 'rounded-full',
 }) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-  const defaultImage = "/icons/mypage/default-profile.png";
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     if (imageUrl) {
       setIsLoading(true);
-      setHasError(false);
-      setImgSrc(imageUrl);
-      
+
       const img = new (window as any).Image() as HTMLImageElement;
       img.src = imageUrl;
-      
+
       img.onload = () => {
-        console.log("이미지 로드 성공:", imageUrl);
         setIsLoading(false);
+        setIsError(false);
       };
-      
+
       img.onerror = () => {
-        console.error("이미지 로드 실패:", imageUrl);
-        setHasError(true);
         setIsLoading(false);
-        setImgSrc(defaultImage);
+        setIsError(true);
       };
     } else {
-      setImgSrc(defaultImage);
       setIsLoading(false);
-      setHasError(true);
     }
   }, [imageUrl]);
 
-  if (isLoading) {
-    return (
-      <div 
-        className={`bg-gray-200 animate-pulse ${className}`}
-        style={{ width, height }}
-      />
-    );
-  }
-
   return (
-    <Image
-      src={hasError ? defaultImage : (imgSrc || defaultImage)}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      onError={() => {
-        console.log("이미지 오류 발생 (Image 컴포넌트)");
-        setHasError(true);
-        setImgSrc(defaultImage);
-      }}
-      priority
-    />
+    <div style={{ width, height }} className="relative">
+      {isLoading ? (
+        <div
+          className={`absolute inset-0 animate-pulse bg-gray-200 ${className}`}
+          style={{ width, height }}
+        ></div>
+      ) : (
+        <Image
+          src={isError ? DEFAULT_IMAGE : imageUrl || DEFAULT_IMAGE}
+          alt={alt}
+          width={width}
+          height={height}
+          onLoadingComplete={() => setIsLoading(false)}
+          className={`${className} transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          priority
+        />
+      )}
+    </div>
   );
 };
 
