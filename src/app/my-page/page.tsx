@@ -37,7 +37,7 @@ export default function MyPage() {
   }, []);
 
   const handleGoBack = () => {
-    router.push('/home-page');
+    router.push('/');
   };
 
   const handleLogout = () => {

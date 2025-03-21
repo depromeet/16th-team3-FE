@@ -68,11 +68,11 @@ const LoginPage = () => {
         setUser(oauthData.userData);
 
         if (oauthData.isNewUser) {
-          router.push('/onboarding');
+          router.push('/signup-complete');
           return;
         }
 
-        router.push('/home-page'); // TODO(prgmr99): Redirect to the home page('/')
+        router.push('/');
       } else {
         console.error('Failed to login');
       }

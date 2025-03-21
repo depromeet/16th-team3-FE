@@ -71,11 +71,11 @@ export const usePatchTaskHoldOff = (): UseMutationResult<
   return useMutation<TaskResponse, Error, HoldOffParams>({
     mutationFn: ({ taskId, data }) => patchTaskHoldOff({ taskId, data }),
     onSuccess: (data) => {
-      router.push('/home-page');
+      router.push('/');
     },
     onError: (error) => {
       console.error('usePatchTaskHoldOff onError', error);
-      router.push('/home-page');
+      router.push('/');
     },
   });
 };

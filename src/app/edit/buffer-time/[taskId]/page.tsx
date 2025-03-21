@@ -157,7 +157,7 @@ const BufferTimeEditPage = ({ params, searchParams }: EditPageProps) => {
 
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(
-        `/home-page?dialog=success&task=${taskQuery || taskData?.name}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+        `/?dialog=success&task=${taskQuery || taskData?.name}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
     }
   };

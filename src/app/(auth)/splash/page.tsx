@@ -12,7 +12,7 @@ export default function SplashPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (accessToken) {
-        router.push('/home-page');
+        router.push('/');
         return;
       }
       router.push('/login');

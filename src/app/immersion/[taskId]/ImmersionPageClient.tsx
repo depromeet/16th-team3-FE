@@ -34,10 +34,10 @@ export default function ImmersionPageClient({ initialTask }: Props) {
         const targetDate = new Date(initialTask.dueDatetime);
         // 원래 계산된 시간 문자열을 가져옴
         const timeStr = calculateRemainingTime(targetDate);
-        
+
         // '남음' 텍스트를 완전히 제거
         const formattedTime = timeStr.replace(' 남음', '');
-        
+
         setRemainingTime(formattedTime);
       }
     };
@@ -55,7 +55,7 @@ export default function ImmersionPageClient({ initialTask }: Props) {
   return (
     <div className="flex h-full flex-col bg-background-primary">
       {/* TODO : 헤더 컴포넌트로 변경 예정 */}
-      <Link href="/home-page">
+      <Link href="/">
         <div className="flex items-center px-5 py-[14px]">
           <Image
             src="/arrow-left.svg"

@@ -65,7 +65,7 @@ const InstantTaskCreate = () => {
 
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(
-        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+        `/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
     }
   };
@@ -83,7 +83,7 @@ const InstantTaskCreate = () => {
         deadlineTime: funnel.context.deadlineTime,
       });
     } else {
-      router.push('/home-page');
+      router.push('/');
     }
   };
 

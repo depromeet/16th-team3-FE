@@ -18,7 +18,7 @@ export default function ImmersionCompletePage() {
         <Button
           variant="primary"
           className="relative mb-4 w-full"
-          onClick={() => router.push('/home-page')}
+          onClick={() => router.push('/')}
         >
           홈으로 이동하기
         </Button>

@@ -96,7 +96,7 @@ const ScheduledTaskCreate = () => {
 
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
       router.push(
-        `/home-page?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+        `/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
       );
     }
   };
@@ -136,7 +136,7 @@ const ScheduledTaskCreate = () => {
         estimatedDay: funnel.context.estimatedDay,
       } as BufferTimeType);
     } else {
-      router.push('/home-page');
+      router.push('/');
     }
   };
 

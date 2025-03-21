@@ -1,4 +1,5 @@
 import ky from 'ky';
+
 import { cookies } from 'next/headers';
 
 const REFRESH_ENDPOINT = '/v1/auth/token/refresh';
@@ -76,6 +77,7 @@ export const serverApi = ky.create({
             return response;
           }
         }
+
         return response;
       },
     ],

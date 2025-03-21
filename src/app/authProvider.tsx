@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 
 import { useUserStore } from '@/store';
-import { User } from '@/types/user';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -13,7 +12,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
-    async function fetchUser() {
+    const fetchUser = async () => {
       try {
         const response = await fetch('/api/oauth/members/me');
 
@@ -29,7 +28,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         console.error('authProvider error:', error);
         setUser({});
       }
-    }
+    };
 
     fetchUser();
   }, [setUser]);

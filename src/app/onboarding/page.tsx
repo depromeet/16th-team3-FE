@@ -44,7 +44,7 @@ export default function OnboardingPage() {
     if (currentPage < onboardingPages.length - 1) {
       setCurrentPage(currentPage + 1);
     } else {
-      router.push('/home-page');
+      router.push('/');
     }
   };
 

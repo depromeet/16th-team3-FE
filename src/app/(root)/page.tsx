@@ -4,11 +4,11 @@ import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import TaskItem from '@/app/home-page/_components/TaskItem';
-import TaskDetailSheet from '@/app/home-page/_components/TaskDetailSheet';
-import AllTaskItem from '@/app/home-page/_components/AllTaskItem';
-import InProgressTaskItem from '@/app/home-page/_components/InProgressTaskItem';
-import CreateTaskSheet from '@/app/home-page/_components/CreateTaskSheet';
+import TaskItem from '@/app/(root)/_components/TaskItem';
+import TaskDetailSheet from '@/app/(root)/_components/TaskDetailSheet';
+import AllTaskItem from '@/app/(root)/_components/AllTaskItem';
+import InProgressTaskItem from '@/app/(root)/_components/InProgressTaskItem';
+import CreateTaskSheet from '@/app/(root)/_components/CreateTaskSheet';
 import { parseDateAndTime } from '@/utils/dateFormat';
 import { Task } from '@/types/task';
 import {
@@ -356,14 +356,14 @@ const HomePageContent = () => {
 
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.delete('dialog');
-      router.replace(`/home-page?${newParams.toString()}`, { scroll: false });
+      router.replace(`/?${newParams.toString()}`, { scroll: false });
     }
 
     if (searchParams.get('task')) {
       setTaskName(searchParams.get('task') || '');
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.delete('task');
-      router.replace(`/home-page?${newParams.toString()}`, { scroll: false });
+      router.replace(`/?${newParams.toString()}`, { scroll: false });
     }
 
     if (searchParams.get('taskType') && searchParams.get('taskMode')) {
@@ -401,7 +401,7 @@ const HomePageContent = () => {
     }
 
     if (shouldReplace) {
-      router.replace(`/home-page?${newParams.toString()}`, { scroll: false });
+      router.replace(`/?${newParams.toString()}`, { scroll: false });
     }
   }, [searchParams, router]);
 
@@ -453,58 +453,58 @@ const HomePageContent = () => {
   return (
     <Dialog open={isDialogOpen && taskName !== ''}>
       <div className="flex h-screen flex-col overflow-hidden bg-background-primary">
-  {/* 헤더 - fixed 대신 static으로 변경 */}
-  <header className="z-20 bg-background-primary">
-    <div className="flex items-center justify-between px-[20px] py-[15px]">
-      <Image
-        src="/icons/home/spurt.svg"
-        alt="SPURT"
-        width={54}
-        height={20}
-        priority
-        className="w-[54px]"
-      />
-      <button onClick={handleNavigateToMyPage}>
-        <Image
-          src="/icons/home/mypage.svg"
-          alt="마이페이지"
-          width={20}
-          height={20}
-        />
-      </button>
-    </div>
-    <div className="px-[20px] py-[11px]">
-      <div className="flex space-x-4">
-        <div onClick={() => handleTabChange('today')}>
-          <span
-            className={`t3 ${activeTab === 'today' ? 'text-text-normal' : 'text-text-disabled'}`}
-          >
-            오늘 할일
-          </span>
-          <span
-            className={`s1 ml-1 ${activeTab === 'today' ? 'text-text-primary' : 'text-text-disabled'}`}
-          >
-            {todayTasks.length + inProgressTasks.length}
-          </span>
-        </div>
-        <div onClick={() => handleTabChange('all')}>
-          <span
-            className={`t3 ${activeTab === 'all' ? 'text-text-normal' : 'text-text-disabled'}`}
-          >
-            전체 할일
-          </span>
-          <span
-            className={`s1 ml-1 ${activeTab === 'all' ? 'text-text-primary' : 'text-text-disabled'}`}
-          >
-            {allTasks.length}
-          </span>
-        </div>
-      </div>
-    </div>
-  </header>
+        {/* 헤더 - fixed 대신 static으로 변경 */}
+        <header className="z-20 bg-background-primary">
+          <div className="flex items-center justify-between px-[20px] py-[15px]">
+            <Image
+              src="/icons/home/spurt.svg"
+              alt="SPURT"
+              width={54}
+              height={20}
+              priority
+              className="w-[54px]"
+            />
+            <button onClick={handleNavigateToMyPage}>
+              <Image
+                src="/icons/home/mypage.svg"
+                alt="마이페이지"
+                width={20}
+                height={20}
+              />
+            </button>
+          </div>
+          <div className="px-[20px] py-[11px]">
+            <div className="flex space-x-4">
+              <div onClick={() => handleTabChange('today')}>
+                <span
+                  className={`t3 ${activeTab === 'today' ? 'text-text-normal' : 'text-text-disabled'}`}
+                >
+                  오늘 할일
+                </span>
+                <span
+                  className={`s1 ml-1 ${activeTab === 'today' ? 'text-text-primary' : 'text-text-disabled'}`}
+                >
+                  {todayTasks.length + inProgressTasks.length}
+                </span>
+              </div>
+              <div onClick={() => handleTabChange('all')}>
+                <span
+                  className={`t3 ${activeTab === 'all' ? 'text-text-normal' : 'text-text-disabled'}`}
+                >
+                  전체 할일
+                </span>
+                <span
+                  className={`s1 ml-1 ${activeTab === 'all' ? 'text-text-primary' : 'text-text-disabled'}`}
+                >
+                  {allTasks.length}
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
 
-  {/* 메인 영역 - flex-1과 overflow-y-auto로 설정 */}
-  <main className="flex-1 overflow-y-auto px-5 pb-40">
+        {/* 메인 영역 - flex-1과 overflow-y-auto로 설정 */}
+        <main className="flex-1 overflow-y-auto px-5 pb-40">
           {/* 오늘 할일 탭 */}
           {activeTab === 'today' && (
             <>
@@ -568,10 +568,12 @@ const HomePageContent = () => {
                                     {task.dueTime && task.dueDate
                                       ? `${task.dueDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(task.dueDate).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${task.dueTime}`
                                       : task.dueDatetime
-                                      ? `${new Date(task.dueDatetime).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${new Date(task.dueDatetime).toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric' })}까지`
-                                      : '시간 미정'}
+                                        ? `${new Date(task.dueDatetime).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${new Date(task.dueDatetime).toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric' })}까지`
+                                        : '시간 미정'}
                                   </span>
-                                  <span className="c3 mx-1 text-text-neutral">•</span>
+                                  <span className="c3 mx-1 text-text-neutral">
+                                    •
+                                  </span>
                                   <Image
                                     src="/icons/home/clock.svg"
                                     alt="시간"
@@ -584,11 +586,15 @@ const HomePageContent = () => {
                                   </span>
                                 </span>
                               </div>
-                              <div className="s2 mt-[3px] text-text-strong">{task.title}</div>
+                              <div className="s2 mt-[3px] text-text-strong">
+                                {task.title}
+                              </div>
                             </div>
                             <button
                               className={`l4 rounded-[10px] px-[12px] py-[9.5px] ${
-                                (task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating'
+                                (task.ignoredAlerts &&
+                                  task.ignoredAlerts >= 3) ||
+                                task.status === 'procrastinating'
                                   ? 'bg-hologram text-text-inverse'
                                   : task.status === 'inProgress'
                                     ? 'bg-component-accent-tertiary text-text-strong'
@@ -596,7 +602,11 @@ const HomePageContent = () => {
                               }`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                if ((task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating') {
+                                if (
+                                  (task.ignoredAlerts &&
+                                    task.ignoredAlerts >= 3) ||
+                                  task.status === 'procrastinating'
+                                ) {
                                   handleDetailTask(task); // 상세 시트를 보여주거나 시작 로직 추가
                                 } else {
                                   startTaskMutation(task.id);
@@ -605,7 +615,9 @@ const HomePageContent = () => {
                             >
                               {task.status === 'inProgress'
                                 ? '이어서 몰입'
-                                : (task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating'
+                                : (task.ignoredAlerts &&
+                                      task.ignoredAlerts >= 3) ||
+                                    task.status === 'procrastinating'
                                   ? '지금 시작'
                                   : '미리 시작'}
                             </button>
@@ -621,7 +633,7 @@ const HomePageContent = () => {
                   <div>
                     <button
                       className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
-                      onClick={() => router.push('/home-page/weekly-tasks')}
+                      onClick={() => router.push('/weekly-tasks')}
                     >
                       <span className="s2 text-text-neutral">이번주 할일</span>
                       <Image
@@ -655,7 +667,7 @@ const HomePageContent = () => {
                   <div>
                     <button
                       className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
-                      onClick={() => router.push('/home-page/weekly-tasks')}
+                      onClick={() => router.push('/weekly-tasks')}
                     >
                       <span className="s2 text-text-neutral">이번주 할일</span>
                       <Image
@@ -691,10 +703,12 @@ const HomePageContent = () => {
                                     {task.dueTime && task.dueDate
                                       ? `${task.dueDate === new Date().toISOString().split('T')[0] ? '오늘' : new Date(task.dueDate).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${task.dueTime}`
                                       : task.dueDatetime
-                                      ? `${new Date(task.dueDatetime).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${new Date(task.dueDatetime).toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric' })}까지`
-                                      : '시간 미정'}
+                                        ? `${new Date(task.dueDatetime).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })} ${new Date(task.dueDatetime).toLocaleTimeString('ko-KR', { hour: 'numeric', minute: 'numeric' })}까지`
+                                        : '시간 미정'}
                                   </span>
-                                  <span className="c3 mx-1 text-text-neutral">•</span>
+                                  <span className="c3 mx-1 text-text-neutral">
+                                    •
+                                  </span>
                                   <Image
                                     src="/icons/home/clock.svg"
                                     alt="시간"
@@ -707,11 +721,15 @@ const HomePageContent = () => {
                                   </span>
                                 </span>
                               </div>
-                              <div className="s2 mt-[3px] text-text-strong">{task.title}</div>
+                              <div className="s2 mt-[3px] text-text-strong">
+                                {task.title}
+                              </div>
                             </div>
                             <button
                               className={`l4 rounded-[10px] px-[12px] py-[9.5px] ${
-                                (task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating'
+                                (task.ignoredAlerts &&
+                                  task.ignoredAlerts >= 3) ||
+                                task.status === 'procrastinating'
                                   ? 'bg-hologram text-text-inverse'
                                   : task.status === 'inProgress'
                                     ? 'bg-component-accent-tertiary text-text-strong'
@@ -719,7 +737,11 @@ const HomePageContent = () => {
                               }`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                if ((task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating') {
+                                if (
+                                  (task.ignoredAlerts &&
+                                    task.ignoredAlerts >= 3) ||
+                                  task.status === 'procrastinating'
+                                ) {
                                   handleDetailTask(task); // 상세 시트를 보여주거나 시작 로직 추가
                                 } else {
                                   startTaskMutation(task.id);
@@ -728,13 +750,15 @@ const HomePageContent = () => {
                             >
                               {task.status === 'inProgress'
                                 ? '이어서 몰입'
-                                : (task.ignoredAlerts && task.ignoredAlerts >= 3) || task.status === 'procrastinating'
+                                : (task.ignoredAlerts &&
+                                      task.ignoredAlerts >= 3) ||
+                                    task.status === 'procrastinating'
                                   ? '지금 시작'
                                   : '미리 시작'}
                             </button>
                           </div>
                           {index < todayTasks.length - 1 && (
-                            <div className="h-[20px] w-full bg-divider-weak"></div>
+                            <div className="bg-divider-weak h-[20px] w-full"></div>
                           )}
                         </React.Fragment>
                       ))}
@@ -743,7 +767,7 @@ const HomePageContent = () => {
                   <div>
                     <button
                       className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
-                      onClick={() => router.push('/home-page/weekly-tasks')}
+                      onClick={() => router.push('/weekly-tasks')}
                     >
                       <span className="s2 text-text-neutral">이번주 할일</span>
                       <Image
@@ -791,7 +815,9 @@ const HomePageContent = () => {
                         onClick={() => handleTaskClick(task)}
                         onDelete={() => handleDeleteTask(task.id)}
                         timeRequired={task.timeRequired}
-                        onPreviewStart={(taskId) => taskId && startTaskMutation(taskId)}
+                        onPreviewStart={(taskId) =>
+                          taskId && startTaskMutation(taskId)
+                        }
                         ignoredAlerts={task.ignoredAlerts}
                         resetAlerts={resetAlerts}
                         dueDatetime={task.dueDatetime}
@@ -803,7 +829,7 @@ const HomePageContent = () => {
                   <div>
                     <button
                       className="flex w-full items-center justify-between px-4 py-4"
-                      onClick={() => router.push('/home-page/weekly-tasks')}
+                      onClick={() => router.push('/weekly-tasks')}
                     >
                       <span className="s2 text-text-neutral">
                         이번주 할일 더보기
@@ -853,7 +879,9 @@ const HomePageContent = () => {
                         onClick={() => handleTaskClick(task)}
                         onDelete={() => handleDeleteTask(task.id)}
                         timeRequired={task.timeRequired}
-                        onPreviewStart={(taskId) => taskId && startTaskMutation(taskId)}
+                        onPreviewStart={(taskId) =>
+                          taskId && startTaskMutation(taskId)
+                        }
                         ignoredAlerts={task.ignoredAlerts}
                         resetAlerts={resetAlerts}
                         dueDatetime={task.dueDatetime}
@@ -1015,27 +1043,28 @@ const HomePageContent = () => {
 
         <footer className="fixed bottom-0 left-0 right-0 z-10">
           {/* 투명에서 검정색으로 페이드되는 그라디언트 오버레이 */}
-          <div 
-            className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-40"
             style={{
-              background: 'linear-gradient(to bottom, rgba(15, 17, 20, 0) 0%, rgba(15, 17, 20, 1) 100%)'
+              background:
+                'linear-gradient(to bottom, rgba(15, 17, 20, 0) 0%, rgba(15, 17, 20, 1) 100%)',
             }}
           />
-          
+
           {/* 버튼 컨테이너 */}
           <div className="relative flex justify-end p-5 pb-[47px]">
-          {showTooltip && (
-              <div className="b3 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg absolute bottom-[130px] right-4">
+            {showTooltip && (
+              <div className="b3 absolute bottom-[130px] right-4 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
                 지금 바로 할 일을 추가해보세요!
-                <div 
-                  className="absolute w-0 h-0"
+                <div
+                  className="absolute h-0 w-0"
                   style={{
                     bottom: '-11px',
                     right: '3rem',
                     transform: 'translateX(50%)',
                     borderStyle: 'solid',
                     borderWidth: '12px 7px 0 7px',
-                    borderColor: '#6B6BE1 transparent transparent transparent'
+                    borderColor: '#6B6BE1 transparent transparent transparent',
                   }}
                 ></div>
               </div>

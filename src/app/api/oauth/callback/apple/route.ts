@@ -9,11 +9,9 @@ export async function POST(req: NextRequest) {
     const {
       authorization: { code, id_token },
       user,
-      deviceId,
-      deviceType,
+      deviceId = '0f365b39-c33d-39be-bdfc-74aaf55',
+      deviceType = 'IOS',
     } = body;
-
-    console.log(deviceId, deviceType);
 
     if (!code || !id_token) {
       return NextResponse.json(

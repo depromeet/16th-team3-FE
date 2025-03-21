@@ -33,7 +33,7 @@ const KakaoTalk = () => {
         return;
       }
 
-      router.push('/home-page'); // TODO(prgmr99): Redirect to the home page('/')
+      router.push('/'); // TODO(prgmr99): Redirect to the home page('/')
     } else {
       console.error('Failed to login');
     }

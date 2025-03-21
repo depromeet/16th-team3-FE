@@ -154,7 +154,7 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 
     if (response.success) {
       queryClient.invalidateQueries({ queryKey: ['tasks', 'home'] });
-      router.push('/home-page');
+      router.push('/');
     }
   };
 
