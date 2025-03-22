@@ -1,6 +1,7 @@
 import ky from 'ky';
 
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 const REFRESH_ENDPOINT = '/v1/auth/token/refresh';
 const UNAUTHORIZED_CODE = 401;
@@ -27,6 +28,10 @@ export const serverApi = ky.create({
         const cookieStore = await cookies();
         const currentAccessToken = cookieStore.get('accessToken')?.value;
         const refreshToken = cookieStore.get('refreshToken')?.value;
+
+        if (!refreshToken) {
+          return NextResponse.redirect(new URL('/login', request.url));
+        }
 
         if (response.status === UNAUTHORIZED_CODE || !currentAccessToken) {
           try {
