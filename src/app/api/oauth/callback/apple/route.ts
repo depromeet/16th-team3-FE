@@ -1,6 +1,4 @@
-import { useUserStore } from '@/store/useUserStore';
 import { AppleAuthorizationResponse } from '@/types/auth';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -9,8 +7,8 @@ export async function POST(req: NextRequest) {
     const {
       authorization: { code, id_token },
       user,
-      deviceId = '0f365b39-c33d-39be-bdfc-74aaf55',
-      deviceType = 'IOS',
+      deviceId,
+      deviceType,
     } = body;
 
     if (!code || !id_token) {
@@ -31,8 +29,8 @@ export async function POST(req: NextRequest) {
             ? `${user.name.lastName}${user.name.firstName}`
             : null,
           email: user?.email ? user.email : null,
-          deviceId,
-          deviceType,
+          deviceId: deviceId || '0f365b39-c33d-39be-bdfc-74aaf55',
+          deviceType: deviceType || 'IOS',
         }),
       },
     );
@@ -65,7 +63,7 @@ export async function POST(req: NextRequest) {
     });
 
     nextResponse.cookies.set('accessToken', accessToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
       sameSite: 'none',
       path: '/',
