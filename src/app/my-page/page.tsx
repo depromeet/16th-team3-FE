@@ -48,16 +48,18 @@ export default function MyPage() {
 		setShowWithdrawModal(true);
 	};
 
-	const confirmWithdraw = async () => {
-		try {
-			// 회원 탈퇴 API 호출
-			const response = await api.post("v1/auth/withdraw");
+  // ! TODO(prgmr99): 회원 탈퇴 api routes 적용
+  const confirmWithdraw = async () => {
+    try {
+      // 회원 탈퇴 API 호출
+      const response = await api.post('v1/auth/withdraw');
 
-			// 쿠키 삭제
-			document.cookie =
-				"accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-			document.cookie =
-				"refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly; secure; sameSite=none;";
+      // 쿠키 삭제
+      // ! TODO(prgmr99): 쿠키 삭제 로직 변경
+      document.cookie =
+        'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie =
+        'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly; secure; sameSite=none;';
 
 			// 사용자 정보 초기화
 			clearUser();
