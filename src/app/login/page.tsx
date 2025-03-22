@@ -1,15 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { useWebViewMessage } from "@/hooks/useWebViewMessage";
+import { useUserStore } from "@/store";
+import type { AppleAuthorizationResponse } from "@/types/auth";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-
-import { useWebViewMessage } from "@/hooks/useWebViewMessage";
-import { useUserStore } from "@/store";
-import type { AppleAuthorizationResponse } from "@/types/auth";
-
-import { Button } from "@/components/ui/button";
 
 declare global {
 	interface Window {
