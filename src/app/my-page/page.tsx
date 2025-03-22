@@ -2,7 +2,6 @@
 
 import ProfileImage from "@/components/ProfileImage";
 import { useAuth } from "@/hooks/useAuth";
-import { api } from "@/lib/ky";
 import { useUserStore } from "@/store/useUserStore";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +11,7 @@ import { useEffect, useState } from "react";
 export default function MyPage() {
 	const router = useRouter();
 
-	const { logout, loadUserProfile } = useAuth();
+	const { loadUserProfile } = useAuth();
 	const userData = useUserStore((state) => state.userData);
 	const clearUser = useUserStore((state) => state.clearUser);
 
@@ -31,10 +30,23 @@ export default function MyPage() {
 
 	const confirmLogout = async () => {
 		try {
-			await logout();
-			setShowLogoutModal(false);
-			router.push("/login");
+			const res = await fetch("/api/auth/logout", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			const text = await res.text();
+			const response = text ? JSON.parse(text) : {};
+
+			if (response.success) {
+				clearUser();
+				setShowLogoutModal(false);
+				router.push("/login");
+			}
 		} catch (error) {
+			// TODO(prgmr99): Toast 메시지 추가
 			console.error("로그아웃 중 오류 발생:", error);
 			setShowLogoutModal(false);
 		}
