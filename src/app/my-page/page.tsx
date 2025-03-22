@@ -63,7 +63,7 @@ export default function MyPage() {
 	// ! TODO(prgmr99): 회원 탈퇴 api routes 적용
 	const confirmWithdraw = async () => {
 		try {
-			const res = await fetch("/api/auth/logout", {
+			const res = await fetch("/api/auth/withdraw", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
