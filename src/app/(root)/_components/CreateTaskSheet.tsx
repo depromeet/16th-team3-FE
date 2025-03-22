@@ -1,38 +1,32 @@
 import { Button } from "@/components/ui/button";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerHeader,
+	DrawerTitle,
+} from "@/components/ui/drawer";
 import Image from "next/image";
 import Link from "next/link";
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
 
-type CreateTaskSheetProps = {
+interface CreateTaskSheetProps {
 	isOpen: boolean;
 	onClose: () => void;
-};
+}
 
-const CreateTaskSheet: React.FC<CreateTaskSheetProps> = ({
-	isOpen,
-	onClose,
-}) => {
-	if (!isOpen) return null;
-
-	const handleClose = () => {
-		onClose();
-	};
-
+const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 	return (
-		<div className="fixed inset-0 z-50 flex items-end bg-black bg-opacity-70">
-			<div className="animate-slide-up w-full rounded-t-[28px] bg-[#1F2024]">
-				<div className="flex items-center justify-start p-5 pb-6 pt-12">
-					<h3 className="t3 text-text-strong">마감할 일 추가하기</h3>
-				</div>
+		<Drawer open={isOpen} onOpenChange={onClose}>
+			<DrawerContent className="w-auto border-0 bg-component-gray-secondary pb-[33px] pt-2">
+				<DrawerHeader className="flex items-center justify-start p-5 pb-6 pt-10">
+					<DrawerTitle className="t3 text-text-strong">
+						마감할 일 추가하기
+					</DrawerTitle>
+				</DrawerHeader>
 
 				<div className="px-5">
 					{/* 여유있게 시작 옵션 */}
 					<Link href="/scheduled-create">
-						<div
-							className="mb-3 flex items-center overflow-hidden rounded-[20px]"
-							onClick={onClose}
-						>
+						<div className="mb-3 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<Image
 									src="/icons/home/gp-clock.svg"
@@ -66,10 +60,7 @@ const CreateTaskSheet: React.FC<CreateTaskSheetProps> = ({
 
 					{/* 즉시 시작 옵션 */}
 					<Link href="/instant-create">
-						<div
-							className="mb-8 flex items-center overflow-hidden rounded-[20px]"
-							onClick={onClose}
-						>
+						<div className="mb-8 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<Image
 									src="/icons/home/heartfire.svg"
@@ -105,18 +96,14 @@ const CreateTaskSheet: React.FC<CreateTaskSheetProps> = ({
 							variant="primary"
 							size="default"
 							className="l2 z-10 w-full rounded-[16px] bg-component-accent-primary py-4 font-medium text-gray-strong"
-							onClick={handleClose}
+							onClick={onClose}
 						>
 							닫기
 						</Button>
 					</div>
 				</div>
-
-				<div className="w-full py-3">
-					<div className="mx-auto h-1 w-16 rounded-full bg-[#373A45]"></div>
-				</div>
-			</div>
-		</div>
+			</DrawerContent>
+		</Drawer>
 	);
 };
 

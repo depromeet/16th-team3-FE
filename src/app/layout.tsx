@@ -23,9 +23,9 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="kr" className={pretendard.variable}>
+		<html lang="ko" className={pretendard.variable}>
 			<body
-				className={`${pretendard.className} overflow-hidden h-screen pt-[44px] antialiased`}
+				className={`${pretendard.className} mt-[44px] h-screen overflow-hidden antialiased`}
 			>
 				<Providers>
 					<AuthProvider>{children}</AuthProvider>
