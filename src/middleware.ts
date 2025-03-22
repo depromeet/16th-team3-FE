@@ -1,13 +1,38 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+	const path = request.nextUrl.pathname;
+	const accessToken = request.cookies.get("accessToken");
+	const refreshToken = request.cookies.get("refreshToken");
+
+	const openPaths = [
+		"/login",
+		"/api/oauth",
+		"/api/oauth/callback/kakao",
+		"/api/oauth/callback/apple",
+		"/api/auth/members/me",
+		"/firebase-messaging-sw.js",
+		"/oauth/callback/kakao",
+	];
+
+	const isOpenPath = openPaths.some(
+		(openPath) => path === openPath || path.startsWith(`${openPath}/`),
+	);
+
+	if (isOpenPath && accessToken) {
+		return NextResponse.redirect(new URL("/", request.url));
+	}
+
+	if (!isOpenPath && !refreshToken) {
+		console.log("hi");
+		return NextResponse.redirect(new URL("/login", request.url));
+	}
+
 	return NextResponse.next();
 }
 
 export const config = {
-	// * Next.js 내부 리소스를 제외한 모든 경로에 middleware 적용
-	// * 로그인 페이지는 제외 - 제외하지 않으면 무한 리다이렉트 발생
-	matcher: ["/", "/((?!_next/static|favicon.ico|login|icons).*)"],
+	matcher: ["/((?!_next/static|_next/image|favicon.ico|assets).*)"],
 };
 
 export const runtime = "nodejs";

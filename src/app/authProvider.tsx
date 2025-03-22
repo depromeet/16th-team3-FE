@@ -14,7 +14,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const response = await fetch("/api/oauth/members/me");
+				const response = await fetch("/api/auth/members/me");
 
 				if (!response.ok) {
 					setUser({});
