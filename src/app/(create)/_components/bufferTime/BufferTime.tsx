@@ -72,8 +72,6 @@ const BufferTime = ({
 		minutes: finalMinutes,
 	});
 
-	console.log("timeString", timeString);
-
 	return (
 		<div className="flex h-full w-full flex-col justify-between">
 			<div className="relative mt-[30px]">
