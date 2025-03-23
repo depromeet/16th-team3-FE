@@ -1,6 +1,11 @@
 import { motion } from "framer-motion";
 
-const Loader = () => {
+interface LoaderProps {
+	width?: number;
+	height?: number;
+}
+
+const Loader = ({ width = 50, height = 50 }: LoaderProps) => {
 	return (
 		<div
 			style={{
@@ -12,8 +17,8 @@ const Loader = () => {
 		>
 			<motion.div
 				style={{
-					width: 50,
-					height: 50,
+					width: width,
+					height: height,
 					border: "4px solid #ccc",
 					borderTop: "4px solid #6b6be1",
 					borderRadius: "50%",

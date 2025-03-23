@@ -3,7 +3,7 @@
 import BackHeader from "@/components/backHeader/BackHeader";
 import useMount from "@/hooks/useMount";
 import type { ScheduledTaskType, TimePickerType } from "@/types/create";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFunnelSteps, useFunnel } from "@use-funnel/browser";
 import BufferTime from "../_components/bufferTime/BufferTime";
 import EstimatedTimeInput from "../_components/estimatedTimeInput/EstimatedTimeInput";
@@ -79,27 +79,35 @@ const ScheduledTaskCreate = () => {
 	const queryClient = useQueryClient();
 	const { isMounted } = useMount();
 
-	const scheduledTaskMutation = async (data: ScheduledTaskType) => {
-		const res = await fetch("/api/tasks/scheduled", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(data),
-		});
+	const { mutate: scheduledTaskMutation, isIdle } = useMutation({
+		mutationFn: async (data: ScheduledTaskType) => {
+			const res = await fetch("/api/tasks/scheduled", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
 
-		const text = await res.text();
-		const response = text ? JSON.parse(text) : {};
+			const text = await res.text();
+			const response = text ? JSON.parse(text) : {};
 
-		if (response.success) {
-			const personaName = response.personaName;
-			const taskMode = response.taskMode;
-			const taskType = response.taskType;
+			return response;
+		},
+		onSuccess: (response) => {
+			if (response.success) {
+				const personaName = response.personaName;
+				const taskMode = response.taskMode;
+				const taskType = response.taskType;
 
-			queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
-			router.push(
-				`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
-			);
-		}
-	};
+				queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
+				router.push(
+					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+				);
+			}
+		},
+		onError: (error) => {
+			console.error("Mutation failed:", error);
+		},
+	});
 
 	const handleHistoryBack = () => {
 		if (funnel.step === "smallActionInput") {
@@ -257,6 +265,7 @@ const ScheduledTaskCreate = () => {
 				taskTypeInput={({ context }) => (
 					<TaskTypeInput
 						context={context}
+						isIdle={isIdle}
 						onClick={(data) => scheduledTaskMutation(data)}
 					/>
 				)}

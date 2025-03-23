@@ -5,6 +5,7 @@ import { MoodType, type ScheduledTaskType, TaskType } from "@/types/create";
 import { combineDeadlineDateTimeToDate } from "@/utils/dateFormat";
 import getBufferTime from "@/utils/getBufferTime";
 import { transformScheduledTaskData } from "@/utils/transformTaskData";
+import { Loader } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import type { TaskTypeInputType } from "../../context";
@@ -12,6 +13,7 @@ import TaskTypeChip from "../taskTypeChip/TaskTypeChip";
 
 interface TaskTypeInputProps {
 	context: TaskTypeInputType;
+	isIdle: boolean;
 	onClick: (data: ScheduledTaskType) => void;
 }
 
@@ -31,7 +33,7 @@ const MOOD_TYPE_LIST = [
 	MoodType.CALM,
 ];
 
-const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
+const TaskTypeInput = ({ context, isIdle, onClick }: TaskTypeInputProps) => {
 	const [taskType, setTaskType] = useState<TaskType | null>(null);
 	const [moodType, setMoodType] = useState<MoodType | null>(null);
 
@@ -137,10 +139,10 @@ const TaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
 				<Button
 					variant="primary"
 					className="w-full"
-					disabled={!taskType || !moodType}
+					disabled={!taskType || !moodType || !isIdle}
 					onClick={() => onClick(convertedData)}
 				>
-					확인
+					{isIdle ? "확인" : <Loader width={24} height={24} />}
 				</Button>
 			</div>
 		</div>

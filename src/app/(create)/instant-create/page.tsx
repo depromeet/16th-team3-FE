@@ -3,7 +3,7 @@
 import BackHeader from "@/components/backHeader/BackHeader";
 import useMount from "@/hooks/useMount";
 import type { InstantTaskType, TimePickerType } from "@/types/create";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFunnelSteps, useFunnel } from "@use-funnel/browser";
 import { useRouter } from "next/navigation";
 import InstantTaskTypeInput from "../_components/instantTaskTypeInput/InstantTaskTypeInput";
@@ -48,27 +48,30 @@ const InstantTaskCreate = () => {
 	const queryClient = useQueryClient();
 	const { isMounted } = useMount();
 
-	const instantTaskMutation = async (data: InstantTaskType) => {
-		const res = await fetch("/api/tasks/urgent", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(data),
-		});
-
-		const text = await res.text();
-		const response = text ? JSON.parse(text) : {};
-
-		if (response.success) {
-			const personaName = response.personaName;
-			const taskMode = response.taskMode;
-			const taskType = response.taskType;
-
-			queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
-			router.push(
-				`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
-			);
-		}
-	};
+	const { mutate: instantTaskMutation, isIdle } = useMutation({
+		mutationFn: async (data: InstantTaskType) => {
+			const res = await fetch("/api/tasks/urgent", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
+			const text = await res.text();
+			const response = text ? JSON.parse(text) : {};
+			return response;
+		},
+		onSuccess: (response) => {
+			if (response.success) {
+				const { personaName, taskMode, taskType } = response;
+				queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
+				router.push(
+					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+				);
+			}
+		},
+		onError: (error) => {
+			console.error("Mutation failed:", error);
+		},
+	});
 
 	const lastStep =
 		funnel.historySteps.length > 1
@@ -109,6 +112,7 @@ const InstantTaskCreate = () => {
 				taskTypeInput={({ context }) => (
 					<InstantTaskTypeInput
 						context={context}
+						isIdle={isIdle}
 						onClick={(data) => instantTaskMutation(data)}
 					/>
 				)}
