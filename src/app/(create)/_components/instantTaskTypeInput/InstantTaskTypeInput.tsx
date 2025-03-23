@@ -104,7 +104,7 @@ const InstantTaskTypeInput = ({ context, onClick }: TaskTypeInputProps) => {
 				</div>
 			</div>
 
-			<div className="pb-[46px] transition-all duration-300">
+			<div className="transition-all duration-300">
 				<Button
 					variant="primary"
 					className="w-full"

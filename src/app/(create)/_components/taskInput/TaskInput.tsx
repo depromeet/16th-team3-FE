@@ -47,7 +47,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 	});
 	const [isFocused, setIsFocused] = useState(true);
 	const [isTimePickerFirstTouched, setIsTimePickerFirstTouched] = useState(
-		lastStep ? false : true,
+		!lastStep,
 	);
 
 	const isInvalid =
@@ -136,7 +136,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 				</div>
 			</div>
 
-			<div className="mb-[30px] mt-auto">
+			<div className="mt-auto">
 				<Button
 					variant="primary"
 					className="mt-6"

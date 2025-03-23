@@ -11,7 +11,9 @@ import { useCallback, useEffect, useState } from "react";
 
 declare global {
 	interface Window {
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		Kakao?: any;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		AppleID?: any;
 	}
 }
@@ -127,6 +129,7 @@ const LoginPage = () => {
 		setSocialType(type);
 
 		const isWebView = () => {
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			return !!(window as any).ReactNativeWebView;
 		};
 
@@ -147,12 +150,13 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			const { AppleID } = window as any;
 			if (AppleID) {
 				AppleID.auth.init({
-					clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!,
+					clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || "",
 					scope: "name email",
-					redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!,
+					redirectURI: process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI || "",
 					usePopup: true,
 				});
 			}
@@ -183,7 +187,7 @@ const LoginPage = () => {
 					filter: "blur(75px)",
 					borderRadius: "50%",
 				}}
-			></div>
+			/>
 
 			<div
 				className="absolute bottom-10 left-1/2 z-0 -translate-x-1/2"
@@ -196,7 +200,7 @@ const LoginPage = () => {
 					mixBlendMode: "color-dodge",
 					filter: "blur(62px)",
 				}}
-			></div>
+			/>
 
 			<div className="t2 text-strong pb-5">
 				<p>
@@ -232,10 +236,10 @@ const LoginPage = () => {
 						borderWidth: "12px 7px 0 7px",
 						borderColor: "#6B6BE1 transparent transparent transparent",
 					}}
-				></div>
+				/>
 			</div>
 
-			<div className="z-10 flex w-full flex-col gap-4">
+			<div className="z-10 flex w-full flex-col gap-4 mb-[40px]">
 				<Button
 					variant="default"
 					className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
