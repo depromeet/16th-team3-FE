@@ -178,7 +178,7 @@ const LoginPage = () => {
 	}, []);
 
 	return (
-		<div className="flex h-full flex-col justify-between bg-background-primary px-5 pb-[42px] pt-20">
+		<div className="flex h-full flex-col justify-between bg-background-primary px-5 pt-20">
 			<div
 				className="absolute bottom-0 left-1/2 z-0 -translate-x-1/2"
 				style={{

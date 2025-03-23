@@ -1,7 +1,6 @@
 "use client";
 
 import ProfileImage from "@/components/ProfileImage";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserStore } from "@/store/useUserStore";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,14 +10,16 @@ import { useEffect, useState } from "react";
 export default function MyPage() {
 	const router = useRouter();
 
-	const { loadUserProfile } = useAuth();
 	const userData = useUserStore((state) => state.userData);
+	const setUser = useUserStore((state) => state.setUser);
 	const clearUser = useUserStore((state) => state.clearUser);
 
 	const [appVersion] = useState("V.0.0.1");
 	const [pageLoading, setPageLoading] = useState(true);
 	const [showLogoutModal, setShowLogoutModal] = useState(false);
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+
+	console.log("userData", userData);
 
 	const handleGoBack = () => {
 		router.push("/");
@@ -88,27 +89,50 @@ export default function MyPage() {
 		setShowWithdrawModal(false);
 	};
 
+	console.log("mypage loaded");
 	useEffect(() => {
-		const initPage = async () => {
-			if (userData.memberId === -1) {
-				try {
-					await loadUserProfile();
-				} catch (error) {
-					console.error("사용자 정보 로드 실패:", error);
+		const fetchUser = async () => {
+			try {
+				if (userData.memberId === -1) {
+					const response = await fetch("/api/auth/members/me", {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					});
+
+					if (!response.ok) {
+						setUser({});
+						return;
+					}
+
+					const data = await response.json();
+
+					console.log("data", data);
+
+					setUser(data);
 				}
+			} catch (error) {
+				console.error("사용자 정보 로드 실패:", error);
+
+				setUser({});
 			}
 
 			setPageLoading(false);
 		};
 
-		initPage();
-	}, [loadUserProfile, userData.memberId]);
+		fetchUser();
+	}, [userData.memberId, setUser]);
 
 	return (
 		<div className="flex min-h-screen flex-col">
 			{/* 헤더 부분 */}
 			<div className="relative flex items-center px-5 py-[14px]">
-				<button onClick={handleGoBack} className="absolute left-5">
+				<button
+					type="button"
+					className="absolute left-5"
+					onClick={handleGoBack}
+				>
 					<Image
 						src="/icons/ArrowLeft.svg"
 						alt="뒤로가기"
@@ -122,8 +146,8 @@ export default function MyPage() {
 			{/* 프로필 정보 */}
 			{pageLoading ? (
 				<div className="mb-8 mt-[23px] flex flex-col items-center justify-center">
-					<div className="mb-[14px] h-20 w-20 animate-pulse rounded-full bg-gray-200"></div>
-					<div className="h-6 w-24 animate-pulse rounded bg-gray-200"></div>
+					<div className="mb-[14px] h-20 w-20 animate-pulse rounded-full bg-gray-200" />
+					<div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
 				</div>
 			) : (
 				<>
@@ -143,7 +167,7 @@ export default function MyPage() {
 				</>
 			)}
 
-			<div className="h-[8px] bg-component-gray-primary"></div>
+			<div className="h-[8px] bg-component-gray-primary" />
 
 			<div className="px-5">
 				<div className="l5 pb-4 pt-6 text-gray-alternative">서비스 관리</div>
@@ -190,13 +214,14 @@ export default function MyPage() {
 				</Link>
 			</div>
 
-			<div className="h-[8px] bg-component-gray-primary"></div>
+			<div className="h-[8px] bg-component-gray-primary" />
 
 			{/* 로그아웃 */}
 			<div className="px-5">
 				<button
-					onClick={handleLogout}
+					type="button"
 					className="b2 w-full pb-4 pt-6 text-left text-base text-gray-normal"
+					onClick={handleLogout}
 				>
 					로그아웃
 				</button>
@@ -205,14 +230,15 @@ export default function MyPage() {
 			{/* 탈퇴하기 */}
 			<div className="px-5">
 				<button
-					onClick={handleWithdraw}
+					type="button"
 					className="b2 w-full pb-4 pt-6 text-left text-base text-gray-normal"
+					onClick={handleWithdraw}
 				>
 					탈퇴하기
 				</button>
 			</div>
 
-			<div className="h-12"></div>
+			<div className="h-12" />
 
 			{/* 로그아웃 확인 모달 */}
 			{showLogoutModal && (
@@ -226,14 +252,16 @@ export default function MyPage() {
 
 							<div className="flex space-x-4">
 								<button
-									onClick={cancelLogout}
+									type="button"
 									className="l1 flex-1 rounded-[12px] bg-component-gray-tertiary p-[13.5px] text-gray-neutral"
+									onClick={cancelLogout}
 								>
 									닫기
 								</button>
 								<button
-									onClick={confirmLogout}
+									type="button"
 									className="l1 flex-1 rounded-[12px] bg-component-accent-primary p-[13.5px] text-gray-strong"
+									onClick={confirmLogout}
 								>
 									로그아웃
 								</button>
@@ -253,14 +281,16 @@ export default function MyPage() {
 
 							<div className="flex space-x-4">
 								<button
-									onClick={cancelWithdraw}
+									type="button"
 									className="l1 flex-1 rounded-[12px] bg-component-gray-tertiary p-[13.5px] text-gray-neutral"
+									onClick={cancelWithdraw}
 								>
 									닫기
 								</button>
 								<button
-									onClick={confirmWithdraw}
+									type="button"
 									className="l1 flex-1 rounded-[12px] bg-component-accent-primary p-[13.5px] text-gray-strong"
+									onClick={confirmWithdraw}
 								>
 									탈퇴하기
 								</button>
