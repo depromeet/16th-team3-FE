@@ -424,7 +424,7 @@ const EstimatedTimeInput = ({
 			</div>
 
 			<div
-				className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? "mb-[32vh]" : "pb-[46px]"} gap-4`}
+				className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? "mb-[38vh]" : ""} gap-4`}
 			>
 				{currentTab === "시간" && (
 					<div className="flex items-center justify-center space-x-2">

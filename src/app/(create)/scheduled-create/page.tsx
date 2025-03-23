@@ -143,7 +143,7 @@ const ScheduledTaskCreate = () => {
 	if (!isMounted) return null;
 
 	return (
-		<div className="background-primary flex h-full w-full flex-col items-center justify-start overflow-y-auto px-5">
+		<div className="background-primary flex h-full w-full flex-col items-center justify-start overflow-y-auto px-5 pb-20">
 			<BackHeader onClick={handleHistoryBack} />
 			<funnel.Render
 				taskForm={({ history }) => (
