@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import Script from "next/script";
-import AuthProvider from "./authProvider";
-import Providers from "./providers";
 
 export const metadata: Metadata = {
 	title: "Spurt",
@@ -27,9 +25,7 @@ export default function RootLayout({
 			<body
 				className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] overflow-hidden antialiased`}
 			>
-				<Providers>
-					<AuthProvider>{children}</AuthProvider>
-				</Providers>
+				{children}
 				<Script
 					src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
 					integrity={process.env.NEXT_PUBLIC_KAKAO_INTEGRITY}

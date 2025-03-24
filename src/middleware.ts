@@ -10,7 +10,6 @@ export async function middleware(request: NextRequest) {
 		"/api/oauth",
 		"/api/oauth/callback/kakao",
 		"/api/oauth/callback/apple",
-		// "/api/auth/members/me",  제거해도 괜찮을까? -> 일단 정상동작
 		"/firebase-messaging-sw.js",
 		"/oauth/callback/kakao",
 	];

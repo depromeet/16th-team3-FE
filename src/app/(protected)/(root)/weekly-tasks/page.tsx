@@ -1,7 +1,7 @@
 "use client";
 
-import TaskDetailSheet from "@/app/(root)/_components/TaskDetailSheet";
-import WeeklyTaskItem from "@/app/(root)/_components/WeeklyTaskItem";
+import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
+import WeeklyTaskItem from "@/app/(protected)/(root)/_components/WeeklyTaskItem";
 import Loader from "@/components/loader/Loader";
 import Header from "@/components/ui/header";
 import { useDeleteTask, useHomeData, useStartTask } from "@/hooks/useTasks";

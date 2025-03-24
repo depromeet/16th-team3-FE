@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
 
-import DateSelectedComponent from "@/app/(create)/_components/dateSelectedComponent/DateSelectedComponent";
-import HeaderTitle from "@/app/(create)/_components/headerTitle/HeaderTitle";
-import TimeSelectedComponent from "@/app/(create)/_components/timeSelectedComponent/TimeSelectedComponent";
+import DateSelectedComponent from "@/app/(protected)/(create)/_components/dateSelectedComponent/DateSelectedComponent";
+import HeaderTitle from "@/app/(protected)/(create)/_components/headerTitle/HeaderTitle";
+import TimeSelectedComponent from "@/app/(protected)/(create)/_components/timeSelectedComponent/TimeSelectedComponent";
 import ClearableInput from "@/components/clearableInput/ClearableInput";
 import { Button } from "@/components/ui/button";
 import {

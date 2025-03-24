@@ -2,7 +2,7 @@ import {
 	type InstantTaskInputType,
 	TYPE_LABELS,
 	type TaskTypeInputType,
-} from "@/app/(create)/context";
+} from "@/app/(protected)/(create)/context";
 import type { InstantTaskType, ScheduledTaskType } from "@/types/create";
 import { format, set, subMinutes } from "date-fns";
 

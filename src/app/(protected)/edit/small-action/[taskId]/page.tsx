@@ -1,7 +1,7 @@
 "use client";
 
-import HeaderTitle from "@/app/(create)/_components/headerTitle/HeaderTitle";
-import SmallActionChip from "@/app/(create)/_components/smallActionChip/SmallActionChip";
+import HeaderTitle from "@/app/(protected)/(create)/_components/headerTitle/HeaderTitle";
+import SmallActionChip from "@/app/(protected)/(create)/_components/smallActionChip/SmallActionChip";
 import ClearableInput from "@/components/clearableInput/ClearableInput";
 import { Button } from "@/components/ui/button";
 import { fetchSingleTask } from "@/services/taskService";

@@ -1,5 +1,4 @@
 import { serverApi } from "@/lib/serverKy";
-import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -8,7 +7,7 @@ export async function GET(request: NextRequest) {
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-		const response = await serverApi.get(`v1/tasks/home`);
+		const response = await serverApi.get("v1/tasks/home");
 
 		clearTimeout(timeoutId);
 
@@ -31,18 +30,9 @@ export async function GET(request: NextRequest) {
 			);
 		}
 
-		// ! 지금 serverApi는 refresh token 로직이 돌지 않고 있음.
-		// const cookieStore = await cookies();
-		// const accessToken = cookieStore.get('accessToken')?.value;
-
-		// if (!accessToken) {
-		//   return NextResponse.json(
-		//     {
-		//       error: 'Unauthorized',
-		//     },
-		//     { status: 401 },
-		//   );
-		// }
+		if (error.response?.status === 401) {
+			return NextResponse.redirect(new URL("/login", request.url));
+		}
 
 		return NextResponse.json(
 			{

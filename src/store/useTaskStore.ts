@@ -1,4 +1,4 @@
-import { EditTaskInputType } from "@/app/(create)/context";
+import { EditTaskInputType } from "@/app/(protected)/(create)/context";
 import type { Task as TaskType } from "@/types/task";
 import { create } from "zustand";
 

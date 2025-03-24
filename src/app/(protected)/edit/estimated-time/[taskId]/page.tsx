@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import HeaderTitle from "@/app/(create)/_components/headerTitle/HeaderTitle";
+import HeaderTitle from "@/app/(protected)/(create)/_components/headerTitle/HeaderTitle";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
