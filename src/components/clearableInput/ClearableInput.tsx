@@ -13,7 +13,7 @@ interface ClearableInputProps
 	handleInputFocus?: (value: boolean) => void;
 }
 
-const MAX_TASK_LENGTH = 15;
+const MAX_TASK_LENGTH = 16;
 
 const ClearableInput = ({
 	className,
@@ -33,6 +33,7 @@ const ClearableInput = ({
 				className={cn(
 					"b3 transition-colors",
 					isFocused ? "text-primary" : "text-neutral",
+					isInvalid && "text-line-error",
 				)}
 			>
 				{title}
@@ -42,7 +43,7 @@ const ClearableInput = ({
 				className={cn(
 					"t3 w-full border-0 border-b bg-transparent pl-0 pr-10 transition-colors focus:border-b-2",
 					isInvalid
-						? "border-red-500 focus:border-red-500"
+						? "text-line-error border-line-error"
 						: "focus:border-b-component-accent-primary",
 					className,
 				)}

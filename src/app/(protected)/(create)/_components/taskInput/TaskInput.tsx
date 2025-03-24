@@ -32,7 +32,7 @@ interface TaskInputProps {
 	}) => void;
 }
 
-const MAX_TASK_LENGTH = 15;
+const MAX_TASK_LENGTH = 16;
 const WAITING_TIME = 200;
 
 const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
@@ -113,7 +113,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 							handleInputFocus={handleInputFocus}
 						/>
 						{task.length > MAX_TASK_LENGTH && (
-							<p className="mt-2 text-sm text-red-500">
+							<p className="mt-2 text-sm text-line-error">
 								최대 16자 이내로 입력할 수 있어요.
 							</p>
 						)}
