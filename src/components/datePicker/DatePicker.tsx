@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
+import { useState } from "react";
 
 interface DatePickerProps {
 	deadlineDate: Date | undefined;
@@ -12,11 +13,18 @@ interface DatePickerProps {
 }
 
 const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
+	const [displayMonth, setDisplayMonth] = useState(new Date());
+
+	const isPrevDisabled =
+		displayMonth.getFullYear() === new Date().getFullYear() &&
+		displayMonth.getMonth() === new Date().getMonth();
+
 	return (
 		<Calendar
 			mode="single"
 			selected={deadlineDate}
 			onSelect={(date) => date && handleDateChange(date)}
+			onMonthChange={(month) => setDisplayMonth(month)}
 			initialFocus
 			locale={ko}
 			disabled={{ before: new Date() }}
@@ -24,7 +32,9 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 			classNames={{
 				caption: "flex justify-between items-center mb-5",
 				caption_label: "text-lg font-semibold",
-				nav_button_previous: "",
+				nav_button_previous: cn(
+					isPrevDisabled && "opacity-30 pointer-events-none",
+				),
 				nav_button_next: "",
 				nav_button: cn(
 					"h-7 w-7 bg-transparent p-0 hover:opacity-100 text-[#6B6BE1]",
