@@ -47,6 +47,7 @@ const DateSelectedComponent = ({
 		<Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
 			<DrawerTrigger>
 				<div className="relative mt-2 w-full">
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
 						onClick={handleToggle}
@@ -65,7 +66,7 @@ const DateSelectedComponent = ({
 									: format(deadlineDate, "M월 d일 (E)", { locale: ko })}
 							</span>
 							<ChevronDown
-								className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+								className={`h-4 w-4 icon-primary transition-transform duration-200 ${
 									isOpen ? "rotate-180" : ""
 								}`}
 							/>
