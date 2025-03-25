@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 			secure: true, // ! TODO: 앱 심사 받을 때, true로 변경 / 로컬(웹)에서 테스트할 떄, true로 변경 / 로컬(앱)에서 테스트할 때, false로 변경
 			sameSite: "none",
 			path: "/",
-			maxAge: 60 * 60,
+			maxAge: 60 * 1,
 		});
 
 		nextResponse.cookies.set("refreshToken", refreshToken, {

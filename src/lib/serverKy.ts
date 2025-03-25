@@ -36,6 +36,7 @@ export const serverApi = ky.create({
 
 				if (response.status === UNAUTHORIZED_CODE || !currentAccessToken) {
 					try {
+						console.log("currentRefreshToken", refreshToken);
 						const refreshResponse = await ky.post(
 							`${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
 							{
@@ -70,7 +71,7 @@ export const serverApi = ky.create({
 							secure: true,
 							sameSite: "none",
 							path: "/",
-							maxAge: 60 * 60,
+							maxAge: 60 * 1,
 						});
 
 						cookieStore.set("refreshToken", newRefreshToken, {

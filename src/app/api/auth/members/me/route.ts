@@ -25,7 +25,7 @@ export async function GET() {
 			{
 				error: `사용자 정보를 가져오는 중 에러 발생: ${error.message || "알 수 없는 오류"}`,
 			},
-			{ status: 500 },
+			{ status: error.response?.status || 500 },
 		);
 	}
 }
