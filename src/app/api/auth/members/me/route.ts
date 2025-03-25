@@ -23,9 +23,9 @@ export async function GET() {
 	} catch (error) {
 		return NextResponse.json(
 			{
-				error: `사용자 정보를 가져오는 중 에러 발생: ${error.message || "알 수 없는 오류"}`,
+				error: `사용자 정보를 가져오는 중 에러 발생: ${(error as Error).message || "알 수 없는 오류"}`,
 			},
-			{ status: error.response?.status || 500 },
+			{ status: (error as any).response?.status || 500 },
 		);
 	}
 }
