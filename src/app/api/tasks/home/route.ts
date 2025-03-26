@@ -31,10 +31,7 @@ export async function GET(request: NextRequest) {
 		}
 
 		if (error.response?.status === 401) {
-			console.log("이거 안찍히니?");
-			return NextResponse.redirect(
-				new URL("https://spurt.site/login", request.url),
-			);
+			return NextResponse.redirect(new URL("/login", request.url));
 		}
 
 		return NextResponse.json(

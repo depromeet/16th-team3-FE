@@ -19,13 +19,11 @@ export async function middleware(request: NextRequest) {
 	);
 
 	if (isOpenPath && accessToken) {
-		return NextResponse.redirect(new URL("https://spurt.site", request.url));
+		return NextResponse.redirect(new URL("/", request.url));
 	}
 
 	if (!isOpenPath && !refreshToken) {
-		return NextResponse.redirect(
-			new URL("https://spurt.site/login", request.url),
-		);
+		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
 	return NextResponse.next();

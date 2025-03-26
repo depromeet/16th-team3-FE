@@ -205,10 +205,12 @@ export default function MyPage() {
 				</Link>
 
 				<Link
-					href="/open-source"
+					href="https://docs.google.com/forms/d/e/1FAIpQLSewine18Gw4dpEeT-NwN2M9Cuw6hRUiKVd3g0wrNOazW58GWA/viewform"
+					target="_blank"
+					rel="noopener noreferrer"
 					className="flex items-center justify-between py-4"
 				>
-					<div className="text-base">오픈소스 라이센스</div>
+					<div className="text-base">문의사항</div>
 					<Image
 						src="/icons/mypage/external-link.svg"
 						alt="외부 링크"

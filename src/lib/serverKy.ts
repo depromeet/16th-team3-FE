@@ -52,9 +52,10 @@ export const serverApi = ky.create({
 
 							console.error("Refresh API 실패:", errText);
 
-							return NextResponse.redirect(
-								new URL("https://spurt.site/login", request.url),
-							);
+							cookieStore.delete("accessToken");
+							cookieStore.delete("refreshToken");
+
+							return NextResponse.redirect(new URL("/login", request.url));
 						}
 
 						const {
@@ -85,9 +86,7 @@ export const serverApi = ky.create({
 					} catch (error) {
 						console.error("refresh 요청 중 에러 발생:", error);
 
-						return NextResponse.redirect(
-							new URL("https://spurt.site/login", request.url),
-						);
+						return NextResponse.redirect(new URL("/login", request.url));
 					}
 				}
 
