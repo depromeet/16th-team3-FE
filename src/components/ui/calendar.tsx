@@ -35,12 +35,13 @@ function Calendar({
 				head_cell: "text-muted-foreground rounded-md w-full text-[0.8rem]",
 				row: "flex w-full mt-2",
 				cell: "aspect-square w-full text-center text-sm p-0 relative",
-				day: cn("aspect-square w-full p-0 aria-selected:opacity-100"),
+				day: "aspect-square w-full p-0 aria-selected:opacity-100 text-[16px] font-normal",
 				day_range_end: "day-range-end",
 				day_selected: cn(
 					buttonVariants({ variant: "point" }),
-					"bg-primary text-inverse focus:bg-primary focus:text-primary-foreground focus:outline-none",
+					"bg-primary text-inverse focus:bg-primary focus:text-primary-foreground",
 					"aspect-square h-full p-0",
+					"s2",
 				),
 				day_today: "bg-accent text-accent-foreground",
 				day_outside:

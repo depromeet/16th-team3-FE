@@ -25,8 +25,8 @@ const DateSelectedComponent = ({
 	handleDateChange,
 }: DateSelectedComponentProps) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [temporaryDate, setTemporaryDate] = useState<Date | undefined>(
-		deadlineDate,
+	const [temporaryDate, setTemporaryDate] = useState<Date>(
+		deadlineDate ?? new Date(),
 	);
 	const handleToggle = () => {
 		setIsOpen((prev) => !prev);

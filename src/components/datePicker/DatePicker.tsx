@@ -22,7 +22,7 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 	return (
 		<Calendar
 			mode="single"
-			selected={deadlineDate}
+			selected={deadlineDate ?? new Date()}
 			onSelect={(date) => date && handleDateChange(date)}
 			onMonthChange={(month) => setDisplayMonth(month)}
 			initialFocus
