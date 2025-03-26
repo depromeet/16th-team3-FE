@@ -1,5 +1,6 @@
 "use client";
 
+import Toast from "@/components/toast/Toast";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -28,12 +29,27 @@ const DateSelectedComponent = ({
 	const [temporaryDate, setTemporaryDate] = useState<Date>(
 		deadlineDate ?? new Date(),
 	);
+	const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+	const today = new Date();
+	const todayStart = new Date(
+		today.getFullYear(),
+		today.getMonth(),
+		today.getDate(),
+	);
+
 	const handleToggle = () => {
 		setIsOpen((prev) => !prev);
 	};
 
 	const handleTemporaryDate = (date: Date) => {
+		if (date < todayStart) {
+			setToastMessage("마감일은 오늘 날짜 이후로 설정할 수 있어요.");
+			return;
+		}
+
 		setTemporaryDate(date || new Date());
+		setToastMessage(null);
 	};
 
 	const handleConfirmButtonClick = () => {
@@ -41,6 +57,7 @@ const DateSelectedComponent = ({
 
 		handleDateChange(temporaryDate);
 		setIsOpen(false);
+		setToastMessage(null);
 	};
 
 	return (
@@ -84,6 +101,7 @@ const DateSelectedComponent = ({
 					deadlineDate={temporaryDate}
 					handleDateChange={handleTemporaryDate}
 				/>
+				{toastMessage && <Toast message={toastMessage} />}
 				<DrawerFooter className="px-0">
 					<Button
 						variant="primary"

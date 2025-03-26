@@ -10,11 +10,22 @@ import { useState } from "react";
 interface DatePickerProps {
 	deadlineDate: Date | undefined;
 	handleDateChange: (date: Date) => void;
+	onDayClick?: (
+		day: Date,
+		modifiers: { [key: string]: boolean },
+		event: React.MouseEvent<Element, MouseEvent>,
+	) => void;
 }
 
 const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 	const [displayMonth, setDisplayMonth] = useState(new Date());
 
+	const today = new Date();
+	const todayStart = new Date(
+		today.getFullYear(),
+		today.getMonth(),
+		today.getDate(),
+	);
 	const isPrevDisabled =
 		displayMonth.getFullYear() === new Date().getFullYear() &&
 		displayMonth.getMonth() === new Date().getMonth();
@@ -23,11 +34,20 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 		<Calendar
 			mode="single"
 			selected={deadlineDate ?? new Date()}
-			onSelect={(date) => date && handleDateChange(date)}
+			onSelect={(date) => {
+				if (date) handleDateChange(date);
+			}}
 			onMonthChange={(month) => setDisplayMonth(month)}
+			modifiers={{
+				past: (date: Date) =>
+					new Date(date.getFullYear(), date.getMonth(), date.getDate()) <
+					todayStart,
+			}}
+			modifiersClassNames={{
+				past: "text-muted-foreground opacity-50",
+			}}
 			initialFocus
 			locale={ko}
-			disabled={{ before: new Date() }}
 			captionLayout="dropdown"
 			classNames={{
 				caption: "flex justify-between items-center mb-5",
