@@ -77,6 +77,23 @@ const TimeSelectedComponent = ({
 		setIsOpen(false);
 	};
 
+	const handleMidnightButtonClick = () => {
+		setIsMidnight(true);
+		setIsOpen(false);
+		setTemporaryTime({
+			hour: "11",
+			minute: "59",
+			meridiem: "오후",
+			second: "59",
+		});
+		handleTimeChange({
+			hour: "11",
+			minute: "59",
+			meridiem: "오후",
+			second: "59",
+		});
+	};
+
 	const displayedTime = deadlineTime
 		? `${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`
 		: "";
@@ -177,15 +194,7 @@ const TimeSelectedComponent = ({
 								alt="uncheckedBox"
 								width={20}
 								height={20}
-								onClick={() => {
-									setIsMidnight(true);
-									setTemporaryTime({
-										hour: "11",
-										minute: "59",
-										meridiem: "오후",
-										second: "59",
-									});
-								}}
+								onClick={handleMidnightButtonClick}
 							/>
 						)}
 					</div>
