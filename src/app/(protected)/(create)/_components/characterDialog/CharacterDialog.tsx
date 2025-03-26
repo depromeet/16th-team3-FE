@@ -11,12 +11,8 @@ import {
 import { useUserStore } from "@/store";
 import Image from "next/image";
 
-const CharacterDialog = ({
-	task,
-	personaName,
-	personaType,
-	onClick,
-}: {
+interface CharacterDialogProps {
+	isOpen: boolean;
 	task: string;
 	personaName: string;
 	personaType: {
@@ -24,11 +20,19 @@ const CharacterDialog = ({
 		taskMode: string;
 	};
 	onClick: () => void;
-}) => {
+}
+
+const CharacterDialog = ({
+	isOpen,
+	task,
+	personaName,
+	personaType,
+	onClick,
+}: CharacterDialogProps) => {
 	const { userData } = useUserStore();
 
 	return (
-		<Dialog>
+		<Dialog open={isOpen} onOpenChange={onClick}>
 			<DialogContent className="w-[328px] rounded-[24px] border-none bg-component-gray-secondary px-4 py-6">
 				<DialogHeader>
 					<DialogTitle className="text-normal t3 mb-1">

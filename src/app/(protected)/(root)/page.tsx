@@ -356,19 +356,19 @@ const HomePageContent = () => {
 	};
 
 	useEffect(() => {
-		if (searchParams.get("modal") === "success") {
+		if (searchParams.get("dialog") === "success") {
 			setIsDialogOpen(true);
-
-			const newParams = new URLSearchParams(searchParams.toString());
-			newParams.delete("dialog");
-			router.replace(`/?${newParams.toString()}`, { scroll: false });
 		}
 
-		if (searchParams.get("task")) {
-			setTaskName(searchParams.get("task") || "");
-			const newParams = new URLSearchParams(searchParams.toString());
-			newParams.delete("task");
-			router.replace(`/?${newParams.toString()}`, { scroll: false });
+		const taskParam = searchParams.get("task");
+		if (taskParam) {
+			setTaskName(taskParam);
+		}
+
+		const personaParam = searchParams.get("personaName");
+
+		if (personaParam) {
+			setPersonaName(personaParam);
 		}
 
 		if (searchParams.get("taskType") && searchParams.get("taskMode")) {
@@ -377,38 +377,11 @@ const HomePageContent = () => {
 				taskMode: searchParams.get("taskMode") || "",
 			});
 		}
-	}, [searchParams, router]);
 
-	useEffect(() => {
-		// TODO(prgmr99): 서버로부터 별칭받기
-		const newParams = new URLSearchParams(searchParams.toString());
-		let shouldReplace = false;
-
-		if (searchParams.get("dialog") === "success") {
-			setIsDialogOpen(true);
-			newParams.delete("dialog");
-			shouldReplace = true;
+		if (isDialogOpen) {
+			router.replace("/", { scroll: false });
 		}
-
-		const taskParam = searchParams.get("task");
-		if (taskParam) {
-			setTaskName(taskParam);
-			newParams.delete("task");
-			shouldReplace = true;
-		}
-
-		const personaParam = searchParams.get("personaName");
-
-		if (personaParam) {
-			setPersonaName(personaParam);
-			newParams.delete("personaName");
-			shouldReplace = true;
-		}
-
-		if (shouldReplace) {
-			router.replace(`/?${newParams.toString()}`, { scroll: false });
-		}
-	}, [searchParams, router]);
+	}, [searchParams, router, isDialogOpen]);
 
 	// 로딩 상태 처리
 	if (isLoadingHome || isUserProfileLoading) {
@@ -1097,7 +1070,9 @@ const HomePageContent = () => {
 			)}
 
 			{/* TODO(prgmr99): 모달 띄워지는 애니메이션 확인 필요 */}
+
 			<CharacterDialog
+				isOpen={isDialogOpen}
 				task={taskName}
 				personaName={personaName}
 				personaType={personaType}
