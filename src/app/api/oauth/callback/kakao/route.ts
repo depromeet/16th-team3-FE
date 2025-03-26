@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json();
-		const { authCode, deviceId, deviceType } = body;
+		const { authCode } = body;
 
 		if (!authCode) {
 			return NextResponse.json(
@@ -21,8 +21,6 @@ export async function POST(req: NextRequest) {
 				body: JSON.stringify({
 					authCode,
 					provider: "KAKAO",
-					deviceId: deviceId || "0f365b39-c33d-39be-bdfc-74aaf55",
-					deviceType: deviceType || "IOS",
 				}),
 			},
 		);

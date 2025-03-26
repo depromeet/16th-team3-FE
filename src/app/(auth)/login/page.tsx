@@ -1,10 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useWebViewMessage } from "@/hooks/useWebViewMessage";
 import { useUserStore } from "@/store";
 import type { AppleAuthorizationResponse } from "@/types/auth";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -18,12 +16,6 @@ declare global {
 	}
 }
 
-const COOKIE_OPTIONS = {
-	expires: 30,
-	path: "/",
-	secure: false,
-} as const;
-
 const REDIRECT_URI_KAKAO =
 	process.env.NODE_ENV === "production"
 		? "https://spurt.site/oauth/callback/kakao"
@@ -33,8 +25,6 @@ const SCOPE_KAKAO = ["openid"].join(",");
 const LoginPage = () => {
 	const router = useRouter();
 	const [isKakaoLoaded, setIsKakaoLoaded] = useState(false);
-	const [socialType, setSocialType] = useState<"kakao" | "apple">("kakao");
-	const { handleGetDeviceToken } = useWebViewMessage();
 
 	const { setUser } = useUserStore();
 
@@ -60,8 +50,6 @@ const LoginPage = () => {
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: JSON.stringify({
 					...response,
-					deviceId: Cookies.get("deviceId"),
-					deviceType: Cookies.get("deviceType"),
 				}),
 			});
 
@@ -89,63 +77,6 @@ const LoginPage = () => {
 			console.error("Apple login error: ", err);
 		}
 	}, [router, setUser]);
-
-	const executeSocialLogin = useCallback(() => {
-		if (socialType === "kakao") {
-			handleKakaoLogin();
-		} else {
-			handleAppleLogin();
-		}
-	}, [socialType, handleKakaoLogin, handleAppleLogin]);
-
-	const saveDeviceToken = useCallback(
-		(fcmToken: string, deviceType: string) => {
-			Cookies.set("deviceId", fcmToken, COOKIE_OPTIONS);
-			Cookies.set("deviceType", deviceType, COOKIE_OPTIONS);
-		},
-		[],
-	);
-
-	useEffect(() => {
-		const handleMessage = (event: MessageEvent) => {
-			try {
-				const data =
-					typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-
-				if (data.type === "GET_DEVICE_TOKEN" && data.payload.fcmToken) {
-					saveDeviceToken(data.payload.fcmToken, data.payload.deviceType);
-					executeSocialLogin();
-				}
-			} catch (error) {
-				console.error("Failed to parse message:", error);
-			}
-		};
-
-		window.addEventListener("message", handleMessage);
-		return () => window.removeEventListener("message", handleMessage);
-	}, [executeSocialLogin, saveDeviceToken]);
-
-	const handleSocialLogin = (type: "kakao" | "apple") => {
-		setSocialType(type);
-
-		const isWebView = () => {
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			return !!(window as any).ReactNativeWebView;
-		};
-		if (isWebView()) {
-			handleGetDeviceToken();
-			// 웹뷰 환경이면 네이티브 쪽에서 디바이스 토큰을 받아오도록 처리
-		} else {
-			// 웹 환경이면 바로 소셜 로그인 함수를 실행
-			if (type === "kakao") {
-				saveDeviceToken("test_on_web", "IOS");
-				handleKakaoLogin();
-			} else {
-				saveDeviceToken("test_on_web", "IOS");
-				handleAppleLogin();
-			}
-		}
-	};
 
 	useEffect(() => {
 		if (typeof window !== "undefined") {
@@ -223,26 +154,26 @@ const LoginPage = () => {
 				/>
 			</div>
 
-			<div className="b3 absolute bottom-[192px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
-				3초만에 바로 시작하기
-				<div
-					className="absolute h-0 w-0"
-					style={{
-						bottom: "-11px",
-						right: "3rem",
-						transform: "translateX(50%)",
-						borderStyle: "solid",
-						borderWidth: "12px 7px 0 7px",
-						borderColor: "#6B6BE1 transparent transparent transparent",
-					}}
-				/>
-			</div>
+			<div className="relative z-10 pb-[40px] flex w-full flex-col gap-4">
+				<div className="b3 absolute bottom-[200px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
+					3초만에 바로 시작하기
+					<div
+						className="absolute h-0 w-0"
+						style={{
+							bottom: "-11px",
+							right: "3rem",
+							transform: "translateX(50%)",
+							borderStyle: "solid",
+							borderWidth: "12px 7px 0 7px",
+							borderColor: "#6B6BE1 transparent transparent transparent",
+						}}
+					/>
+				</div>
 
-			<div className="z-10 mb-[40px] flex w-full flex-col gap-4">
 				<Button
 					variant="default"
 					className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
-					onClick={() => handleSocialLogin("kakao")}
+					onClick={handleKakaoLogin}
 				>
 					<Image
 						src="/icons/login/kakao.svg"
@@ -256,7 +187,7 @@ const LoginPage = () => {
 				<Button
 					variant="default"
 					className="l2 i gap-2 rounded-[16px] bg-[#e6edf8] text-[#0f1114]"
-					onClick={() => handleSocialLogin("apple")}
+					onClick={handleAppleLogin}
 				>
 					<Image
 						src="/icons/login/apple.svg"

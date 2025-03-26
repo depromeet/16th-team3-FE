@@ -20,6 +20,7 @@ import React, { useState, useEffect, useMemo, Suspense } from "react";
 
 import Loader from "@/components/loader/Loader";
 import { useAuthStore } from "@/store";
+import Link from "next/link";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
 
 const HomePageContent = () => {
@@ -183,10 +184,6 @@ const HomePageContent = () => {
 		taskType: "",
 		taskMode: "",
 	});
-
-	const handleNavigateToMyPage = () => {
-		router.push("/my-page");
-	};
 
 	// 다른 페이지에서 돌아올 때 재진입으로 간주
 	useEffect(() => {
@@ -459,10 +456,10 @@ const HomePageContent = () => {
 		inProgressTasks.length === 0 && todayTasks.length > 0;
 
 	return (
-		<div className="flex h-screen flex-col overflow-hidden bg-background-primary">
+		<div className="flex flex-col overflow-hidden bg-background-primary">
 			{/* 헤더 - fixed 대신 static으로 변경 */}
-			<header className="z-20 bg-background-primary">
-				<div className="flex items-center justify-between px-[20px] py-[15px]">
+			<header className="z-20 fixed top-0 w-[100vw] bg-background-primary pt-[44px]">
+				<div className="flex items-center justify-between px-[20px] py-[15px] h-[60px]">
 					<Image
 						src="/icons/home/spurt.svg"
 						alt="SPURT"
@@ -471,14 +468,16 @@ const HomePageContent = () => {
 						priority
 						className="w-[54px]"
 					/>
-					<button onClick={handleNavigateToMyPage}>
-						<Image
-							src="/icons/home/mypage.svg"
-							alt="마이페이지"
-							width={20}
-							height={20}
-						/>
-					</button>
+					<Link href="/my-page">
+						<button type="button">
+							<Image
+								src="/icons/home/mypage.svg"
+								alt="마이페이지"
+								width={20}
+								height={20}
+							/>
+						</button>
+					</Link>
 				</div>
 				<div className="px-[20px] py-[11px]">
 					<div className="flex space-x-4">
@@ -511,7 +510,7 @@ const HomePageContent = () => {
 			</header>
 
 			{/* 메인 영역 - flex-1과 overflow-y-auto로 설정 */}
-			<main className="flex-1 overflow-y-auto px-5 pb-40">
+			<main className="flex-1 overflow-y-auto px-5 pb-40 pt-28">
 				{/* 오늘 할일 탭 */}
 				{activeTab === "today" && (
 					<>

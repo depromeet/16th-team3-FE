@@ -23,7 +23,7 @@ export default function RootLayout({
 	return (
 		<html lang="ko" className={pretendard.variable}>
 			<body
-				className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] overflow-hidden antialiased`}
+				className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] antialiased`}
 			>
 				{children}
 				<Script

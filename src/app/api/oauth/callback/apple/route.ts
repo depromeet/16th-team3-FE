@@ -7,8 +7,6 @@ export async function POST(req: NextRequest) {
 		const {
 			authorization: { code, id_token },
 			user,
-			deviceId,
-			deviceType,
 		} = body;
 
 		if (!code || !id_token) {
@@ -29,8 +27,6 @@ export async function POST(req: NextRequest) {
 						? `${user.name.lastName}${user.name.firstName}`
 						: null,
 					email: user?.email ? user.email : null,
-					deviceId: deviceId || "0f365b39-c33d-39be-bdfc-74aaf55",
-					deviceType: deviceType || "IOS",
 				}),
 			},
 		);
