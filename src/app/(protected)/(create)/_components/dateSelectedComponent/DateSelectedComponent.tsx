@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "../../../../../components/datePicker/DatePicker";
 import {
 	Drawer,
@@ -44,7 +44,9 @@ const DateSelectedComponent = ({
 
 	const handleTemporaryDate = (date: Date) => {
 		if (date < todayStart) {
-			setToastMessage("마감일은 오늘 날짜 이후로 설정할 수 있어요.");
+			if (!toastMessage) {
+				setToastMessage("마감일은 오늘 날짜 이후로 설정할 수 있어요.");
+			}
 			return;
 		}
 
@@ -59,6 +61,15 @@ const DateSelectedComponent = ({
 		setIsOpen(false);
 		setToastMessage(null);
 	};
+
+	useEffect(() => {
+		if (toastMessage) {
+			const timer = setTimeout(() => {
+				setToastMessage(null);
+			}, 2500);
+			return () => clearTimeout(timer);
+		}
+	}, [toastMessage]);
 
 	return (
 		<Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
