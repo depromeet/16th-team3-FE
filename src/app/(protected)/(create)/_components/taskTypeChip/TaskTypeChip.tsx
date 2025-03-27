@@ -27,6 +27,7 @@ const TaskTypeChip = <T extends TaskType | MoodType>({
 				width={24}
 				height={24}
 				loading="eager"
+				priority
 			/>
 			<span className={`l2 ${isSelected ? "text-inverse" : "text-normal"}`}>
 				{label}
