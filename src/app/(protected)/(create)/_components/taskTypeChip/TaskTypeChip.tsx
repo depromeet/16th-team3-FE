@@ -16,11 +16,18 @@ const TaskTypeChip = <T extends TaskType | MoodType>({
 	const label = TYPE_LABELS[type];
 
 	return (
+		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
 			className={`flex h-12 items-center gap-2 rounded-[10px] p-[14px] transition-colors duration-300 ${isSelected ? "bg-point-gradient" : "bg-component-gray-secondary"}`}
 			onClick={() => onClick(type)}
 		>
-			<Image src={`/icons/${type}.svg`} alt={`type`} width={24} height={24} />
+			<Image
+				src={`/icons/${type}.svg`}
+				alt={type}
+				width={24}
+				height={24}
+				loading="eager"
+			/>
 			<span className={`l2 ${isSelected ? "text-inverse" : "text-normal"}`}>
 				{label}
 			</span>

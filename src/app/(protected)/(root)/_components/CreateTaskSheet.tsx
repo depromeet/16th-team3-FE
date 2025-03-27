@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -28,7 +29,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 					<Link href="/scheduled-create">
 						<div className="mb-3 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
-								<Image
+								<img
 									src="/icons/home/gp-clock.svg"
 									alt="Clock"
 									width={30}
@@ -46,7 +47,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										알림 받고 나중에 시작
 									</p>
 									<div className="text-text-neutral">
-										<Image
+										<img
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
 											width={7}
@@ -62,7 +63,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 					<Link href="/instant-create">
 						<div className="mb-8 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
-								<Image
+								<img
 									src="/icons/home/heartfire.svg"
 									alt="Heart"
 									width={30}
@@ -78,7 +79,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										알림 없이 바로 몰입
 									</p>
 									<div className="text-text-neutral">
-										<Image
+										<img
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
 											width={7}
