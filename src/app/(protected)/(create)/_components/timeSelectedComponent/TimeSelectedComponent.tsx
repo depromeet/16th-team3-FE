@@ -127,7 +127,7 @@ const TimeSelectedComponent = ({
 	}, [temporaryTime, deadlineDate]);
 
 	return (
-		<Drawer open={isOpen} dismissible={false}>
+		<Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
 			<DrawerTrigger>
 				<div className="relative mt-2 w-full">
 					<div

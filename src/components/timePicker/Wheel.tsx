@@ -105,8 +105,14 @@ const Wheel = (props: {
 
 	return (
 		<div
-			className={"wheel keen-slider wheel--perspective-" + perspective}
+			className={`wheel keen-slider wheel--perspective-${perspective}`}
 			ref={sliderRef}
+			onPointerDownCapture={(e) => {
+				e.stopPropagation();
+			}}
+			onPointerMoveCapture={(e) => {
+				e.stopPropagation();
+			}}
 		>
 			<div
 				className="wheel__shadow-top text-disabled t2"
@@ -116,7 +122,7 @@ const Wheel = (props: {
 				}}
 			/>
 			<div className="wheel__inner">
-				<div className="wheel__slides t3" style={{ width: props.width + "px" }}>
+				<div className="wheel__slides t3" style={{ width: `${props.width}px` }}>
 					{slideValues().map(({ style, value }, idx) => (
 						<div className="wheel__slide text-strong" style={style} key={idx}>
 							<span>{value}</span>

@@ -3,6 +3,7 @@
 	height: 100%;
 	overflow: visible;
 	width: 100%;
+	touch-action: none;
 }
 .wheel--perspective-right .wheel__inner {
 	perspective-origin: calc(50% + 100px) 50%;

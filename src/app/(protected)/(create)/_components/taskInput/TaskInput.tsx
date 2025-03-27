@@ -2,6 +2,7 @@
 
 import ClearableInput from "@/components/clearableInput/ClearableInput";
 import { Button } from "@/components/ui/button";
+import useInitialTime from "@/hooks/useInitialTime";
 import type { TimePickerType } from "@/types/create";
 import { useEffect, useRef, useState } from "react";
 import type { TaskInputType } from "../../context";
@@ -38,12 +39,18 @@ const WAITING_TIME = 200;
 const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
+	const {
+		meridiem: meridiemString,
+		hour: hourString,
+		minute: minuteString,
+	} = useInitialTime();
+
 	const [task, setTask] = useState<string>("");
 	const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
 	const [deadlineTime, setDeadlineTime] = useState<TimePickerType>({
-		meridiem: "오전",
-		hour: "01",
-		minute: "00",
+		meridiem: meridiemString,
+		hour: hourString,
+		minute: minuteString,
 	});
 	const [isFocused, setIsFocused] = useState(true);
 	const [isTimePickerFirstTouched, setIsTimePickerFirstTouched] = useState(
