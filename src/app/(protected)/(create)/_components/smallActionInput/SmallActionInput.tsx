@@ -88,7 +88,7 @@ const SmallActionInput = ({
 				</div>
 			</div>
 			<div
-				className={`mt-auto transition-all duration-300 ${isFocused ? "mb-[48vh]" : ""}`}
+				className={`fixed bottom-10 w-[100%] mt-auto transition-all duration-300 pr-10 ${isFocused ? "mb-[36vh]" : ""}`}
 			>
 				<Button
 					variant="primary"

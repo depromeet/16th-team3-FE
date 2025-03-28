@@ -156,7 +156,7 @@ const LoginPage = () => {
 			</div>
 
 			<div className="relative z-10 pb-[40px] flex w-full flex-col gap-4">
-				<div className="b3 absolute bottom-[200px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
+				{/* <div className="b3 absolute bottom-[200px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
 					3초만에 바로 시작하기
 					<div
 						className="absolute h-0 w-0"
@@ -183,7 +183,7 @@ const LoginPage = () => {
 						height={24}
 					/>
 					<span className="pt-0.5">카카오로 계속하기</span>
-				</Button>
+				</Button> */}
 
 				<Button
 					variant="default"

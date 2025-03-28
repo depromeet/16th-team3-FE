@@ -53,8 +53,14 @@ const InstantTaskTypeInput = ({
 		moodType: moodType || "",
 	});
 
+	const handleClick = () => {
+		if (!taskType || !moodType || !isIdle) return;
+
+		onClick(convertedData);
+	};
+
 	return (
-		<div className="flex h-full w-full flex-col justify-between">
+		<div className="relative flex h-full w-full flex-col justify-between">
 			<div>
 				<div className="flex flex-col gap-3 pb-6 pt-4">
 					<div className="flex h-[26px] w-auto items-center gap-1 self-start rounded-[8px] bg-component-accent-secondary px-[7px] py-[6px]">
@@ -74,7 +80,7 @@ const InstantTaskTypeInput = ({
 						</span>
 					</div>
 				</div>
-				<div className="flex flex-col gap-10">
+				<div className="flex flex-col gap-10 pb-20">
 					<div className="flex flex-col gap-[14px]">
 						<div className="flex items-center gap-2">
 							<span className="b3 text-normal">마감 유형</span>
@@ -110,12 +116,12 @@ const InstantTaskTypeInput = ({
 				</div>
 			</div>
 
-			<div className="transition-all duration-300">
+			<div className="fixed w-[100%] pr-10 bottom-10 transition-all duration-300">
 				<Button
 					variant="primary"
 					className="w-full"
-					disabled={!taskType || !moodType || !isIdle}
-					onClick={() => onClick(convertedData)}
+					// disabled={!taskType || !moodType || !isIdle}
+					onClick={handleClick}
 				>
 					{isIdle ? "확인" : <Loader width={24} height={24} />}
 				</Button>

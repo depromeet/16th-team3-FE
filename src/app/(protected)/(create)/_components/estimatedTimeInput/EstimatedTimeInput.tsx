@@ -217,7 +217,7 @@ const EstimatedTimeInput = ({
 	// ! TODO feat: 일 탭 선택 시, 일 Input 바로 focus 되도록
 
 	return (
-		<div className="flex h-full w-full flex-col justify-between">
+		<div className="relative flex h-full w-full flex-col justify-between">
 			<div ref={containerRef}>
 				<HeaderTitle title="할일이 얼마나 걸릴 것 같나요?" />
 				<div>
@@ -424,7 +424,9 @@ const EstimatedTimeInput = ({
 			</div>
 
 			<div
-				className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? "mb-[38vh]" : ""} gap-4`}
+				className={
+					"fixed flex flex-col w-[100%] bottom-10 pr-10 transition-all duration-300 gap-4"
+				}
 			>
 				{currentTab === "시간" && (
 					<div className="flex items-center justify-center space-x-2">
