@@ -20,7 +20,7 @@ const Wheel = (props: {
 	const wheelSize = 20;
 	const slides = props.length;
 	const slideDegree = 360 / wheelSize;
-	const slidesPerView = props.loop ? 9 : 1;
+	const slidesPerView = props.loop ? 3 : 1;
 	const [sliderState, setSliderState] = useState<TrackDetails | null>(null);
 	const size = useRef(0);
 	const options = useRef<KeenSliderOptions>({
@@ -28,10 +28,10 @@ const Wheel = (props: {
 			number: slides,
 			origin: "center",
 			perView: slidesPerView,
+			spacing: 50,
 		},
 
 		vertical: true,
-
 		initial: props.initIdx || 0,
 		loop: props.loop,
 		dragSpeed: (val) => {
@@ -75,7 +75,7 @@ const Wheel = (props: {
 
 	const slideValues = () => {
 		if (!sliderState) return [];
-		const offset = props.loop ? 1 / 2 - 1 / slidesPerView / 2 : 0;
+		const offset = props.loop ? 0.5 - 1 / slidesPerView / 2 : 0;
 
 		const values = [];
 		for (let i = 0; i < slides; i++) {
@@ -115,14 +115,14 @@ const Wheel = (props: {
 			}}
 		>
 			<div
-				className="wheel__shadow-top text-disabled t2"
+				className="wheel__shadow-top text-disabled t1"
 				style={{
 					transform: `translateZ(${radius}px)`,
 					WebkitTransform: `translateZ(${radius}px)`,
 				}}
 			/>
 			<div className="wheel__inner">
-				<div className="wheel__slides t3" style={{ width: `${props.width}px` }}>
+				<div className="wheel__slides t1" style={{ width: `${props.width}px` }}>
 					{slideValues().map(({ style, value }, idx) => (
 						<div className="wheel__slide text-strong" style={style} key={idx}>
 							<span>{value}</span>
@@ -142,7 +142,7 @@ const Wheel = (props: {
 				)}
 			</div>
 			<div
-				className="wheel__shadow-bottom text-disabled t3"
+				className="wheel__shadow-bottom text-disabled t1"
 				style={{
 					transform: `translateZ(${radius}px)`,
 					WebkitTransform: `translateZ(${radius}px)`,
