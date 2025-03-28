@@ -11,7 +11,6 @@ const KakaoTalk = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const authCode = searchParams.get("code");
-	const platform = searchParams.get("platform");
 
 	const { setUser } = useUserStore();
 
@@ -19,7 +18,11 @@ const KakaoTalk = () => {
 		const response = await fetch("/api/oauth/callback/kakao", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ authCode }),
+			body: JSON.stringify({
+				authCode,
+				deviceId: Cookies.get("deviceId"),
+				deviceType: Cookies.get("deviceType"),
+			}),
 		}).then((res) => res.json());
 
 		if (response.success) {
@@ -29,7 +32,8 @@ const KakaoTalk = () => {
 				router.push("/onboarding");
 				return;
 			}
-			router.push("/");
+
+			router.push("/"); // TODO(prgmr99): Redirect to the home page('/')
 		} else {
 			console.error("Failed to login");
 		}
@@ -37,15 +41,9 @@ const KakaoTalk = () => {
 
 	useEffect(() => {
 		if (authCode) {
-			if (platform === "mobile") {
-				// 모바일 로그인: 커스텀 스킴으로 리다이렉트해서, RN 쪽 InAppBrowser.openAuth()에서 감지
-				window.location.href = `spurt://callback?code=${authCode}`;
-			} else {
-				// 웹 로그인: 기존 방식대로 처리
-				loginMutation(authCode);
-			}
+			loginMutation(authCode);
 		}
-	}, [authCode, platform]);
+	}, [authCode]);
 
 	return (
 		<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
