@@ -180,10 +180,6 @@ const HomePageContent = () => {
 	const searchParams = useSearchParams();
 	const [taskName, setTaskName] = useState("");
 	const [personaName, setPersonaName] = useState("");
-	const [personaType, setPersonaType] = useState({
-		taskType: "",
-		taskMode: "",
-	});
 
 	// 다른 페이지에서 돌아올 때 재진입으로 간주
 	useEffect(() => {
@@ -369,13 +365,6 @@ const HomePageContent = () => {
 
 		if (personaParam) {
 			setPersonaName(personaParam);
-		}
-
-		if (searchParams.get("taskType") && searchParams.get("taskMode")) {
-			setPersonaType({
-				taskType: searchParams.get("taskType") || "",
-				taskMode: searchParams.get("taskMode") || "",
-			});
 		}
 
 		if (isDialogOpen) {
@@ -1075,7 +1064,6 @@ const HomePageContent = () => {
 				isOpen={isDialogOpen}
 				task={taskName}
 				personaName={personaName}
-				personaType={personaType}
 				onClick={() => setIsDialogOpen(false)}
 			/>
 

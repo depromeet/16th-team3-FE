@@ -61,10 +61,10 @@ const InstantTaskCreate = () => {
 		},
 		onSuccess: (response) => {
 			if (response.success) {
-				const { personaName, taskMode, taskType } = response;
+				const { personaName } = response;
 				queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
 				router.push(
-					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&taskMode=${taskMode}&taskType=${taskType}`,
+					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}`,
 				);
 			}
 		},
