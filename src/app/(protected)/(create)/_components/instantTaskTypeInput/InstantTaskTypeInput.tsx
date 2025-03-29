@@ -74,7 +74,7 @@ const InstantTaskTypeInput = ({
 					</div>
 					<span className="text-strong t2 mt-1">정말 마지막단계에요!</span>
 					<div className="flex flex-col">
-						<span className="b2 text-neutral">몰입을 도울</span>
+						<span className="b2 text-neutral">즉시, 몰입을 도울</span>
 						<span className="b2 text-neutral">
 							캐릭터와 플레이리스트를 만들어 드릴게요.
 						</span>
