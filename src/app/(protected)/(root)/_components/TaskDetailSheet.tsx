@@ -198,7 +198,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 							{task.title}
 						</DialogTitle>
 					</DialogHeader>
-					<div className="w-6"></div>
+					<div className="w-6" />
 					<button
 						ref={buttonRef}
 						className="z-10 px-5"
@@ -278,6 +278,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 					</div>
 
 					<div>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
 							className="flex items-center justify-between py-2.5 pt-0"
 							onClick={() => {
