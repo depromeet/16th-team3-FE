@@ -14,6 +14,7 @@ import Image from "next/image";
 interface CharacterDialogProps {
 	isOpen: boolean;
 	task: string;
+	taskType: string;
 	personaName: string;
 	onClick: () => void;
 }
@@ -21,6 +22,7 @@ interface CharacterDialogProps {
 const CharacterDialog = ({
 	isOpen,
 	task,
+	taskType,
 	personaName,
 	onClick,
 }: CharacterDialogProps) => {
@@ -31,7 +33,9 @@ const CharacterDialog = ({
 			<DialogContent className="w-[328px] rounded-[24px] border-none bg-component-gray-secondary px-4 py-6">
 				<DialogHeader>
 					<DialogTitle className="text-normal t3 mb-1">
-						할일 등록 완료!
+						{taskType === "instant"
+							? "지금 바로 시작할까요?"
+							: "할일 등록 완료!"}
 					</DialogTitle>
 					<DialogDescription className="max-w-[190px] flex-wrap self-center">
 						{`‘${personaName}’ ${userData.nickname}님!`}
@@ -57,7 +61,7 @@ const CharacterDialog = ({
 					</div>
 				</div>
 				<Button variant="primary" className="w-full" onClick={onClick}>
-					확인
+					{taskType === "instant" ? "시작" : "확인"}
 				</Button>
 			</DialogContent>
 		</Dialog>

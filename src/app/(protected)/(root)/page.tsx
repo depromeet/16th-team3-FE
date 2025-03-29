@@ -180,6 +180,10 @@ const HomePageContent = () => {
 	const searchParams = useSearchParams();
 	const [taskName, setTaskName] = useState("");
 	const [personaName, setPersonaName] = useState("");
+	const [taskType, setTaskType] = useState("");
+	const [urgentTaskId, setUrgentTaskId] = useState<number | undefined>(
+		undefined,
+	);
 
 	// 다른 페이지에서 돌아올 때 재진입으로 간주
 	useEffect(() => {
@@ -305,6 +309,14 @@ const HomePageContent = () => {
 		setIsCreateSheetOpen(false);
 	};
 
+	const handleCharacterDialogButtonClick = () => {
+		if (taskType === "instant") {
+			router.push(`/immersion/${urgentTaskId}`);
+		}
+
+		setIsDialogOpen(false);
+	};
+
 	// 툴팁 표시 관련 로직
 	useEffect(() => {
 		const hasVisited = localStorage.getItem("hasVisitedBefore");
@@ -362,9 +374,18 @@ const HomePageContent = () => {
 		}
 
 		const personaParam = searchParams.get("personaName");
-
 		if (personaParam) {
 			setPersonaName(personaParam);
+		}
+
+		const taskTypeParam = searchParams.get("type");
+		if (taskTypeParam) {
+			setTaskType(taskTypeParam);
+		}
+
+		const taskIdParam = searchParams.get("taskId");
+		if (taskIdParam) {
+			setUrgentTaskId(Number(taskIdParam));
 		}
 
 		if (isDialogOpen) {
@@ -1063,8 +1084,9 @@ const HomePageContent = () => {
 			<CharacterDialog
 				isOpen={isDialogOpen}
 				task={taskName}
+				taskType={taskType}
 				personaName={personaName}
-				onClick={() => setIsDialogOpen(false)}
+				onClick={handleCharacterDialogButtonClick}
 			/>
 
 			<CreateTaskSheet

@@ -22,10 +22,12 @@ export async function POST(req: NextRequest) {
 		const taskResponse: TaskResponse = await apiResponse.json();
 
 		const personaName = taskResponse.persona.name;
+		const taskId = taskResponse.id;
 
 		const nextResponse = NextResponse.json({
 			success: true,
 			personaName: personaName,
+			taskId: taskId,
 		});
 
 		return nextResponse;
