@@ -101,8 +101,6 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 		};
 	}, []);
 
-	if (!isOpen) return null;
-
 	// 닉네임 문자열 처리 (9자 초과시 말줄임표)
 	const formatNickname = (name: string) => {
 		if (!name) return "";
