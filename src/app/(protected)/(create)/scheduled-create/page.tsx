@@ -110,30 +110,7 @@ const ScheduledTaskCreate = () => {
 	});
 
 	const handleHistoryBack = () => {
-		if (funnel.step === "smallActionInput") {
-			funnel.history.push("taskForm", {
-				task: funnel.context.task,
-				deadlineDate: funnel.context.deadlineDate,
-				deadlineTime: funnel.context.deadlineTime,
-			});
-		} else if (funnel.step === "estimatedTimeInput") {
-			funnel.history.push("smallActionInput", {
-				task: funnel.context.task,
-				deadlineDate: funnel.context.deadlineDate,
-				deadlineTime: funnel.context.deadlineTime,
-				smallAction: funnel.context.smallAction,
-			});
-		} else if (funnel.step === "bufferTime") {
-			funnel.history.push("estimatedTimeInput", {
-				task: funnel.context.task,
-				deadlineDate: funnel.context.deadlineDate,
-				deadlineTime: funnel.context.deadlineTime,
-				smallAction: funnel.context.smallAction,
-				estimatedHour: funnel.context.estimatedHour,
-				estimatedMinute: funnel.context.estimatedMinute,
-				estimatedDay: funnel.context.estimatedDay,
-			});
-		} else if (funnel.step === "taskTypeInput") {
+		if (lastStep === "bufferTime") {
 			funnel.history.push("bufferTime", {
 				task: funnel.context.task,
 				deadlineDate: funnel.context.deadlineDate,
@@ -144,7 +121,46 @@ const ScheduledTaskCreate = () => {
 				estimatedDay: funnel.context.estimatedDay,
 			} as BufferTimeType);
 		} else {
-			router.push("/");
+			if (funnel.step === "smallActionInput") {
+				funnel.history.push("taskForm", {
+					task: funnel.context.task,
+					deadlineDate: funnel.context.deadlineDate,
+					deadlineTime: funnel.context.deadlineTime,
+				});
+			} else if (funnel.step === "estimatedTimeInput") {
+				funnel.history.push("smallActionInput", {
+					task: funnel.context.task,
+					deadlineDate: funnel.context.deadlineDate,
+					deadlineTime: funnel.context.deadlineTime,
+					smallAction: funnel.context.smallAction,
+				});
+			} else if (funnel.step === "bufferTime") {
+				funnel.history.push("estimatedTimeInput", {
+					task: funnel.context.task,
+					deadlineDate: funnel.context.deadlineDate,
+					deadlineTime: funnel.context.deadlineTime,
+					smallAction: funnel.context.smallAction,
+					estimatedHour: funnel.context.estimatedHour,
+					estimatedMinute: funnel.context.estimatedMinute,
+					estimatedDay: funnel.context.estimatedDay,
+				});
+			} else if (funnel.step === "taskTypeInput") {
+				funnel.history.push("bufferTime", {
+					task: funnel.context.task,
+					deadlineDate: funnel.context.deadlineDate,
+					deadlineTime: funnel.context.deadlineTime,
+					smallAction: funnel.context.smallAction,
+					estimatedHour: funnel.context.estimatedHour,
+					estimatedMinute: funnel.context.estimatedMinute,
+					estimatedDay: funnel.context.estimatedDay,
+				} as BufferTimeType);
+			} else if (funnel.step === "taskForm") {
+				if (confirm("홈 화면으로 돌아가시겠습니까?")) {
+					router.push("/");
+				} else {
+					return;
+				}
+			}
 		}
 	};
 

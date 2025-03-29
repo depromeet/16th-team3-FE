@@ -128,6 +128,7 @@ const TaskInput = ({ context, lastStep, onNext, onEdit }: TaskInputProps) => {
 
 					<DateSelectedComponent
 						deadlineDate={deadlineDate}
+						isLastStepBufferTime={lastStep === "bufferTime"}
 						handleDateChange={handleDateChange}
 					/>
 

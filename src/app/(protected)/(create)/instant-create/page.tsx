@@ -86,7 +86,11 @@ const InstantTaskCreate = () => {
 				deadlineTime: funnel.context.deadlineTime,
 			});
 		} else {
-			router.push("/");
+			if (confirm("홈 화면으로 돌아가시겠습니까?")) {
+				router.push("/");
+			} else {
+				return;
+			}
 		}
 	};
 
