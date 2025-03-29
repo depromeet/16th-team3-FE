@@ -393,6 +393,14 @@ const HomePageContent = () => {
 		}
 	}, [searchParams, router, isDialogOpen]);
 
+	useEffect(() => {
+		if (searchParams.get("tab") === "all") {
+			setActiveTab("all");
+		} else if (searchParams.get("tab") === "today") {
+			setActiveTab("today");
+		}
+	}, [searchParams]);
+
 	// 로딩 상태 처리
 	if (isLoadingHome || isUserProfileLoading) {
 		return (
@@ -464,7 +472,13 @@ const HomePageContent = () => {
 				</div>
 				<div className="px-[20px] py-[11px]">
 					<div className="flex space-x-4">
-						<div onClick={() => handleTabChange("today")}>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<div
+							onClick={() => {
+								handleTabChange("today");
+								router.replace("/?tab=today", { scroll: true });
+							}}
+						>
 							<span
 								className={`t3 ${activeTab === "today" ? "text-text-normal" : "text-text-disabled"}`}
 							>
@@ -476,7 +490,13 @@ const HomePageContent = () => {
 								{todayTasks.length + inProgressTasks.length}
 							</span>
 						</div>
-						<div onClick={() => handleTabChange("all")}>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<div
+							onClick={() => {
+								handleTabChange("all");
+								router.replace("/?tab=all", { scroll: true });
+							}}
+						>
 							<span
 								className={`t3 ${activeTab === "all" ? "text-text-normal" : "text-text-disabled"}`}
 							>

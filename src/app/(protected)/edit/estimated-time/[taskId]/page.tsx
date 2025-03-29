@@ -36,20 +36,19 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 	const minuteInputRef = useRef<HTMLInputElement>(null);
 	const dayInputRef = useRef<HTMLInputElement>(null);
 
-	const { data: taskData } = useQuery<TaskResponse>({
+	const { data: taskData, isFetching } = useQuery<TaskResponse>({
 		queryKey: ["singleTask", taskId],
 		queryFn: () => fetchSingleTask(taskId),
 	});
 
 	const [estimatedHour, setEstimatedHour] = useState<string>("");
-
 	const [estimatedMinute, setEstimatedMinute] = useState<string>("");
-
 	const [estimatedDay, setEstimatedDay] = useState<string>("");
 
 	const [focusedTab, setFocusedTab] = useState<string | null>("시간");
 	const [currentTab, setCurrentTab] = useState("시간");
 	const [isOnlyMinute, setIsOnlyMinute] = useState(false);
+
 	const [hourError, setHourError] = useState<{
 		isValid: boolean;
 		message: string;
@@ -157,15 +156,6 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 		}
 	};
 
-	const resetInputValues = () => {
-		setEstimatedHour("");
-		setEstimatedMinute("");
-		setEstimatedDay("");
-		setHourError({ isValid: true, message: "" });
-		setMinuteError({ isValid: true, message: "" });
-		setDayError({ isValid: true, message: "" });
-	};
-
 	const handleNextButtonClick = () => {
 		const query = new URLSearchParams({
 			triggerActionAlarmTime: triggerActionAlarmTime,
@@ -182,6 +172,18 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 				estimatedHour: convertedEstimatedHour,
 				estimatedMinute: convertedEstimatedMinute,
 			} = convertEstimatedTime(taskData.estimatedTime);
+
+			if (convertedEstimatedDay > 0) {
+				setCurrentTab("일");
+			}
+
+			if (convertedEstimatedHour > 0 || convertedEstimatedMinute > 0) {
+				setCurrentTab("시간");
+			}
+
+			if (convertedEstimatedHour === 0 && convertedEstimatedMinute > 0) {
+				setIsOnlyMinute(true);
+			}
 
 			setEstimatedHour(convertedEstimatedHour.toString());
 			setEstimatedMinute(convertedEstimatedMinute.toString());
@@ -266,73 +268,194 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	if (!taskData) {
-		return <Loader />;
-	}
-
 	return (
-		<div className="flex h-full w-full flex-col justify-between">
+		<div className="relative flex h-full w-full flex-col justify-between">
 			<div ref={containerRef}>
 				<HeaderTitle title="할일이 얼마나 걸릴 것 같나요?" />
-				<div>
-					<div className="flex gap-1">
-						<span className="b2 text-text-alternative">할일:</span>
-						<span className="text-text-neutral">{taskData.name}</span>
+				{isFetching ? (
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+						<Loader />
 					</div>
-					<div className="flex gap-1">
-						<span className="b2 text-text-alternative">마감:</span>
-						<span className="text-text-neutral">{formattedDeadline}</span>
-					</div>
-				</div>
-				<Tabs
-					defaultValue="시간"
-					value={currentTab}
-					onValueChange={(value) => {
-						setCurrentTab(value);
-						resetInputValues();
-					}}
-					className="mt-6 w-full"
-				>
-					<TabsList className="h-full w-full rounded-[10px] bg-component-gray-primary p-1">
-						<TabsTrigger
-							value="시간"
-							className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px]`}
+				) : (
+					<>
+						<div className="mt-[-28px]">
+							<div className="flex gap-1">
+								<span className="b2 text-text-alternative">할일:</span>
+								<span className="text-text-neutral">{taskData?.name}</span>
+							</div>
+							<div className="flex gap-1">
+								<span className="b2 text-text-alternative">마감:</span>
+								<span className="text-text-neutral">{formattedDeadline}</span>
+							</div>
+						</div>
+						<Tabs
+							defaultValue="시간"
+							value={currentTab}
+							onValueChange={(value) => {
+								setCurrentTab(value);
+							}}
+							className="mt-6 w-full p-1"
 						>
-							시간
-						</TabsTrigger>
-						<TabsTrigger
-							value="일"
-							className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px]`}
-						>
-							일
-						</TabsTrigger>
-					</TabsList>
-					<TabsContent value="시간">
-						<div className="relative mt-3 flex justify-between gap-6">
-							{!isOnlyMinute && (
-								<div className="flex w-full flex-col gap-2">
+							<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
+								<TabsTrigger
+									value="시간"
+									className={`l4 w-full ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+								>
+									시간
+								</TabsTrigger>
+								<TabsTrigger
+									value="일"
+									className={`l4 w-full ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+								>
+									일
+								</TabsTrigger>
+							</TabsList>
+							<TabsContent value="시간">
+								<div className="relative mt-3 flex justify-between gap-6">
+									{!isOnlyMinute && (
+										<div className="flex w-full flex-col gap-2">
+											<span
+												className={`b3 ${
+													!hourError.isValid
+														? "text-red"
+														: focusedTab === "시간"
+															? "text-primary"
+															: "text-neutral"
+												}`}
+											>
+												시간
+											</span>
+											{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+											<div
+												className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
+													!hourError.isValid
+														? "border-b-2 border-line-error"
+														: focusedTab === "시간"
+															? "border-b-2 border-b-component-accent-primary"
+															: "border-gray-300"
+												}`}
+												onClick={() => {
+													hourInputRef.current?.focus();
+													setFocusedTab("시간");
+												}}
+											>
+												<Input
+													type="text"
+													inputMode="decimal"
+													className="t3 text-normal border-0 bg-transparent p-0"
+													style={{
+														minWidth: "1ch",
+														width: `${Math.max(estimatedHour.length, 2)}ch`,
+														caretColor: "transparent",
+													}}
+													ref={hourInputRef}
+													value={estimatedHour === "0" ? "" : estimatedHour}
+													maxLength={2}
+													onChange={(event) => {
+														handleHourChange(event, "시간");
+														setEstimatedDay("");
+													}}
+												/>
+												{estimatedHour.length > 0 && estimatedHour !== "0" && (
+													<span
+														className={`t3 text-normal ${estimatedHour.length === 1 ? "ml-[-8px]" : ""} transform`}
+													>
+														시간
+													</span>
+												)}
+											</div>
+											{!hourError.isValid && (
+												<span className="text-red s3 absolute bottom-[-28px]">
+													{hourError.message}
+												</span>
+											)}
+										</div>
+									)}
+									<div className="relative flex w-full flex-col gap-2">
+										<span
+											className={`b3 ${
+												!minuteError.isValid
+													? "text-red"
+													: focusedTab === "분"
+														? "text-primary"
+														: "text-neutral"
+											}`}
+										>
+											분
+										</span>
+										{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+										<div
+											className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
+												!minuteError.isValid
+													? "border-b-2 border-line-error"
+													: focusedTab === "분"
+														? "border-b-2 border-b-component-accent-primary"
+														: "border-gray-300"
+											}`}
+											onClick={() => {
+												minuteInputRef.current?.focus();
+												setFocusedTab("분");
+											}}
+										>
+											<Input
+												type="text"
+												inputMode="decimal"
+												className="t3 text-normal border-0 bg-transparent p-0"
+												style={{
+													minWidth: "1ch",
+													width: `${Math.max(estimatedMinute.length, 2)}ch`,
+													caretColor: "transparent",
+												}}
+												ref={minuteInputRef}
+												value={estimatedMinute === "0" ? "" : estimatedMinute}
+												maxLength={2}
+												onChange={(event) => {
+													handleHourChange(event, "분");
+													setEstimatedDay("");
+												}}
+											/>
+											{estimatedMinute.length > 0 &&
+												estimatedMinute !== "0" && (
+													<span
+														className={`t3 text-normal ${estimatedMinute.length === 1 ? "ml-[-8px]" : ""} transform`}
+													>
+														분
+													</span>
+												)}
+										</div>
+										{!minuteError.isValid && (
+											<span className="text-red s3 absolute bottom-[-28px]">
+												{minuteError.message}
+											</span>
+										)}
+									</div>
+								</div>
+							</TabsContent>
+							<TabsContent value="일">
+								<div className="relative mt-3 flex w-full flex-col gap-2">
 									<span
 										className={`b3 ${
-											!hourError.isValid
+											!dayError.isValid
 												? "text-red"
-												: focusedTab === "시간"
+												: focusedTab === "일"
 													? "text-primary"
 													: "text-neutral"
 										}`}
 									>
-										시간
+										일
 									</span>
+									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 									<div
-										className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
-											!hourError.isValid
+										className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
+											!dayError.isValid
 												? "border-b-2 border-line-error"
-												: focusedTab === "시간"
+												: focusedTab === "일"
 													? "border-b-2 border-b-component-accent-primary"
 													: "border-gray-300"
 										}`}
 										onClick={() => {
-											hourInputRef.current?.focus();
-											setFocusedTab("시간");
+											dayInputRef.current?.focus();
+											setFocusedTab("일");
 										}}
 									>
 										<Input
@@ -341,145 +464,39 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 											className="t3 text-normal border-0 bg-transparent p-0"
 											style={{
 												minWidth: "1ch",
-												width: `${Math.max(estimatedHour.length, 2)}ch`,
+												width: `${Math.max(estimatedDay.length, 2)}ch`,
 												caretColor: "transparent",
 											}}
-											ref={hourInputRef}
-											value={estimatedHour}
+											ref={dayInputRef}
+											value={estimatedDay === "0" ? "" : estimatedDay}
 											maxLength={2}
-											onChange={(event) => handleHourChange(event, "시간")}
+											onChange={(event) => {
+												handleHourChange(event, "일");
+												setEstimatedHour("");
+												setEstimatedMinute("");
+											}}
 										/>
-										{estimatedHour.length > 0 && (
+										{estimatedDay.length > 0 && estimatedDay !== "0" && (
 											<span
-												className={`t3 text-normal ${estimatedHour.length === 1 ? "ml-[-8px]" : ""} transform`}
+												className={`t3 text-normal ${estimatedDay.length === 1 ? "ml-[-8px]" : ""} transform`}
 											>
-												시간
+												일
 											</span>
 										)}
 									</div>
-									{!hourError.isValid && (
+									{!dayError.isValid && (
 										<span className="text-red s3 absolute bottom-[-28px]">
-											{hourError.message}
+											{dayError.message}
 										</span>
 									)}
 								</div>
-							)}
-							<div className="relative flex w-full flex-col gap-2">
-								<span
-									className={`b3 ${
-										!minuteError.isValid
-											? "text-red"
-											: focusedTab === "분"
-												? "text-primary"
-												: "text-neutral"
-									}`}
-								>
-									분
-								</span>
-								<div
-									className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
-										!minuteError.isValid
-											? "border-b-2 border-line-error"
-											: focusedTab === "분"
-												? "border-b-2 border-b-component-accent-primary"
-												: "border-gray-300"
-									}`}
-									onClick={() => {
-										minuteInputRef.current?.focus();
-										setFocusedTab("분");
-									}}
-								>
-									<Input
-										type="text"
-										inputMode="decimal"
-										className="t3 text-normal border-0 bg-transparent p-0"
-										style={{
-											minWidth: "1ch",
-											width: `${Math.max(estimatedMinute.length, 2)}ch`,
-											caretColor: "transparent",
-										}}
-										ref={minuteInputRef}
-										value={estimatedMinute}
-										maxLength={2}
-										onChange={(event) => handleHourChange(event, "분")}
-									/>
-									{estimatedMinute.length > 0 && (
-										<span
-											className={`t3 text-normal ${estimatedMinute.length === 1 ? "ml-[-8px]" : ""} transform`}
-										>
-											분
-										</span>
-									)}
-								</div>
-								{!minuteError.isValid && (
-									<span className="text-red s3 absolute bottom-[-28px]">
-										{minuteError.message}
-									</span>
-								)}
-							</div>
-						</div>
-					</TabsContent>
-					<TabsContent value="일">
-						<div className="relative mt-3 flex w-full flex-col gap-2">
-							<span
-								className={`b3 ${
-									!dayError.isValid
-										? "text-red"
-										: focusedTab === "일"
-											? "text-primary"
-											: "text-neutral"
-								}`}
-							>
-								일
-							</span>
-							<div
-								className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
-									!dayError.isValid
-										? "border-b-2 border-line-error"
-										: focusedTab === "일"
-											? "border-b-2 border-b-component-accent-primary"
-											: "border-gray-300"
-								}`}
-								onClick={() => {
-									dayInputRef.current?.focus();
-									setFocusedTab("일");
-								}}
-							>
-								<Input
-									type="text"
-									inputMode="decimal"
-									className="t3 text-normal border-0 bg-transparent p-0"
-									style={{
-										minWidth: "1ch",
-										width: `${Math.max(estimatedDay.length, 2)}ch`,
-										caretColor: "transparent",
-									}}
-									ref={dayInputRef}
-									value={estimatedDay}
-									maxLength={2}
-									onChange={(event) => handleHourChange(event, "일")}
-								/>
-								{estimatedDay.length > 0 && (
-									<span
-										className={`t3 text-normal ${estimatedDay.length === 1 ? "ml-[-14px]" : "ml-[-2px]"} transform`}
-									>
-										일
-									</span>
-								)}
-							</div>
-							{!dayError.isValid && (
-								<span className="text-red s3 absolute bottom-[-28px]">
-									{dayError.message}
-								</span>
-							)}
-						</div>
-					</TabsContent>
-				</Tabs>
+							</TabsContent>
+						</Tabs>
+					</>
+				)}
 			</div>
 
-			<div
-				className={`flex flex-col transition-all duration-300 ${focusedTab !== null ? "mb-[32vh]" : "pb-[46px]"} gap-4`}
-			>
+			<div className="fixed flex flex-col w-[100%] bottom-10 pr-10 transition-all duration-300 gap-4">
 				{currentTab === "시간" && (
 					<div className="flex items-center justify-center space-x-2">
 						<label
@@ -496,6 +513,7 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 								width={20}
 								height={20}
 								onClick={() => setIsOnlyMinute(false)}
+								priority
 							/>
 						) : (
 							<Image
@@ -503,7 +521,11 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 								alt="uncheckedBox"
 								width={20}
 								height={20}
-								onClick={() => setIsOnlyMinute(true)}
+								onClick={() => {
+									setIsOnlyMinute(true);
+									setEstimatedHour("");
+								}}
+								priority
 							/>
 						)}
 					</div>

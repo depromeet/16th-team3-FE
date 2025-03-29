@@ -17,6 +17,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
+import useInitialTime from "@/hooks/useInitialTime";
 import { fetchSingleTask } from "@/services/taskService";
 import type { TimePickerType } from "@/types/create";
 import type { TaskResponse } from "@/types/task";
@@ -33,7 +34,7 @@ import getBufferTime from "@/utils/getBufferTime";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { EditPageProps } from "../../context";
 
-const MAX_TASK_LENGTH = 15;
+const MAX_TASK_LENGTH = 16;
 const WAITING_TIME = 200;
 
 const DeadlineDateEditPage = ({ params }: EditPageProps) => {
@@ -43,15 +44,21 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 	const queryClient = useQueryClient();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
+	const {
+		meridiem: meridiemString,
+		hour: hourString,
+		minute: minuteString,
+	} = useInitialTime();
+
 	const [task, setTask] = useState<string>("");
 	const [isFocused, setIsFocused] = useState<boolean>(true);
 	const [isUrgent, setIsUrgent] = useState<boolean>(false);
 	const [isUrgentDrawerOpen, setIsUrgentDrawerOpen] = useState<boolean>(false);
 	const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
 	const [deadlineTime, setDeadlineTime] = useState<TimePickerType>({
-		meridiem: "오전",
-		hour: "01",
-		minute: "00",
+		meridiem: meridiemString,
+		hour: hourString,
+		minute: minuteString,
 	});
 
 	const { data: taskData, isFetching } = useQuery<TaskResponse>({
@@ -226,7 +233,7 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 									handleInputFocus={handleInputFocus}
 								/>
 								{task.length > MAX_TASK_LENGTH && (
-									<p className="mt-2 text-sm text-red-500">
+									<p className="mt-2 text-sm text-line-error">
 										최대 16자 이내로 입력할 수 있어요.
 									</p>
 								)}
