@@ -14,7 +14,7 @@ interface SmallActionInputProps {
 }
 
 const WAITING_TIME = 200;
-const MAX_SMALL_ACTION_LENGTH = 15;
+const MAX_SMALL_ACTION_LENGTH = 16;
 const SMALL_ACTION_LIST = ["SitAtTheDesk", "TurnOnTheLaptop", "DrinkWater"];
 
 const SmallActionInput = ({
@@ -69,7 +69,7 @@ const SmallActionInput = ({
 							handleInputFocus={handleInputFocus}
 						/>
 						{smallAction.length > MAX_SMALL_ACTION_LENGTH && (
-							<p className="mt-2 text-sm text-red-500">
+							<p className="mt-2 text-sm text-line-error">
 								최대 16자 이내로 입력할 수 있어요.
 							</p>
 						)}
@@ -77,6 +77,7 @@ const SmallActionInput = ({
 							<div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
 								{SMALL_ACTION_LIST.map((action, index) => (
 									<SmallActionChip
+										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 										key={index}
 										smallAction={action}
 										onClick={handleSmallActionClick}
