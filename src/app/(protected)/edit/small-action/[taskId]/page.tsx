@@ -3,13 +3,13 @@
 import HeaderTitle from "@/app/(protected)/(create)/_components/headerTitle/HeaderTitle";
 import SmallActionChip from "@/app/(protected)/(create)/_components/smallActionChip/SmallActionChip";
 import ClearableInput from "@/components/clearableInput/ClearableInput";
+import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { fetchSingleTask } from "@/services/taskService";
 import type { TaskResponse } from "@/types/task";
 import { useQuery } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Suspense, use, useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import type { EditPageProps } from "../../context";
 
 const MAX_SMALL_ACTION_LENGTH = 15;
@@ -21,10 +21,10 @@ const SmallActionEdit = ({ params }: EditPageProps) => {
 	const router = useRouter();
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
-	const [isFocused, setIsFocused] = useState(true);
+	const [isFocused, setIsFocused] = useState(false);
 	const [smallAction, setSmallAction] = useState<string>("");
 
-	const { data: taskData } = useQuery<TaskResponse>({
+	const { data: taskData, isFetching } = useQuery<TaskResponse>({
 		queryKey: ["singleTask", taskId],
 		queryFn: () => fetchSingleTask(taskId),
 	});
@@ -57,45 +57,47 @@ const SmallActionEdit = ({ params }: EditPageProps) => {
 		}
 	}, [taskData]);
 
-	if (!taskData) {
-		return <Loader />;
-	}
-
 	return (
-		<div className="flex h-screen w-full flex-col justify-between">
+		<div className="relative flex h-screen w-full flex-col justify-between">
 			<div>
 				<HeaderTitle title="어떤 작은 행동부터 시작할래요?" />
-				<div className="flex flex-col gap-6">
-					<div>
-						<ClearableInput
-							value={smallAction}
-							ref={inputRef}
-							title="작은 행동 입력"
-							isFocused={isFocused}
-							onChange={handleSmallActionChange}
-							handleInputFocus={handleInputFocus}
-						/>
-						{smallAction.length > MAX_SMALL_ACTION_LENGTH && (
-							<p className="mt-2 text-sm text-red-500">
-								최대 16자 이내로 입력할 수 있어요.
-							</p>
-						)}
-						{smallAction.length === 0 && (
-							<div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
-								{SMALL_ACTION_LIST.map((action, index) => (
-									<SmallActionChip
-										key={index}
-										smallAction={action}
-										onClick={handleSmallActionClick}
-									/>
-								))}
-							</div>
-						)}
+				{isFetching ? (
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+						<Loader />
 					</div>
-				</div>
+				) : (
+					<div className="flex flex-col gap-6">
+						<div>
+							<ClearableInput
+								value={smallAction}
+								ref={inputRef}
+								title="작은 행동 입력"
+								isFocused={isFocused}
+								onChange={handleSmallActionChange}
+								handleInputFocus={handleInputFocus}
+							/>
+							{smallAction.length > MAX_SMALL_ACTION_LENGTH && (
+								<p className="mt-2 text-sm text-red-500">
+									최대 16자 이내로 입력할 수 있어요.
+								</p>
+							)}
+							{smallAction.length === 0 && (
+								<div className="mt-3 flex w-full gap-2 overflow-x-auto whitespace-nowrap">
+									{SMALL_ACTION_LIST.map((action) => (
+										<SmallActionChip
+											key={action}
+											smallAction={action}
+											onClick={handleSmallActionClick}
+										/>
+									))}
+								</div>
+							)}
+						</div>
+					</div>
+				)}
 			</div>
 			<div
-				className={`transition-all duration-300 ${isFocused ? "mb-[48vh]" : "pb-[46px]"}`}
+				className={`fixed bottom-10 w-[100%] mt-auto transition-all duration-300 pr-10 ${isFocused ? "mb-[36vh]" : ""}`}
 			>
 				<Button
 					variant="primary"
@@ -113,18 +115,4 @@ const SmallActionEdit = ({ params }: EditPageProps) => {
 	);
 };
 
-const SmallActionEditPage = (props: EditPageProps) => {
-	return (
-		<Suspense
-			fallback={
-				<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
-					<Loader />
-				</div>
-			}
-		>
-			<SmallActionEdit {...props} />
-		</Suspense>
-	);
-};
-
-export default SmallActionEditPage;
+export default SmallActionEdit;
