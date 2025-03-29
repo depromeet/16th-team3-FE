@@ -81,8 +81,8 @@ const BufferTime = ({
 						<span className="l6 text-inverse">1.5배의 여유시간 적용</span>
 					</div>
 				</div>
-				<div className="bg-blur-purple absolute left-0 right-0 top-20 z-0 h-[240px] w-[100vw] blur-[75px]" />
-				<div className="z-100 mt-[3vh] flex flex-col items-center">
+				<div className="bg-blur-purple absolute left-0 right-0 top-20 z-[-1] h-[240px] w-[100vw] blur-[75px]" />
+				<div className="z-50 mt-[3vh] flex flex-col items-center">
 					<div>
 						<span className="t2 text-primary">{timeString}</span>
 						<span className="t2 text-strong"> 전에는</span>
@@ -99,6 +99,7 @@ const BufferTime = ({
 					<span className="text-normal s2">{task}</span>
 					<div className="flex w-full items-center justify-between">
 						<span className="b2 text-alternative mt-[2px]">마감일</span>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div className="flex items-center" onClick={handleDeadlineModify}>
 							<span className="b2 text-neutral mt-[2px]">
 								{`${formattedDate}, ${deadlineTime.meridiem} ${deadlineTime.hour}:${deadlineTime.minute}`}
@@ -112,6 +113,7 @@ const BufferTime = ({
 					</div>
 					<div className="flex w-full items-center justify-between">
 						<span className="b2 text-alternative mt-[2px]">작은 행동</span>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
 							className="flex items-center"
 							onClick={handleSmallActionModify}
@@ -126,6 +128,7 @@ const BufferTime = ({
 					</div>
 					<div className="flex w-full items-center justify-between">
 						<span className="b2 text-alternative mt-[2px]">예상 소요시간</span>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
 							className="flex items-center"
 							onClick={handleEstimatedTimeModify}
@@ -147,7 +150,7 @@ const BufferTime = ({
 						</div>
 					</div>
 				</div>
-				<Button variant="primary" className="w-full" onClick={onNext}>
+				<Button variant="primary" onClick={onNext}>
 					다음
 				</Button>
 			</div>
