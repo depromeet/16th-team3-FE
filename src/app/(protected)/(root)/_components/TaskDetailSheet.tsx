@@ -111,12 +111,10 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 	};
 
 	const handleStartTask = () => {
-		// task.id가 있고 onStart 함수가 제공된 경우 태스크 상태 변경
 		if (task.id && onStart) {
 			onStart(task.id);
 		}
 
-		// 몰입 화면으로 이동
 		router.push(`/immersion/${task.id}`);
 		onClose();
 	};
@@ -127,8 +125,11 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 	};
 
 	const handleEditTitle = () => {
+		if (!isInProgress) {
+			router.push(`/edit/deadline-date/${task.id}`);
+		}
+
 		setShowMenu(false);
-		// 이름 변경 로직 추가
 	};
 
 	const handleDelete = () => {
