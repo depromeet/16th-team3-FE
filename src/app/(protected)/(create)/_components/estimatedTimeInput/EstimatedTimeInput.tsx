@@ -445,6 +445,7 @@ const EstimatedTimeInput = ({
 								width={20}
 								height={20}
 								onClick={() => setIsOnlyMinute(false)}
+								priority
 							/>
 						) : (
 							<Image
@@ -452,7 +453,11 @@ const EstimatedTimeInput = ({
 								alt="uncheckedBox"
 								width={20}
 								height={20}
-								onClick={() => setIsOnlyMinute(true)}
+								onClick={() => {
+									setIsOnlyMinute(true);
+									setEstimatedHour("");
+								}}
+								priority
 							/>
 						)}
 					</div>
