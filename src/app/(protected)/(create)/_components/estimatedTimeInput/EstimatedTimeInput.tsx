@@ -63,9 +63,7 @@ const EstimatedTimeInput = ({
 	);
 
 	const [focusedTab, setFocusedTab] = useState<string | null>("시간");
-	const [currentTab, setCurrentTab] = useState(
-		Boolean(historyDayData) ? "일" : "시간",
-	);
+	const [currentTab, setCurrentTab] = useState(historyDayData ? "일" : "시간");
 	const [isOnlyMinute, setIsOnlyMinute] = useState(false);
 
 	const [hourError, setHourError] = useState<{
@@ -220,7 +218,7 @@ const EstimatedTimeInput = ({
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div ref={containerRef}>
 				<HeaderTitle title="할일이 얼마나 걸릴 것 같나요?" />
-				<div>
+				<div className="mt-[-28px]">
 					<div className="flex gap-1">
 						<span className="b2 text-text-alternative">할일:</span>
 						<span className="text-text-neutral">{task}</span>
@@ -237,18 +235,18 @@ const EstimatedTimeInput = ({
 						setCurrentTab(value);
 						resetInputValues();
 					}}
-					className="mt-6 w-full"
+					className="mt-6 w-full p-1"
 				>
-					<TabsList className="h-full w-full rounded-[10px] bg-component-gray-primary p-1">
+					<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
 						<TabsTrigger
 							value="시간"
-							className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px]`}
+							className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
 						>
 							시간
 						</TabsTrigger>
 						<TabsTrigger
 							value="일"
-							className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px]`}
+							className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
 						>
 							일
 						</TabsTrigger>
@@ -268,6 +266,7 @@ const EstimatedTimeInput = ({
 									>
 										시간
 									</span>
+									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 									<div
 										className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
 											!hourError.isValid
@@ -322,6 +321,7 @@ const EstimatedTimeInput = ({
 								>
 									분
 								</span>
+								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
 									className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
 										!minuteError.isValid
@@ -378,6 +378,7 @@ const EstimatedTimeInput = ({
 							>
 								일
 							</span>
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 							<div
 								className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
 									!dayError.isValid
