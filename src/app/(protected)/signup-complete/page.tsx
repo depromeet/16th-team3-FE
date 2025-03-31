@@ -1,20 +1,10 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignupCompletePage() {
-	const router = useRouter();
-
-	const handleContinue = () => {
-		router.push("/onboarding");
-	};
-
 	return (
-		<div className="flex h-screen flex-col items-center justify-between bg-background-primary px-5 py-12">
-			<div></div>
-
+		<div className="relative h-full flex flex-col items-center justify-between bg-background-primary px-5 py-12">
 			<div className="flex flex-col items-center justify-center text-center mb-20">
 				<Image
 					src="/icons/signup/wave.svg"
@@ -34,14 +24,16 @@ export default function SignupCompletePage() {
 					시간을 완벽하게 공략해볼까요?
 				</p>
 			</div>
-
-			<Button
-				variant="primary"
-				className="w-full rounded-[16px] bg-component-accent-primary py-4 text-white"
-				onClick={handleContinue}
-			>
-				핵심 기능 둘러보기
-			</Button>
+			<div className="absolute bottom-10 w-full left-0 right-0 px-5">
+				<Link href="/onboarding">
+					<Button
+						variant="primary"
+						className="w-full rounded-[16px] bg-component-accent-primary text-white"
+					>
+						핵심 기능 둘러보기
+					</Button>
+				</Link>
+			</div>
 		</div>
 	);
 }
