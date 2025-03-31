@@ -1,4 +1,11 @@
 import { Button } from "@/components/ui/button";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerDescription,
+	DrawerHeader,
+	DrawerTitle,
+} from "@/components/ui/drawer";
 import type { Task } from "@/types/task";
 import { calculateRemainingTime, parseDateAndTime } from "@/utils/dateFormat";
 import { AnimatePresence, motion } from "framer-motion";
@@ -165,22 +172,29 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 
 	// 바텀시트 렌더링 (일반 및 긴급 케이스 모두 공통으로 사용)
 	const renderBottomSheet = () => {
-		if (!showBottomSheet || !isReentry) return null;
-
 		return (
-			<div className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-60">
-				<div className="flex w-full flex-col items-center rounded-t-[28px] bg-component-gray-secondary p-4 pt-10">
-					<h2 className="t3 text-center text-text-strong">{task.title}</h2>
-					<p className="t3 mb-2 text-center text-text-strong">
-						하던 중이었어요. 이어서 몰입할까요?
-					</p>
-					<p
-						className={`b3 ${isExpired ? "text-red-500" : "text-text-neutral"} mb-7 text-center`}
-					>
-						{isExpired ? "마감 시간이 지났습니다" : `마감까지 ${remainingTime}`}
-					</p>
+			<Drawer
+				open={showBottomSheet && isReentry}
+				onOpenChange={setShowBottomSheet}
+			>
+				<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+					<DrawerHeader>
+						<DrawerTitle className="t3 text-center text-text-strong">
+							{task.title}
+						</DrawerTitle>
+						<DrawerDescription className="t3 text-center text-text-strong">
+							하던 중이었어요. 이어서 몰입할까요?
+							<p
+								className={`b3 ${isExpired ? "text-red-500" : "text-text-neutral"} mt-2 text-center`}
+							>
+								{isExpired
+									? "마감 시간이 지났습니다"
+									: `마감까지 ${remainingTime}`}
+							</p>
+						</DrawerDescription>
+					</DrawerHeader>
 					<button
-						className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 text-white"
+						className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 mt-3 text-white"
 						onClick={handleContinueToFocus}
 					>
 						이어서 몰입
@@ -192,8 +206,8 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 					>
 						닫기
 					</button>
-				</div>
-			</div>
+				</DrawerContent>
+			</Drawer>
 		);
 	};
 

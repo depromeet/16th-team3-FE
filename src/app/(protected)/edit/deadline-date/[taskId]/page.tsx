@@ -271,7 +271,7 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 				<DrawerHeader className="px-0 pb-4 pt-6">
 					<DrawerTitle>
 						<p className="t3 text-gray-normal">
-							PPT 만들고 대본 작성의 <br />
+							{task}의 <br />
 							마감일이 바뀌었어요. <br />
 							할일을 즉시 시작으로 전환할게요.
 						</p>
