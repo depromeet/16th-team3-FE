@@ -77,12 +77,6 @@ const TaskTypeInput = ({ context, isIdle, onClick }: TaskTypeInputProps) => {
 
 	const timeString = timeParts.length ? timeParts.join(" ") : "0분";
 
-	const handleClick = () => {
-		if (!taskType || !moodType || !isIdle) return;
-
-		onClick(convertedData);
-	};
-
 	return (
 		<div className="relative flex h-full flex-col justify-between">
 			<div>
@@ -145,8 +139,8 @@ const TaskTypeInput = ({ context, isIdle, onClick }: TaskTypeInputProps) => {
 				<Button
 					variant="primary"
 					className="w-full"
-					// disabled={!taskType || !moodType || !isIdle}
-					onClick={handleClick}
+					disabled={!taskType || !moodType || !isIdle}
+					onClick={() => onClick(convertedData)}
 				>
 					{isIdle ? "확인" : <Loader width={24} height={24} />}
 				</Button>

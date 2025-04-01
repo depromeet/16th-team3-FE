@@ -53,12 +53,6 @@ const InstantTaskTypeInput = ({
 		moodType: moodType || "",
 	});
 
-	const handleClick = () => {
-		if (!taskType || !moodType || !isIdle) return;
-
-		onClick(convertedData);
-	};
-
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div>
@@ -120,8 +114,8 @@ const InstantTaskTypeInput = ({
 				<Button
 					variant="primary"
 					className="w-full"
-					// disabled={!taskType || !moodType || !isIdle}
-					onClick={handleClick}
+					disabled={!taskType || !moodType || !isIdle}
+					onClick={() => onClick(convertedData)}
 				>
 					{isIdle ? "확인" : <Loader width={24} height={24} />}
 				</Button>
