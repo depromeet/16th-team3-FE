@@ -128,6 +128,7 @@ const TimeSelectedComponent = ({
 		<Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
 			<DrawerTrigger>
 				<div className="relative mt-2 w-full">
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
 						onClick={handleToggle}
@@ -185,6 +186,7 @@ const TimeSelectedComponent = ({
 									setIsMidnight(false);
 									setTemporaryTime(deadlineTime);
 								}}
+								priority
 							/>
 						) : (
 							<Image
@@ -193,6 +195,7 @@ const TimeSelectedComponent = ({
 								width={20}
 								height={20}
 								onClick={handleMidnightButtonClick}
+								priority
 							/>
 						)}
 					</div>

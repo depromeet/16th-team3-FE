@@ -59,11 +59,11 @@ const TimePicker = ({
 			<div className="h-[180px] w-[100px]">
 				<Wheel
 					initIdx={minuteInitIdx}
-					length={60}
+					length={12}
 					width={50}
 					loop={true}
 					setValue={(relative) => {
-						const minute = String(relative % 60).padStart(2, "0");
+						const minute = String(relative * 5).padStart(2, "0");
 						return minute;
 					}}
 					onChange={(selected) => handleSelectedMinute(selected as string)}
