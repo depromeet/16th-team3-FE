@@ -29,6 +29,7 @@ const HomePageContent = () => {
 		data: homeData,
 		isLoading: isLoadingHome,
 		error: homeError,
+		isPending,
 	} = useHomeData();
 
 	const isUserProfileLoading = useAuthStore(
@@ -261,9 +262,9 @@ const HomePageContent = () => {
 	const handleCharacterDialogButtonClick = () => {
 		if (taskType === "instant") {
 			router.push(`/immersion/${urgentTaskId}`);
+		} else {
+			setIsDialogOpen(false);
 		}
-
-		setIsDialogOpen(false);
 	};
 
 	// 진행 중인 작업 계속하기
@@ -419,7 +420,7 @@ const HomePageContent = () => {
 	}, []);
 
 	// 로딩 상태 처리
-	if (isLoadingHome || isUserProfileLoading) {
+	if (isUserProfileLoading || isPending) {
 		return (
 			<div className="flex min-h-screen flex-col items-center justify-center bg-background-primary">
 				<Loader />
@@ -568,6 +569,7 @@ const HomePageContent = () => {
 										<InProgressTaskItem
 											key={task.id}
 											task={task}
+											isReentry={isReentry}
 											onShowDetails={() => handleDetailTask(task)}
 										/>
 									))}
@@ -678,6 +680,7 @@ const HomePageContent = () => {
 										<InProgressTaskItem
 											key={task.id}
 											task={task}
+											isReentry={isReentry}
 											onShowDetails={() => handleDetailTask(task)}
 										/>
 									))}
@@ -1111,8 +1114,6 @@ const HomePageContent = () => {
 					onStart={handleStartTask}
 				/>
 			)}
-
-			{/* TODO(prgmr99): 모달 띄워지는 애니메이션 확인 필요 */}
 
 			<CharacterDialog
 				isOpen={isDialogOpen}

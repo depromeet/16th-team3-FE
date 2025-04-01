@@ -16,11 +16,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 interface InProgressTaskItemProps {
 	task: Task;
+	isReentry: boolean;
 	onShowDetails?: (task: Task) => void;
 }
 
 const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	task,
+	isReentry,
 	onShowDetails,
 }) => {
 	const router = useRouter();
@@ -80,13 +82,13 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	}, [calculateRemainingTimeLocal]);
 
 	// 홈화면 재진입 시 자동으로 바텀시트 표시
-	// ! 이 로직 검토 필요
-	// useEffect(() => {
-	// 	// 홈화면 재진입인 경우에만 바텀시트 표시
-	// 	if (isReentry) {
-	// 		setShowBottomSheet(true);
-	// 	}
-	// }, []);
+	// ! TODO(prgmr99) 이 로직 검토 필요
+	useEffect(() => {
+		// 홈화면 재진입인 경우에만 바텀시트 표시
+		if (!isReentry) {
+			setShowBottomSheet(true);
+		}
+	}, [isReentry]);
 
 	// 카드 영역 클릭 시 - TaskDetailSheet 표시
 	const handleCardClick = () => {
