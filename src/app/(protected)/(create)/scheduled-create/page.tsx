@@ -1,15 +1,10 @@
 "use client";
 
-import BackHeader from "@/components/backHeader/BackHeader";
 import useMount from "@/hooks/useMount";
 import type { ScheduledTaskType, TimePickerType } from "@/types/create";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFunnelSteps, useFunnel } from "@use-funnel/browser";
-import BufferTime from "../_components/bufferTime/BufferTime";
-import EstimatedTimeInput from "../_components/estimatedTimeInput/EstimatedTimeInput";
-import SmallActionInput from "../_components/smallActionInput/SmallActionInput";
-import TaskInput from "../_components/taskInput/TaskInput";
-import TaskTypeInput from "../_components/taskTypeInput/TaskTypeInput";
+
 import type {
 	BufferTimeType,
 	EstimatedTimeInputType,
@@ -18,7 +13,23 @@ import type {
 	TaskTypeInputType,
 } from "../context";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+
+const BackHeader = dynamic(() => import("@/components/backHeader/BackHeader"));
+const BufferTime = dynamic(
+	() => import("../_components/bufferTime/BufferTime"),
+);
+const EstimatedTimeInput = dynamic(
+	() => import("../_components/estimatedTimeInput/EstimatedTimeInput"),
+);
+const SmallActionInput = dynamic(
+	() => import("../_components/smallActionInput/SmallActionInput"),
+);
+const TaskInput = dynamic(() => import("../_components/taskInput/TaskInput"));
+const TaskTypeInput = dynamic(
+	() => import("../_components/taskTypeInput/TaskTypeInput"),
+);
 
 type FormState = {
 	task?: string;
