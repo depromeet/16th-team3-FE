@@ -16,6 +16,7 @@ import { ko } from "date-fns/locale";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { TaskInputType } from "../../context";
+import EstimatedTimePicker from "../estimatedTimePicker/EstimatedTimePicker";
 import HeaderTitle from "../headerTitle/HeaderTitle";
 
 interface EstimatedTimeInputProps {
@@ -307,7 +308,7 @@ const EstimatedTimeInput = ({
 										예상 소요시간
 									</DrawerTitle>
 								</DrawerHeader>
-								{/* 타임티커 자리 */}
+								<EstimatedTimePicker />
 								<DrawerFooter className="px-0">
 									<Button
 										variant="primary"
