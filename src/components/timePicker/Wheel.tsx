@@ -124,7 +124,7 @@ const Wheel = (props: {
 			<div className="wheel__inner">
 				<div className="wheel__slides t1" style={{ width: `${props.width}px` }}>
 					{slideValues().map(({ style, value }, idx) => (
-						<div className="wheel__slide text-strong" style={style} key={idx}>
+						<div className="wheel__slide text-strong" style={style} key={value}>
 							<span>{value}</span>
 						</div>
 					))}

@@ -25,7 +25,7 @@ const SmallActionInput = ({
 }: SmallActionInputProps) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
-	const [isFocused, setIsFocused] = useState(true);
+	const [isFocused, setIsFocused] = useState(false);
 	const [smallAction, setSmallAction] = useState<string>(
 		smallActionHistoryData || "",
 	);
@@ -44,15 +44,16 @@ const SmallActionInput = ({
 		setSmallAction(action);
 	};
 
-	useEffect(() => {
-		if (inputRef.current)
-			setTimeout(() => {
-				if (inputRef.current) {
-					inputRef.current.focus();
-					setIsFocused(true);
-				}
-			}, WAITING_TIME);
-	}, []);
+	// TODO(prgmr99): react-native 수정 후 적용
+	// useEffect(() => {
+	// 	if (inputRef.current)
+	// 		setTimeout(() => {
+	// 			if (inputRef.current) {
+	// 				inputRef.current.focus();
+	// 				setIsFocused(true);
+	// 			}
+	// 		}, WAITING_TIME);
+	// }, []);
 
 	return (
 		<div className="flex h-full w-full flex-col justify-between">
