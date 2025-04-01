@@ -89,7 +89,7 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 		if (isReentry) {
 			setShowBottomSheet(true);
 		}
-	}, [isReentry]);
+	}, []);
 
 	// 카드 영역 클릭 시 - TaskDetailSheet 표시
 	const handleCardClick = () => {
@@ -173,10 +173,7 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	// 바텀시트 렌더링 (일반 및 긴급 케이스 모두 공통으로 사용)
 	const renderBottomSheet = () => {
 		return (
-			<Drawer
-				open={showBottomSheet && isReentry}
-				onOpenChange={setShowBottomSheet}
-			>
+			<Drawer open={showBottomSheet} onOpenChange={setShowBottomSheet}>
 				<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
 					<DrawerHeader>
 						<DrawerTitle className="t3 text-center text-text-strong">
