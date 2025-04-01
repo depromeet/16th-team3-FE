@@ -1,12 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { TimePickerType } from "@/types/create";
 import { formatDistanceStrict, set } from "date-fns";
 import { ko } from "date-fns/locale";
-import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { TaskInputType } from "../../context";
 import HeaderTitle from "../headerTitle/HeaderTitle";
@@ -34,6 +41,7 @@ interface EstimatedTimeInputProps {
 	}) => void;
 }
 
+// TODO(prgmr99): MUST be refactored
 const EstimatedTimeInput = ({
 	context: {
 		task,
@@ -62,6 +70,7 @@ const EstimatedTimeInput = ({
 		historyDayData || "",
 	);
 
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [focusedTab, setFocusedTab] = useState<string | null>("시간");
 	const [currentTab, setCurrentTab] = useState(historyDayData ? "일" : "시간");
 	const [isOnlyMinute, setIsOnlyMinute] = useState(false);
@@ -98,6 +107,10 @@ const EstimatedTimeInput = ({
 
 	const isInvalidValue =
 		!hourError.isValid || !minuteError.isValid || !dayError.isValid;
+
+	const handleToggle = () => {
+		setIsOpen((prev) => !prev);
+	};
 
 	const convertDeadlineToDate = (date: Date, time: TimePickerType): Date => {
 		let hour = Number.parseInt(time.hour, 10);
@@ -142,6 +155,11 @@ const EstimatedTimeInput = ({
 		setDayError({ isValid: true, message: "" });
 	};
 
+	const handleConfirmButtonClick = () => {
+		setIsOpen(false);
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const hour = Number.parseInt(estimatedHour, 10) || 0;
 		const minute = Number.parseInt(estimatedMinute, 10) || 0;
@@ -181,6 +199,7 @@ const EstimatedTimeInput = ({
 		}
 	}, [estimatedHour, estimatedMinute, deadlineDate, deadlineTime]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const now = new Date();
 		const deadlineDateTime = convertDeadlineToDate(
@@ -212,7 +231,7 @@ const EstimatedTimeInput = ({
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
-	// ! TODO feat: 일 탭 선택 시, 일 Input 바로 focus 되도록
+	// TODO(prgmr99): 일 탭 선택 시, 일 Input 바로 focus 되도록
 
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
@@ -248,118 +267,58 @@ const EstimatedTimeInput = ({
 						</TabsTrigger>
 					</TabsList>
 					<TabsContent value="시간">
-						<div className="relative mt-3 flex justify-between gap-6">
-							{!isOnlyMinute && (
-								<div className="flex w-full flex-col gap-2">
-									<span
-										className={`b3 ${
-											!hourError.isValid
-												? "text-red"
-												: focusedTab === "시간"
-													? "text-primary"
-													: "text-neutral"
-										}`}
-									>
-										시간
-									</span>
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-									<div
-										className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-2 focus:border-b-component-accent-primary focus:outline-none ${
-											!hourError.isValid
-												? "border-b-2 border-line-error"
-												: focusedTab === "시간"
-													? "border-b-2 border-b-component-accent-primary"
-													: "border-gray-300"
-										}`}
-										onClick={() => {
-											hourInputRef.current?.focus();
-											setFocusedTab("시간");
-										}}
-									>
-										<Input
-											type="text"
-											inputMode="decimal"
-											className="t3 text-normal border-0 bg-transparent p-0"
-											style={{
-												minWidth: "1ch",
-												width: `${Math.max(estimatedHour.length, 2)}ch`,
-												caretColor: "transparent",
-											}}
-											ref={hourInputRef}
-											value={estimatedHour}
-											maxLength={2}
-											onChange={(event) => handleHourChange(event, "시간")}
-										/>
-										{estimatedHour.length > 0 && (
-											<span
-												className={`t3 text-normal ${estimatedHour.length === 1 ? "ml-[-8px]" : ""} transform`}
-											>
-												시간
-											</span>
-										)}
-									</div>
-									{!hourError.isValid && (
-										<span className="text-red s3 absolute bottom-[-28px]">
-											{hourError.message}
-										</span>
-									)}
-								</div>
-							)}
-							<div className="relative flex w-full flex-col gap-2">
-								<span
-									className={`b3 ${
-										!minuteError.isValid
-											? "text-red"
-											: focusedTab === "분"
-												? "text-primary"
-												: "text-neutral"
-									}`}
-								>
-									분
-								</span>
+						<Drawer
+							open={isOpen}
+							onDrag={() => setIsOpen(false)}
+							onOpenChange={setIsOpen}
+						>
+							<div className="relative mt-6 w-full">
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 								<div
-									className={`focus:border-primary relative flex items-center border-0 border-b transition-colors focus:border-b-component-accent-primary focus:outline-none ${
-										!minuteError.isValid
-											? "border-b-2 border-line-error"
-											: focusedTab === "분"
-												? "border-b-2 border-b-component-accent-primary"
-												: "border-gray-300"
-									}`}
-									onClick={() => {
-										minuteInputRef.current?.focus();
-										setFocusedTab("분");
-									}}
+									className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
+									onClick={handleToggle}
 								>
-									<Input
-										type="text"
-										inputMode="decimal"
-										className="t3 text-normal border-0 bg-transparent p-0"
-										style={{
-											minWidth: "1ch",
-											width: `${Math.max(estimatedMinute.length, 2)}ch`,
-											caretColor: "transparent",
-										}}
-										ref={minuteInputRef}
-										value={estimatedMinute}
-										maxLength={2}
-										onChange={(event) => handleHourChange(event, "분")}
-									/>
-									{estimatedMinute.length > 0 && (
-										<span
-											className={`t3 text-normal ${estimatedMinute.length === 1 ? "ml-[-8px]" : ""} transform`}
-										>
-											분
-										</span>
-									)}
-								</div>
-								{!minuteError.isValid && (
-									<span className="text-red s3 absolute bottom-[-28px]">
-										{minuteError.message}
+									<span
+										className={`absolute left-0 text-gray-500 transition-all duration-200 ${
+											!estimatedHour && !estimatedMinute
+												? "t3 top-1"
+												: "text-neutral b3 top-[-8px]"
+										}`}
+									>
+										예상 소요시간 선택
 									</span>
-								)}
+									<div className="flex w-full items-center justify-between pt-4">
+										<span className="t3 text-base font-semibold">
+											{estimatedHour}
+											{estimatedMinute}
+										</span>
+										<ChevronDown
+											className={`h-4 w-4 icon-primary transition-transform duration-200 ${
+												isOpen ? "rotate-180" : ""
+											}`}
+										/>
+									</div>
+								</div>
 							</div>
-						</div>
+
+							<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+								<DrawerHeader className="px-0 pb-10 pt-6">
+									<DrawerTitle className="t3 text-left">
+										예상 소요시간
+									</DrawerTitle>
+								</DrawerHeader>
+								{/* 타임티커 자리 */}
+								<DrawerFooter className="px-0">
+									<Button
+										variant="primary"
+										className="mt-4 flex w-full items-center justify-center"
+										onClick={handleConfirmButtonClick}
+									>
+										확인
+									</Button>
+								</DrawerFooter>
+							</DrawerContent>
+						</Drawer>
 					</TabsContent>
 					<TabsContent value="일">
 						<div className="relative mt-3 flex w-full flex-col gap-2">
@@ -425,39 +384,6 @@ const EstimatedTimeInput = ({
 					"fixed flex flex-col w-[100%] bottom-10 pr-10 transition-all duration-300 gap-4"
 				}
 			>
-				{currentTab === "시간" && (
-					<div className="flex items-center justify-center space-x-2">
-						<label
-							htmlFor="onlyMinute"
-							className="b3 text-neutral mt-0.5 rounded-[2px] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-						>
-							분만 입력
-						</label>
-						{/* ! TODO: Checkbox로 변환하기  */}
-						{isOnlyMinute ? (
-							<Image
-								src="/icons/CheckedBox.svg"
-								alt="checkedBox"
-								width={20}
-								height={20}
-								onClick={() => setIsOnlyMinute(false)}
-								priority
-							/>
-						) : (
-							<Image
-								src="/icons/UnCheckedBox.svg"
-								alt="uncheckedBox"
-								width={20}
-								height={20}
-								onClick={() => {
-									setIsOnlyMinute(true);
-									setEstimatedHour("");
-								}}
-								priority
-							/>
-						)}
-					</div>
-				)}
 				<Button
 					variant="primary"
 					className="w-full"
