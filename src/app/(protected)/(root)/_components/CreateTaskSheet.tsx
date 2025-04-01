@@ -6,7 +6,6 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
-import Image from "next/image";
 import Link from "next/link";
 
 interface CreateTaskSheetProps {

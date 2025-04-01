@@ -568,8 +568,6 @@ const HomePageContent = () => {
 										<InProgressTaskItem
 											key={task.id}
 											task={task}
-											onContinue={handleContinueTask}
-											isReentry={isReentry}
 											onShowDetails={() => handleDetailTask(task)}
 										/>
 									))}
@@ -680,8 +678,6 @@ const HomePageContent = () => {
 										<InProgressTaskItem
 											key={task.id}
 											task={task}
-											onContinue={handleContinueTask}
-											isReentry={isReentry}
 											onShowDetails={() => handleDetailTask(task)}
 										/>
 									))}

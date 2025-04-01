@@ -16,15 +16,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 interface InProgressTaskItemProps {
 	task: Task;
-	onContinue: (taskId: number) => void;
-	isReentry?: boolean;
 	onShowDetails?: (task: Task) => void;
 }
 
 const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	task,
-	onContinue,
-	isReentry = false,
 	onShowDetails,
 }) => {
 	const router = useRouter();
@@ -84,12 +80,13 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	}, [calculateRemainingTimeLocal]);
 
 	// 홈화면 재진입 시 자동으로 바텀시트 표시
-	useEffect(() => {
-		// 홈화면 재진입인 경우에만 바텀시트 표시
-		if (isReentry) {
-			setShowBottomSheet(true);
-		}
-	}, []);
+	// ! 이 로직 검토 필요
+	// useEffect(() => {
+	// 	// 홈화면 재진입인 경우에만 바텀시트 표시
+	// 	if (isReentry) {
+	// 		setShowBottomSheet(true);
+	// 	}
+	// }, []);
 
 	// 카드 영역 클릭 시 - TaskDetailSheet 표시
 	const handleCardClick = () => {
@@ -181,13 +178,13 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 						</DrawerTitle>
 						<DrawerDescription className="t3 text-center text-text-strong">
 							하던 중이었어요. 이어서 몰입할까요?
-							<p
-								className={`b3 ${isExpired ? "text-red-500" : "text-text-neutral"} mt-2 text-center`}
-							>
-								{isExpired
-									? "마감 시간이 지났습니다"
-									: `마감까지 ${remainingTime}`}
-							</p>
+						</DrawerDescription>
+						<DrawerDescription
+							className={`b3 ${isExpired ? "text-red-500" : "text-text-neutral"} mt-2 text-center`}
+						>
+							{isExpired
+								? "마감 시간이 지났습니다"
+								: `마감까지 ${remainingTime}`}
 						</DrawerDescription>
 					</DrawerHeader>
 					<button
