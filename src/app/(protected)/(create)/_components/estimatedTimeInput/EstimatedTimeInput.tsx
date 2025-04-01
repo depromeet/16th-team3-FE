@@ -217,12 +217,8 @@ const EstimatedTimeInput = ({
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div ref={containerRef}>
-				<HeaderTitle title="할일이 얼마나 걸릴 것 같나요?" />
+				<HeaderTitle title={`${task} \n얼마나 걸릴 것 같나요?`} />
 				<div className="mt-[-28px]">
-					<div className="flex gap-1">
-						<span className="b2 text-text-alternative">할일:</span>
-						<span className="text-text-neutral">{task}</span>
-					</div>
 					<div className="flex gap-1">
 						<span className="b2 text-text-alternative">마감:</span>
 						<span className="text-text-neutral">{formattedDeadline}</span>
