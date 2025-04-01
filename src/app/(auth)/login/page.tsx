@@ -66,6 +66,7 @@ const LoginPage = () => {
 
 				if (oauthData.isNewUser) {
 					router.push("/signup-complete");
+
 					return;
 				}
 

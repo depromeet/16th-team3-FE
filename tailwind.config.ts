@@ -153,6 +153,13 @@ export default {
 					"conic-gradient(from 210deg at 50% 50%, #CCE4FF 0deg, #BBBBF1 50.06deg, #B8E2FB 85.94deg, #F2EFE8 134.97deg, #CCE4FF 172.05deg, #BBBBF1 224.67deg, #C7EDEB 259.36deg, #E7F5EB 298.82deg, #F2F0E7 328.72deg)",
 				blur: "conic-gradient(from 210deg at 50% 50%, #CCE4FF 0deg, #C1A4E8 50.05925238132477deg, #B8E2FB 85.93856155872345deg, #F2EFE8 134.97360706329346deg, #CCE4FF 172.04889178276062deg, #BDAFE3 224.6718692779541deg, #C7EDEB 259.35521364212036deg, #E7F5EB 298.8224387168884deg, #F2F0E7 328.72185945510864deg))",
 			},
+			animation: {
+				toast: "toast 2.5s ease-in-out forwards",
+				"slide-left-out": "0.4s ease-in forwards slide-left-out",
+				"slide-left-in": "0.4s ease-out slide-left-in",
+				"slide-right-out": "0.4s ease-in forwards slide-right-out",
+				"slide-right-in": "0.4s ease-out slide-right-in",
+			},
 			keyframes: {
 				toast: {
 					"0%": { transform: "translateY(100%)", opacity: "0" },
@@ -160,9 +167,22 @@ export default {
 					"80%": { transform: "translateY(0)", opacity: "1" },
 					"100%": { transform: "translateY(100%)", opacity: "0" },
 				},
-			},
-			animation: {
-				toast: "toast 2.5s ease-in-out forwards",
+				"slide-left-out": {
+					from: { transform: "translateX(0)" },
+					to: { transform: "translateX(-100%)" },
+				},
+				"slide-left-in": {
+					from: { transform: "translateX(100%)" },
+					to: { transform: "translateX(0)" },
+				},
+				"slide-right-out": {
+					from: { transform: "translateX(0)" },
+					to: { transform: "translateX(100%)" },
+				},
+				"slide-right-in": {
+					from: { transform: "translateX(-100%)" },
+					to: { transform: "translateX(0)" },
+				},
 			},
 		},
 	},

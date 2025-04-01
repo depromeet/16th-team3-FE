@@ -20,12 +20,12 @@ import React, { useState, useEffect, useMemo, Suspense } from "react";
 
 import Loader from "@/components/loader/Loader";
 import { useAuthStore } from "@/store";
-import { getPersonaImage } from "@/utils/getPersonaImage";
 import Link from "next/link";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
 
 const HomePageContent = () => {
 	const pathname = usePathname();
+	const router = useRouter();
 	const {
 		data: homeData,
 		isLoading: isLoadingHome,
@@ -170,7 +170,6 @@ const HomePageContent = () => {
 	const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 	const [showTooltip, setShowTooltip] = useState(true);
 	const [activeTab, setActiveTab] = useState<"today" | "all">("today");
-	const router = useRouter();
 	const [detailTask, setDetailTask] = useState<Task | null>(null);
 	const [showExpiredTaskSheet, setShowExpiredTaskSheet] = useState(false);
 	const [expiredTask, setExpiredTask] = useState<Task | null>(null);
@@ -472,7 +471,6 @@ const HomePageContent = () => {
 
 	return (
 		<div className="flex flex-col overflow-hidden bg-background-primary">
-			{/* 헤더 - fixed 대신 static으로 변경 */}
 			<header className="z-20 fixed top-0 w-[100vw] bg-background-primary pt-[44px]">
 				<div className="flex items-center justify-between px-[20px] py-[15px] h-[60px]">
 					<Image
