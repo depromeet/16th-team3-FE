@@ -71,7 +71,7 @@ const TimeSelectedComponent = ({
 	const handleConfirmButtonClick = () => {
 		if (temporaryTime === undefined) return;
 
-		if (toastMessage) return;
+		if (toastMessage !== "") return;
 
 		handleTimeChange(temporaryTime);
 		setIsOpen(false);
@@ -201,6 +201,7 @@ const TimeSelectedComponent = ({
 					<Button
 						variant="primary"
 						className="mt-4 flex w-full items-center justify-center"
+						disabled={!!toastMessage}
 						onClick={handleConfirmButtonClick}
 					>
 						확인

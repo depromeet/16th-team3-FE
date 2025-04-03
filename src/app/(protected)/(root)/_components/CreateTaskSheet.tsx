@@ -29,8 +29,8 @@ const pageAnimation = () => {
 			},
 		],
 		{
-			duration: 1000,
-			easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+			duration: 500,
+			easing: "ease-in-out",
 			fill: "forwards",
 			pseudoElement: "::view-transition-old(root)",
 		},
@@ -46,8 +46,8 @@ const pageAnimation = () => {
 			},
 		],
 		{
-			duration: 1000,
-			easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+			duration: 500,
+			easing: "ease-in-out",
 			fill: "forwards",
 			pseudoElement: "::view-transition-new(root)",
 		},
