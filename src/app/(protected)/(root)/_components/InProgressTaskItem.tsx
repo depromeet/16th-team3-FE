@@ -17,13 +17,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 interface InProgressTaskItemProps {
 	task: Task;
-	isReentry: boolean;
+	index: number;
 	onShowDetails?: (task: Task) => void;
 }
 
 const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	task,
-	isReentry,
+	index,
 	onShowDetails,
 }) => {
 	const router = useRouter();
@@ -34,6 +34,8 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	const [showBottomSheet, setShowBottomSheet] = useState(false);
 	const [isExpired, setIsExpired] = useState(false);
 	const personaImageUrl = getPersonaImage(task.persona?.id);
+
+	const isFirstVisit = sessionStorage.getItem("visited");
 
 	// 남은 시간 계산 함수 개선
 	const calculateRemainingTimeLocal = useCallback(() => {
@@ -61,36 +63,6 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 
 		return calculateRemainingTime(dueDatetime);
 	}, [task]);
-
-	useEffect(() => {
-		const toggleInterval = setInterval(() => {
-			setShowRemaining((prev) => !prev);
-		}, 3000);
-
-		return () => clearInterval(toggleInterval);
-	}, []);
-
-	// 1초마다 남은 시간 업데이트
-	useEffect(() => {
-		const updateRemainingTime = () => {
-			setRemainingTime(calculateRemainingTimeLocal());
-		};
-
-		updateRemainingTime();
-
-		const timeInterval = setInterval(updateRemainingTime, 1000);
-
-		return () => clearInterval(timeInterval);
-	}, [calculateRemainingTimeLocal]);
-
-	// 홈화면 재진입 시 자동으로 바텀시트 표시
-	// ! TODO(prgmr99) 이 로직 검토 필요
-	useEffect(() => {
-		// 홈화면 재진입인 경우에만 바텀시트 표시
-		if (!isReentry) {
-			setShowBottomSheet(true);
-		}
-	}, [isReentry]);
 
 	// 카드 영역 클릭 시 - TaskDetailSheet 표시
 	const handleCardClick = () => {
@@ -161,6 +133,34 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 
 		return isToday() ? `오늘 ${task.dueTime}` : task.dueTime;
 	};
+
+	useEffect(() => {
+		const toggleInterval = setInterval(() => {
+			setShowRemaining((prev) => !prev);
+		}, 3000);
+
+		return () => clearInterval(toggleInterval);
+	}, []);
+
+	// 1초마다 남은 시간 업데이트
+	useEffect(() => {
+		const updateRemainingTime = () => {
+			setRemainingTime(calculateRemainingTimeLocal());
+		};
+
+		updateRemainingTime();
+
+		const timeInterval = setInterval(updateRemainingTime, 1000);
+
+		return () => clearInterval(timeInterval);
+	}, [calculateRemainingTimeLocal]);
+
+	useEffect(() => {
+		if (!isFirstVisit) {
+			setShowBottomSheet(true);
+			sessionStorage.setItem("visited", "true");
+		}
+	}, [isFirstVisit]);
 
 	// 마감 지난 경우 강조 표시
 	const getTimeDisplay = () => {
@@ -240,7 +240,7 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 					</button>
 				</div>
 
-				{renderBottomSheet()}
+				{index === 0 && renderBottomSheet()}
 			</>
 		);
 	}
@@ -285,7 +285,7 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 				</Button>
 			</div>
 
-			{renderBottomSheet()}
+			{index === 0 && renderBottomSheet()}
 		</>
 	);
 };
