@@ -21,6 +21,15 @@ interface InProgressTaskItemProps {
 	onShowDetails?: (task: Task) => void;
 }
 
+/**
+ * 시간과 "이어서 몰입" 텍스트 전환 variants
+ */
+const buttonContentVariants = {
+	initial: { opacity: 0 },
+	animate: { opacity: 1 },
+	exit: { opacity: 0, y: -10 },
+};
+
 const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	task,
 	index,
@@ -137,7 +146,7 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 	useEffect(() => {
 		const toggleInterval = setInterval(() => {
 			setShowRemaining((prev) => !prev);
-		}, 3000);
+		}, 5000);
 
 		return () => clearInterval(toggleInterval);
 	}, []);
@@ -236,7 +245,18 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 						onClick={handleContinueClick}
 						className="l1 flex h-[52px] w-full items-center justify-center rounded-[12px] bg-component-accent-primary p-3.5 text-center text-text-strong"
 					>
-						{showRemaining ? getTimeDisplay() : "이어서 몰입"}
+						<AnimatePresence mode="wait">
+							<motion.div
+								key={showRemaining ? "timeDisplay" : "continue"}
+								variants={buttonContentVariants}
+								initial="initial"
+								animate="animate"
+								exit="exit"
+								transition={{ duration: 0.3 }}
+							>
+								{showRemaining ? getTimeDisplay() : "이어서 몰입"}
+							</motion.div>
+						</AnimatePresence>
 					</button>
 				</div>
 
@@ -281,7 +301,18 @@ const InProgressTaskItem: React.FC<InProgressTaskItemProps> = ({
 					onClick={handleContinueClick}
 					className="l1 z-10 w-full h-[52px] rounded-[12px] p-3.5 text-center text-text-inverse"
 				>
-					{showRemaining ? getTimeDisplay() : "이어서 몰입"}
+					<AnimatePresence mode="wait">
+						<motion.div
+							key={showRemaining ? "timeDisplay" : "continue"}
+							variants={buttonContentVariants}
+							initial="initial"
+							animate="animate"
+							exit="exit"
+							transition={{ duration: 0.3 }}
+						>
+							{showRemaining ? getTimeDisplay() : "이어서 몰입"}
+						</motion.div>
+					</AnimatePresence>
 				</Button>
 			</div>
 
@@ -365,9 +396,9 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`h1-${h1}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
+						exit={{ y: 10, opacity: 0 }}
 						transition={{ duration: 0.4, ease: "easeOut" }}
 					>
 						{h1}
@@ -381,9 +412,9 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`h2-${h2}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
+						exit={{ y: 10, opacity: 0 }}
 						transition={{ duration: 0.4, ease: "easeOut" }}
 					>
 						{h2}
@@ -399,9 +430,9 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`m1-${m1}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
+						exit={{ y: 10, opacity: 0 }}
 						transition={{ duration: 0.4, ease: "easeOut" }}
 					>
 						{m1}
@@ -415,10 +446,10 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`m2-${m2}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
-						transition={{ duration: 0.4, ease: "easeOut" }}
+						exit={{ y: 10, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "linear" }}
 					>
 						{m2}
 					</motion.span>
@@ -433,10 +464,10 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`s1-${s1}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
-						transition={{ duration: 0.4, ease: "easeOut" }}
+						exit={{ y: 10, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "linear" }}
 					>
 						{s1}
 					</motion.span>
@@ -449,10 +480,10 @@ const HMSFormatTimeDisplay = ({
 				<AnimatePresence mode="popLayout">
 					<motion.span
 						key={`s2-${s2}-${Date.now()}`}
-						initial={{ y: 10, opacity: 0 }}
+						initial={{ y: -10, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						exit={{ y: -10, opacity: 0 }}
-						transition={{ duration: 0.4, ease: "easeOut" }}
+						exit={{ y: 10, opacity: 0 }}
+						transition={{ duration: 0.2, ease: "linear" }}
 					>
 						{s2}
 					</motion.span>
