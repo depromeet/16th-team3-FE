@@ -44,12 +44,22 @@ const TaskContainer = ({
 				<div
 					className={`cursor-pointer text-t3 ${activeTab === "completed" ? "text-gray-normal" : "text-gray-alternative"}`}
 					onClick={() => handleTabClick("completed")}
+					onKeyUp={(e) => {
+						if (e.key === "Enter" || e.key === " ") {
+							handleTabClick("completed");
+						}
+					}}
 				>
 					완료한 일 {completedTasks.length}
 				</div>
 				<div
-					className={`cursor-pointer text-t3 ${activeTab === "deferred" ? "text-gray-normal" : "text-gray-alternative"}`}
-					onClick={() => handleTabClick("deferred")}
+					className={`cursor-pointer text-t3 ${activeTab === "postponed" ? "text-gray-normal" : "text-gray-alternative"}`}
+					onClick={() => handleTabClick("postponed")}
+					onKeyUp={(e) => {
+						if (e.key === "Enter" || e.key === " ") {
+							handleTabClick("postponed");
+						}
+					}}
 				>
 					미룬 일 {postponedTasks.length}
 				</div>
