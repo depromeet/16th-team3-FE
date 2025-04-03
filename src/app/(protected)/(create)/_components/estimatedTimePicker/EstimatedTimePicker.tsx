@@ -1,22 +1,32 @@
 import Wheel from "@/components/timePicker/Wheel";
-import React from "react";
 
-const EstimatedTimePicker = () => {
+interface EstimatedTimePickerProps {
+	leftHours: number;
+	handleHourSelect: (hour: string) => void;
+	handleMinuteSelect: (minute: string) => void;
+}
+
+const EstimatedTimePicker = ({
+	leftHours,
+	handleHourSelect,
+	handleMinuteSelect,
+}: EstimatedTimePickerProps) => {
 	return (
 		<div className="background-primary flex h-[180px] justify-center gap-10 px-6">
 			<div className="flex h-[180px] items-center gap-6">
 				<Wheel
-					initIdx={0}
-					length={12}
+					initIdx={1}
+					length={leftHours}
 					width={50}
 					loop={true}
 					setValue={(relative) => {
-						const hour = ((relative % 12) + 1).toString().padStart(2, "0");
+						const modHour = relative % 24;
+						const hour = modHour.toString().padStart(2, "0");
 						return hour;
 					}}
-					// onChange={(selected) => handleSelectedHour(selected as string)}
+					onChange={(selected) => handleHourSelect(selected as string)}
 				/>
-				<span className="t2 mt-[14px]">시간</span>
+				<span className="t2 mt-[8px] w-full">시간</span>
 			</div>
 			<div className="flex h-[180px] items-center gap-6">
 				<Wheel
@@ -28,9 +38,9 @@ const EstimatedTimePicker = () => {
 						const minute = String(relative * 5).padStart(2, "0");
 						return minute;
 					}}
-					// onChange={(selected) => handleSelectedMinute(selected as string)}
+					onChange={(selected) => handleMinuteSelect(selected as string)}
 				/>
-				<span className="t2 mt-[14px]">분</span>
+				<span className="t2 mt-[8px] w-full">분</span>
 			</div>
 		</div>
 	);
