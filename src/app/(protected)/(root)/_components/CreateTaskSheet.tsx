@@ -6,6 +6,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer";
+import { useTransitionRouter } from "next-view-transitions";
 import Link from "next/link";
 
 interface CreateTaskSheetProps {
@@ -13,7 +14,49 @@ interface CreateTaskSheetProps {
 	onClose: () => void;
 }
 
+const pageAnimation = () => {
+	document.documentElement.animate(
+		[
+			{
+				opacity: 1,
+				scale: 1,
+				transform: "translateY(0)",
+			},
+			{
+				opacity: 0,
+				scale: 0.9,
+				transform: "translateY(-100px)",
+			},
+		],
+		{
+			duration: 1000,
+			easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+			fill: "forwards",
+			pseudoElement: "::view-transition-old(root)",
+		},
+	);
+
+	document.documentElement.animate(
+		[
+			{
+				transform: "translateY(100%)",
+			},
+			{
+				transform: "translateY(0)",
+			},
+		],
+		{
+			duration: 1000,
+			easing: "cubic-bezier(0.76, 0, 0.24, 1)",
+			fill: "forwards",
+			pseudoElement: "::view-transition-new(root)",
+		},
+	);
+};
+
 const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
+	const router = useTransitionRouter();
+
 	return (
 		<Drawer open={isOpen} onOpenChange={onClose}>
 			<DrawerContent className="w-auto border-0 bg-component-gray-secondary pb-[33px] pt-2">
@@ -25,7 +68,15 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 
 				<div className="px-5">
 					{/* 여유있게 시작 옵션 */}
-					<Link href="/scheduled-create">
+					<Link
+						href="/scheduled-create"
+						onClick={(e) => {
+							e.preventDefault();
+							router.push("/scheduled-create", {
+								onTransitionReady: pageAnimation,
+							});
+						}}
+					>
 						<div className="mb-3 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<img
@@ -59,7 +110,15 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 					</Link>
 
 					{/* 즉시 시작 옵션 */}
-					<Link href="/instant-create">
+					<Link
+						href="/instant-create"
+						onClick={(e) => {
+							e.preventDefault();
+							router.push("/scheduled-create", {
+								onTransitionReady: pageAnimation,
+							});
+						}}
+					>
 						<div className="mb-8 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<img

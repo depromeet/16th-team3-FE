@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ViewTransitions } from "next-view-transitions";
 import localFont from "next/font/local";
 import Script from "next/script";
-import { PageTransitionsProvider } from "./providers/TransitionProvider";
 
 export const metadata: Metadata = {
 	title: "Spurt",
@@ -22,24 +22,24 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="ko" className={pretendard.variable}>
-			<body
-				className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] antialiased`}
-			>
-				<PageTransitionsProvider wrapperClassName="h-full">
+		<ViewTransitions>
+			<html lang="ko" className={pretendard.variable}>
+				<body
+					className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] antialiased`}
+				>
 					{children}
-				</PageTransitionsProvider>
-				<Script
-					src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
-					integrity={process.env.NEXT_PUBLIC_KAKAO_INTEGRITY}
-					crossOrigin="anonymous"
-					strategy="beforeInteractive"
-				/>
-				<Script
-					src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
-					strategy="beforeInteractive"
-				/>
-			</body>
-		</html>
+					<Script
+						src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
+						integrity={process.env.NEXT_PUBLIC_KAKAO_INTEGRITY}
+						crossOrigin="anonymous"
+						strategy="beforeInteractive"
+					/>
+					<Script
+						src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
+						strategy="beforeInteractive"
+					/>
+				</body>
+			</html>
+		</ViewTransitions>
 	);
 }
