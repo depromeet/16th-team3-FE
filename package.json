@@ -6,8 +6,11 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"init:ssl": "sh init-ssl.sh"
+		"init:ssl": "sh init-ssl.sh",
+		"lint": "biome lint --write",
+		"format": "biome format --write",
+		"check": "biome check --write",
+		"reporter": "biome check --reporter=summary"
 	},
 	"dependencies": {
 		"@radix-ui/react-checkbox": "^1.1.4",
