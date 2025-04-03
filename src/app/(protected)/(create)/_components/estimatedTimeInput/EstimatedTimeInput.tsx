@@ -16,6 +16,7 @@ import { ko } from "date-fns/locale";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import type { TaskInputType } from "../../context";
+import EstimatedDayPicker from "../estimatedDayPicker/EstimatedDayPicker";
 import EstimatedTimePicker from "../estimatedTimePicker/EstimatedTimePicker";
 import HeaderTitle from "../headerTitle/HeaderTitle";
 
@@ -66,7 +67,8 @@ const EstimatedTimeInput = ({
 		historyDayData || "",
 	);
 
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
+	const [isOpenDay, setIsOpenDay] = useState<boolean>(false);
 	const [currentTab, setCurrentTab] = useState(historyDayData ? "일" : "시간");
 
 	const isEmptyValue =
@@ -76,7 +78,7 @@ const EstimatedTimeInput = ({
 		(currentTab === "일" && estimatedDay.length === 0);
 
 	const handleToggle = () => {
-		setIsOpen((prev) => !prev);
+		setIsOpenTime((prev) => !prev);
 	};
 
 	const convertDeadlineToDate = (date: Date, time: TimePickerType): Date => {
@@ -99,12 +101,6 @@ const EstimatedTimeInput = ({
 
 	const { days, hours, minutes } = getTimeRemaining(deadline);
 
-	console.log("days, hours, minutes", {
-		days,
-		hours,
-		minutes,
-	});
-
 	const formattedDeadline = formatDistanceStrict(new Date(), deadline, {
 		addSuffix: true,
 		locale: ko,
@@ -124,11 +120,13 @@ const EstimatedTimeInput = ({
 		setEstimatedMinute(minute);
 	};
 
-	const handleConfirmButtonClick = () => {
-		setIsOpen(false);
+	const handleDaySelect = (day: string) => {
+		setEstimatedDay(day);
 	};
 
-	// TODO(prgmr99): 일 탭 선택 시, 일 Input 바로 focus 되도록
+	const handleConfirmButtonClick = () => {
+		setIsOpenTime(false);
+	};
 
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
@@ -165,9 +163,9 @@ const EstimatedTimeInput = ({
 					</TabsList>
 					<TabsContent value="시간">
 						<Drawer
-							open={isOpen}
-							onDrag={() => setIsOpen(false)}
-							onOpenChange={setIsOpen}
+							open={isOpenTime}
+							onDrag={() => setIsOpenTime(false)}
+							onOpenChange={setIsOpenTime}
 						>
 							<div className="relative mt-6 w-full">
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -177,7 +175,7 @@ const EstimatedTimeInput = ({
 								>
 									<span
 										className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-											!estimatedHour && !estimatedMinute
+											estimatedHour === "" && estimatedMinute === ""
 												? "t3 top-1"
 												: "text-neutral b3 top-[-8px]"
 										}`}
@@ -186,12 +184,13 @@ const EstimatedTimeInput = ({
 									</span>
 									<div className="flex w-full items-center justify-between pt-4">
 										<span className="t3 text-base font-semibold">
-											{`${Number(estimatedHour)}${Number(estimatedHour) > 0 ? "시간" : ""} 
-											${Number(estimatedMinute)}${Number(estimatedMinute) > 0 ? "분" : ""}`}
+											{`${Number(estimatedHour) > 0 ? `${Number(estimatedHour)}시간` : ""} 
+											${Number(estimatedMinute) > 0 ? ` ${Number(estimatedMinute)}분` : ""}`}
 										</span>
+
 										<ChevronDown
 											className={`h-4 w-4 icon-primary transition-transform duration-200 ${
-												isOpen ? "rotate-180" : ""
+												isOpenTime ? "rotate-180" : ""
 											}`}
 										/>
 									</div>
@@ -206,6 +205,7 @@ const EstimatedTimeInput = ({
 								</DrawerHeader>
 								<EstimatedTimePicker
 									leftHours={days > 0 ? 24 : hours}
+									leftMinutes={minutes}
 									handleHourSelect={handleHourSelect}
 									handleMinuteSelect={handleMinuteSelect}
 								/>
@@ -221,7 +221,62 @@ const EstimatedTimeInput = ({
 							</DrawerContent>
 						</Drawer>
 					</TabsContent>
-					<TabsContent value="일"></TabsContent>
+					<TabsContent value="일">
+						<Drawer
+							open={isOpenTime}
+							onDrag={() => setIsOpenTime(false)}
+							onOpenChange={setIsOpenTime}
+						>
+							<div className="relative mt-6 w-full">
+								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+								<div
+									className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
+									onClick={handleToggle}
+								>
+									<span
+										className={`absolute left-0 text-gray-500 transition-all duration-200 ${
+											estimatedDay === ""
+												? "t3 top-1"
+												: "text-neutral b3 top-[-8px]"
+										}`}
+									>
+										예상 소요일 선택
+									</span>
+									<div className="flex w-full items-center justify-between pt-4">
+										<span className="t3 text-base font-semibold">
+											{`${Number(estimatedDay) > 0 ? `${Number(estimatedDay)}일` : ""}`}
+										</span>
+										<ChevronDown
+											className={`h-4 w-4 icon-primary transition-transform duration-200 ${
+												isOpenTime ? "rotate-180" : ""
+											}`}
+										/>
+									</div>
+								</div>
+							</div>
+
+							<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+								<DrawerHeader className="px-0 pb-10 pt-6">
+									<DrawerTitle className="t3 text-left">
+										예상 소요일
+									</DrawerTitle>
+								</DrawerHeader>
+								<EstimatedDayPicker
+									leftDays={days}
+									handleDaySelect={handleDaySelect}
+								/>
+								<DrawerFooter className="px-0">
+									<Button
+										variant="primary"
+										className="mt-4 flex w-full items-center justify-center"
+										onClick={handleConfirmButtonClick}
+									>
+										확인
+									</Button>
+								</DrawerFooter>
+							</DrawerContent>
+						</Drawer>
+					</TabsContent>
 				</Tabs>
 			</div>
 

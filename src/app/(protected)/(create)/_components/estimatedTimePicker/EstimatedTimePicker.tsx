@@ -2,12 +2,14 @@ import Wheel from "@/components/timePicker/Wheel";
 
 interface EstimatedTimePickerProps {
 	leftHours: number;
+	leftMinutes: number;
 	handleHourSelect: (hour: string) => void;
 	handleMinuteSelect: (minute: string) => void;
 }
 
 const EstimatedTimePicker = ({
 	leftHours,
+	leftMinutes,
 	handleHourSelect,
 	handleMinuteSelect,
 }: EstimatedTimePickerProps) => {
@@ -31,7 +33,7 @@ const EstimatedTimePicker = ({
 			<div className="flex h-[180px] items-center gap-6">
 				<Wheel
 					initIdx={0}
-					length={12}
+					length={leftHours > 0 ? 12 : Math.floor(leftMinutes / 5)}
 					width={50}
 					loop={true}
 					setValue={(relative) => {

@@ -135,9 +135,9 @@ const BufferTime = ({
 						>
 							<span className="b2 text-neutral mt-[2px]">
 								{[
-									estimatedHour && `${estimatedHour}시간`,
-									estimatedMinute && `${estimatedMinute}분`,
-									estimatedDay && `${estimatedDay}일`,
+									estimatedHour && `${Number(estimatedHour)}시간`,
+									estimatedMinute && `${Number(estimatedMinute)}분`,
+									estimatedDay && `${Number(estimatedDay)}일`,
 								]
 									.filter(Boolean)
 									.join(" ")}
