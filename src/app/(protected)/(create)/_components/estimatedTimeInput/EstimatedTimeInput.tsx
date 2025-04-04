@@ -131,11 +131,6 @@ const EstimatedTimeInput = ({
 	};
 
 	const handleMinuteSelect = (minute: string) => {
-		if (Number(minute) < 5 && Number(hours) === 0 && currentTab === "시간") {
-			setIsModalOpen(true);
-			return;
-		}
-
 		setTempEstimatedMinute(minute);
 	};
 
