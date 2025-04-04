@@ -13,6 +13,7 @@ const EstimatedTimePicker = ({
 	handleHourSelect,
 	handleMinuteSelect,
 }: EstimatedTimePickerProps) => {
+	console.log("Math.floor(leftMinutes / 5)", Math.floor(leftMinutes / 5));
 	return (
 		<div className="background-primary flex h-[200px] justify-center gap-10 px-6">
 			{leftHours > 0 && (
@@ -36,12 +37,13 @@ const EstimatedTimePicker = ({
 					initIdx={0}
 					length={leftHours > 0 ? 12 : Math.floor(leftMinutes / 5)}
 					width={50}
-					loop={true}
+					loop={Math.floor(leftMinutes / 5) !== 1}
 					setValue={(relative) => {
 						if (leftHours === 0) {
 							const minute = String((relative + 1) * 5).padStart(2, "0");
 							return minute;
 						}
+
 						const minute = String(relative * 5).padStart(2, "0");
 						return minute;
 					}}
