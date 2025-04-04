@@ -65,7 +65,7 @@ const Wheel = (props: {
 			}
 		},
 		rubberband: !props.loop,
-		mode: "free-snap",
+		mode: "snap",
 	});
 
 	const [sliderRef, slider] = useKeenSlider<HTMLDivElement>(options.current);

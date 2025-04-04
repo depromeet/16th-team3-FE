@@ -26,7 +26,7 @@ export async function POST() {
 		return nextResponse;
 	} catch (error) {
 		return NextResponse.json(
-			{ error: "Error creating scheduled task" },
+			{ error: "Error withdraw error" },
 			{ status: 500 },
 		);
 	}
