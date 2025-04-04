@@ -1,5 +1,6 @@
 "use client";
 
+import Modal from "@/components/modal/Modal";
 import Toast from "@/components/toast/Toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +22,7 @@ import type { TaskInputType } from "../../context";
 import EstimatedDayPicker from "../estimatedDayPicker/EstimatedDayPicker";
 import EstimatedTimePicker from "../estimatedTimePicker/EstimatedTimePicker";
 import HeaderTitle from "../headerTitle/HeaderTitle";
+import LestThanFiveMinuteModalContent from "../lessThanFiveMinuteModalContent/LessThanFiveMinuteModalContent";
 
 interface EstimatedTimeInputProps {
 	context: TaskInputType;
@@ -43,6 +45,7 @@ interface EstimatedTimeInputProps {
 		estimatedMinute: string;
 		estimatedDay: string;
 	}) => void;
+	onJumpToTaskTypeInput: () => void;
 }
 
 // TODO(prgmr99): MUST be refactored
@@ -58,6 +61,7 @@ const EstimatedTimeInput = ({
 	lastStep,
 	onNext,
 	onEdit,
+	onJumpToTaskTypeInput,
 }: EstimatedTimeInputProps) => {
 	const [estimatedHour, setEstimatedHour] = useState<string>(
 		historyHourData || "",
@@ -75,6 +79,8 @@ const EstimatedTimeInput = ({
 
 	const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
 	const [isOpenDay, setIsOpenDay] = useState<boolean>(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 	const [currentTab, setCurrentTab] = useState(historyDayData ? "일" : "시간");
 	const [toastMessage, setToastMessage] = useState<string>("");
 
@@ -124,6 +130,11 @@ const EstimatedTimeInput = ({
 	};
 
 	const handleMinuteSelect = (minute: string) => {
+		if (Number(minute) < 5 && Number(hours) === 0 && currentTab === "시간") {
+			setIsModalOpen(true);
+			return;
+		}
+
 		setTempEstimatedMinute(minute);
 	};
 
@@ -159,184 +170,198 @@ const EstimatedTimeInput = ({
 		}
 	}, [currentTab, tempEstimatedHour, tempEstimatedMinute, tempEstimatedDay]);
 
+	useEffect(() => {
+		if (minutes <= 5 && hours === 0 && days === 0) {
+			setIsModalOpen(true);
+		} else {
+			setIsModalOpen(false);
+		}
+	}, [minutes, hours, days]);
+
 	return (
-		<div className="relative flex h-full w-full flex-col justify-between">
-			<div>
-				<HeaderTitle title={`${task} \n얼마나 걸릴 것 같나요?`} />
-				<div className="mt-[-28px]">
-					<div className="flex gap-1">
-						<span className="b2 text-text-alternative">마감:</span>
-						<span className="text-text-neutral">{formattedDeadline}</span>
+		<>
+			<div className="relative flex h-full w-full flex-col justify-between">
+				<div>
+					<HeaderTitle title={`${task} \n얼마나 걸릴 것 같나요?`} />
+					<div className="mt-[-28px]">
+						<div className="flex gap-1">
+							<span className="b2 text-text-alternative">마감:</span>
+							<span className="text-text-neutral">{formattedDeadline}</span>
+						</div>
 					</div>
-				</div>
-				<Tabs
-					defaultValue="시간"
-					value={currentTab}
-					onValueChange={(value) => {
-						setCurrentTab(value);
-						resetInputValues();
-					}}
-					className="mt-6 w-full p-1"
-				>
-					{days > 0 && (
-						<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
-							<TabsTrigger
-								value="시간"
-								className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+					<Tabs
+						defaultValue="시간"
+						value={currentTab}
+						onValueChange={(value) => {
+							setCurrentTab(value);
+							resetInputValues();
+						}}
+						className="mt-6 w-full p-1"
+					>
+						{days > 0 && (
+							<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
+								<TabsTrigger
+									value="시간"
+									className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+								>
+									시간
+								</TabsTrigger>
+								<TabsTrigger
+									value="일"
+									className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+								>
+									일
+								</TabsTrigger>
+							</TabsList>
+						)}
+						<TabsContent value="시간">
+							<Drawer
+								open={isOpenTime}
+								closeThreshold={0.5}
+								onOpenChange={setIsOpenTime}
 							>
-								시간
-							</TabsTrigger>
-							<TabsTrigger
-								value="일"
-								className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
-							>
-								일
-							</TabsTrigger>
-						</TabsList>
-					)}
-					<TabsContent value="시간">
-						<Drawer
-							open={isOpenTime}
-							closeThreshold={0.5}
-							onOpenChange={setIsOpenTime}
-						>
-							<DrawerTrigger className="w-full" asChild>
-								<div className="relative mt-6 w-full">
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-									<div
-										className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
-										onClick={handleToggle}
-									>
-										<span
-											className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-												estimatedHour === "" && estimatedMinute === ""
-													? "t3 top-1"
-													: "text-neutral b3 top-[-8px]"
-											}`}
+								<DrawerTrigger className="w-full" asChild>
+									<div className="relative mt-6 w-full">
+										{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+										<div
+											className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
+											onClick={handleToggle}
 										>
-											예상 소요시간 선택
-										</span>
-										<div className="flex w-full items-center justify-between pt-4">
-											<span className="t3 text-base font-semibold">
-												{`${Number(estimatedHour) > 0 ? `${Number(estimatedHour)}시간` : ""} 
+											<span
+												className={`absolute left-0 text-gray-500 transition-all duration-200 ${
+													estimatedHour === "" && estimatedMinute === ""
+														? "t3 top-1"
+														: "text-neutral b3 top-[-8px]"
+												}`}
+											>
+												예상 소요시간 선택
+											</span>
+											<div className="flex w-full items-center justify-between pt-4">
+												<span className="t3 text-base font-semibold">
+													{`${Number(estimatedHour) > 0 ? `${Number(estimatedHour)}시간` : ""} 
 											${Number(estimatedMinute) > 0 ? ` ${Number(estimatedMinute)}분` : ""}`}
-											</span>
+												</span>
 
-											<ChevronDown
-												className={`h-4 w-4 icon-primary transition-transform duration-200 ${
-													isOpenTime ? "rotate-180" : ""
-												}`}
-											/>
+												<ChevronDown
+													className={`h-4 w-4 icon-primary transition-transform duration-200 ${
+														isOpenTime ? "rotate-180" : ""
+													}`}
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
-							</DrawerTrigger>
+								</DrawerTrigger>
 
-							<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
-								<DrawerHeader className="px-0 pb-10 pt-6">
-									<DrawerTitle className="t3 text-left">
-										예상 소요시간
-									</DrawerTitle>
-								</DrawerHeader>
-								<EstimatedTimePicker
-									leftHours={days > 0 ? 24 : hours}
-									leftMinutes={minutes}
-									handleHourSelect={handleHourSelect}
-									handleMinuteSelect={handleMinuteSelect}
-								/>
-								{toastMessage && <Toast message={toastMessage} />}
-								<DrawerFooter className="px-0">
-									<Button
-										variant="primary"
-										className="mt-4 flex w-full items-center justify-center"
-										disabled={!!toastMessage}
-										onClick={handleTimeConfirmButtonClick}
-									>
-										확인
-									</Button>
-								</DrawerFooter>
-							</DrawerContent>
-						</Drawer>
-					</TabsContent>
-					<TabsContent value="일">
-						<Drawer
-							open={isOpenDay}
-							closeThreshold={0.5}
-							onOpenChange={setIsOpenDay}
-						>
-							<DrawerTrigger className="w-full" asChild>
-								<div className="relative mt-6 w-full">
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-									<div
-										className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
-										onClick={handleToggle}
-									>
-										<span
-											className={`absolute left-0 text-gray-500 transition-all duration-200 ${
-												estimatedDay === ""
-													? "t3 top-1"
-													: "text-neutral b3 top-[-8px]"
-											}`}
+								<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+									<DrawerHeader className="px-0 pb-10 pt-6">
+										<DrawerTitle className="t3 text-left">
+											예상 소요시간
+										</DrawerTitle>
+									</DrawerHeader>
+									<EstimatedTimePicker
+										leftHours={days > 0 ? 24 : hours}
+										leftMinutes={minutes}
+										handleHourSelect={handleHourSelect}
+										handleMinuteSelect={handleMinuteSelect}
+									/>
+									{toastMessage && <Toast message={toastMessage} />}
+									<DrawerFooter className="px-0">
+										<Button
+											variant="primary"
+											className="mt-4 flex w-full items-center justify-center"
+											disabled={!!toastMessage}
+											onClick={handleTimeConfirmButtonClick}
 										>
-											예상 소요일 선택
-										</span>
-										<div className="flex w-full items-center justify-between pt-4">
-											<span className="t3 text-base font-semibold">
-												{`${Number(estimatedDay) > 0 ? `${Number(estimatedDay)}일` : ""}`}
-											</span>
-											<ChevronDown
-												className={`h-4 w-4 icon-primary transition-transform duration-200 ${
-													isOpenTime ? "rotate-180" : ""
+											확인
+										</Button>
+									</DrawerFooter>
+								</DrawerContent>
+							</Drawer>
+						</TabsContent>
+						<TabsContent value="일">
+							<Drawer
+								open={isOpenDay}
+								closeThreshold={0.5}
+								onOpenChange={setIsOpenDay}
+							>
+								<DrawerTrigger className="w-full" asChild>
+									<div className="relative mt-6 w-full">
+										{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+										<div
+											className="relative flex w-full flex-col items-start border-b border-gray-300 pb-2"
+											onClick={handleToggle}
+										>
+											<span
+												className={`absolute left-0 text-gray-500 transition-all duration-200 ${
+													estimatedDay === ""
+														? "t3 top-1"
+														: "text-neutral b3 top-[-8px]"
 												}`}
-											/>
+											>
+												예상 소요일 선택
+											</span>
+											<div className="flex w-full items-center justify-between pt-4">
+												<span className="t3 text-base font-semibold">
+													{`${Number(estimatedDay) > 0 ? `${Number(estimatedDay)}일` : ""}`}
+												</span>
+												<ChevronDown
+													className={`h-4 w-4 icon-primary transition-transform duration-200 ${
+														isOpenTime ? "rotate-180" : ""
+													}`}
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
-							</DrawerTrigger>
-							<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
-								<DrawerHeader className="px-0 pb-10 pt-6">
-									<DrawerTitle className="t3 text-left">
-										예상 소요일
-									</DrawerTitle>
-								</DrawerHeader>
-								<EstimatedDayPicker
-									leftDays={days}
-									handleDaySelect={handleDaySelect}
-								/>
-								<DrawerFooter className="px-0">
-									<Button
-										variant="primary"
-										className="mt-4 flex w-full items-center justify-center"
-										onClick={handleDayConfirmButtonClick}
-									>
-										확인
-									</Button>
-								</DrawerFooter>
-							</DrawerContent>
-						</Drawer>
-					</TabsContent>
-				</Tabs>
-			</div>
+								</DrawerTrigger>
+								<DrawerContent className="w-auto border-0 bg-component-gray-secondary px-5 pb-[33px] pt-2">
+									<DrawerHeader className="px-0 pb-10 pt-6">
+										<DrawerTitle className="t3 text-left">
+											예상 소요일
+										</DrawerTitle>
+									</DrawerHeader>
+									<EstimatedDayPicker
+										leftDays={days}
+										handleDaySelect={handleDaySelect}
+									/>
+									<DrawerFooter className="px-0">
+										<Button
+											variant="primary"
+											className="mt-4 flex w-full items-center justify-center"
+											onClick={handleDayConfirmButtonClick}
+										>
+											확인
+										</Button>
+									</DrawerFooter>
+								</DrawerContent>
+							</Drawer>
+						</TabsContent>
+					</Tabs>
+				</div>
 
-			<div
-				className={
-					"fixed flex flex-col w-[100%] bottom-10 pr-10 transition-all duration-300 gap-4"
-				}
-			>
-				<Button
-					variant="primary"
-					className="w-full"
-					disabled={isEmptyValue}
-					onClick={
-						lastStep === "bufferTime"
-							? () => onEdit({ estimatedHour, estimatedMinute, estimatedDay })
-							: () => onNext({ estimatedHour, estimatedMinute, estimatedDay })
+				<div
+					className={
+						"fixed flex flex-col w-[100%] bottom-10 pr-10 transition-all duration-300 gap-4"
 					}
 				>
-					{lastStep === "bufferTime" ? "확인" : "다음"}
-				</Button>
+					<Button
+						variant="primary"
+						className="w-full"
+						disabled={isEmptyValue}
+						onClick={
+							lastStep === "bufferTime"
+								? () => onEdit({ estimatedHour, estimatedMinute, estimatedDay })
+								: () => onNext({ estimatedHour, estimatedMinute, estimatedDay })
+						}
+					>
+						{lastStep === "bufferTime" ? "확인" : "다음"}
+					</Button>
+				</div>
 			</div>
-		</div>
+
+			<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+				<LestThanFiveMinuteModalContent onNext={onJumpToTaskTypeInput} />
+			</Modal>
+		</>
 	);
 };
 

@@ -253,6 +253,17 @@ const ScheduledTaskCreate = () => {
 								estimatedDay: estimatedDay,
 							} as BufferTimeType)
 						}
+						onJumpToTaskTypeInput={() =>
+							history.push("taskTypeInput", {
+								task: context.task,
+								deadlineDate: context.deadlineDate,
+								deadlineTime: context.deadlineTime,
+								smallAction: context.smallAction,
+								estimatedHour: "00",
+								estimatedMinute: "03",
+								estimatedDay: "00",
+							} as TaskTypeInputType)
+						}
 					/>
 				)}
 				bufferTime={({ context, history }) => (
