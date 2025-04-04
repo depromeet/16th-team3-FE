@@ -329,3 +329,23 @@ export const getValidDate = (dateInput?: string | Date): Date => {
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
 	return date && !isNaN(date.getTime()) ? date : new Date();
 };
+
+export const getTimeRemaining = (
+	deadline: Date,
+): { days: number; hours: number; minutes: number } => {
+	const now = new Date();
+	const diffMs = deadline.getTime() - now.getTime();
+	if (diffMs <= 0) return { days: 0, hours: 0, minutes: 0 };
+
+	const totalMinutes = Math.floor(diffMs / 60000);
+
+	const days = Math.floor(totalMinutes / (24 * 60));
+
+	const remainderMinutes = totalMinutes % (24 * 60);
+
+	const hours = Math.floor(remainderMinutes / 60);
+
+	const minutes = remainderMinutes % 60;
+
+	return { days, hours, minutes };
+};

@@ -352,6 +352,7 @@ const WeeklyTasksPage = () => {
 					task={selectedTask as TaskWithPersona}
 					onDelete={handleDeleteTask}
 					onStart={handleStartTask}
+					setIsDetailSheetOpen={setIsDetailSheetOpen}
 				/>
 			)}
 		</div>

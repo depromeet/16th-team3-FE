@@ -21,14 +21,17 @@ const Wheel = (props: {
 	const slides = props.length;
 	const slideDegree = 360 / wheelSize;
 	const slidesPerView = props.loop ? 3 : 1;
+	const spacing = props.length === 1 ? 0 : 50;
+
 	const [sliderState, setSliderState] = useState<TrackDetails | null>(null);
+
 	const size = useRef(0);
 	const options = useRef<KeenSliderOptions>({
 		slides: {
 			number: slides,
 			origin: "center",
 			perView: slidesPerView,
-			spacing: 50,
+			spacing: spacing,
 		},
 
 		vertical: true,
@@ -51,6 +54,7 @@ const Wheel = (props: {
 		},
 		detailsChanged: (s) => {
 			const details = s.track.details;
+
 			setSliderState(details);
 			if (props.onChange) {
 				const normalizedAbs =
@@ -82,8 +86,9 @@ const Wheel = (props: {
 			const distance = sliderState
 				? (sliderState.slides[i].distance - offset) * slidesPerView
 				: 0;
+			const threshold = wheelSize / 2 + 1;
 			const rotate =
-				Math.abs(distance) > wheelSize / 2
+				Math.abs(distance) > threshold
 					? 180
 					: distance * (360 / wheelSize) * -1;
 			const style = {
@@ -123,7 +128,7 @@ const Wheel = (props: {
 			/>
 			<div className="wheel__inner">
 				<div className="wheel__slides t1" style={{ width: `${props.width}px` }}>
-					{slideValues().map(({ style, value }, idx) => (
+					{slideValues().map(({ style, value }) => (
 						<div className="wheel__slide text-strong" style={style} key={value}>
 							<span>{value}</span>
 						</div>
