@@ -11,13 +11,14 @@ const Wheel = (props: {
 	label?: string;
 	length: number;
 	loop?: boolean;
+	wheelSize?: number;
 	perspective?: "left" | "right" | "center";
 	width: number;
 	setValue?: (relative: number, absolute: number) => string;
 	onChange?: (currentValue: string | number) => void;
 }) => {
 	const perspective = "center";
-	const wheelSize = 20;
+	const wheelSize = props.wheelSize || 20;
 	const slides = props.length;
 	const slideDegree = 360 / wheelSize;
 	const slidesPerView = props.loop ? 3 : 1;

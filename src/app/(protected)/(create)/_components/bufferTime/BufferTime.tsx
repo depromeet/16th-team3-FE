@@ -13,7 +13,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BufferTimeProps {
 	context: BufferTimeDataType;
@@ -91,6 +91,12 @@ const BufferTime = ({
 		setIsOpen((prev) => !prev);
 	};
 
+	useEffect(() => {
+		if (availableMultipliers.length === 1) {
+			setCurrentRatio(availableMultipliers[0]);
+		}
+	}, [availableMultipliers]);
+
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div className="relative mt-[0.1vh]">
@@ -102,12 +108,14 @@ const BufferTime = ({
 						onClick={handleToggle}
 					>
 						<span className="l6 text-inverse">{`${currentRatio}배의 여유시간 적용`}</span>
-						<Image
-							src="/icons/edit-dark.svg"
-							alt="edit"
-							width={14}
-							height={14}
-						/>
+						{availableMultipliers.length > 1 && (
+							<Image
+								src="/icons/edit-dark.svg"
+								alt="edit"
+								width={14}
+								height={14}
+							/>
+						)}
 					</div>
 					{isOpen && (
 						<div className="absolute left-20 top-28 w-[189px] pt-5 pb-[10px] px-5 bg-component-gray-tertiary rounded-[16px] shadow-[0px_0px_14px_2px_rgba(18,18,18,0.5)]">
