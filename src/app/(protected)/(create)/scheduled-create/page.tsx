@@ -13,22 +13,32 @@ import type {
 	TaskTypeInputType,
 } from "../context";
 
+import BackHeader from "@/components/backHeader/BackHeader";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import TaskInput from "../_components/taskInput/TaskInput";
 
-const BackHeader = dynamic(() => import("@/components/backHeader/BackHeader"));
 const BufferTime = dynamic(
-	() => import("../_components/bufferTime/BufferTime"),
+	() =>
+		import(/* webpackPrefetch: true */ "../_components/bufferTime/BufferTime"),
 );
 const EstimatedTimeInput = dynamic(
-	() => import("../_components/estimatedTimeInput/EstimatedTimeInput"),
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../_components/estimatedTimeInput/EstimatedTimeInput"
+		),
 );
 const SmallActionInput = dynamic(
-	() => import("../_components/smallActionInput/SmallActionInput"),
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../_components/smallActionInput/SmallActionInput"
+		),
 );
-const TaskInput = dynamic(() => import("../_components/taskInput/TaskInput"));
 const TaskTypeInput = dynamic(
-	() => import("../_components/taskTypeInput/TaskTypeInput"),
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../_components/taskTypeInput/TaskTypeInput"
+		),
 );
 
 type FormState = {

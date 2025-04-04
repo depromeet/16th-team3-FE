@@ -13,6 +13,9 @@ export async function POST(req: NextRequest) {
 
 		if (!apiResponse.ok) {
 			const errorData = await apiResponse.json();
+
+			console.error("Error response:", errorData);
+
 			return NextResponse.json(
 				{ error: "Failed to POST request", details: errorData },
 				{ status: apiResponse.status },
@@ -30,9 +33,6 @@ export async function POST(req: NextRequest) {
 
 		return nextResponse;
 	} catch (error) {
-		return NextResponse.json(
-			{ error: "Error creating scheduled task" },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: error }, { status: 500 });
 	}
 }

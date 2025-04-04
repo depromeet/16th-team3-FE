@@ -1122,6 +1122,7 @@ const HomePageContent = () => {
 					task={detailTask as TaskWithPersona}
 					onDelete={handleDeleteTask}
 					onStart={handleStartTask}
+					setIsDetailSheetOpen={setIsDetailSheetOpen}
 				/>
 			)}
 

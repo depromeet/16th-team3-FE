@@ -30,6 +30,7 @@ type TaskDetailSheetProps = {
 	onClose: () => void;
 	onDelete?: (taskId: number) => void;
 	onStart?: (taskId: number) => void;
+	setIsDetailSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
@@ -38,6 +39,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 	onClose,
 	onDelete,
 	onStart,
+	setIsDetailSheetOpen,
 }) => {
 	const router = useRouter();
 	const [showMenu, setShowMenu] = useState(false);
@@ -220,7 +222,12 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 	};
 
 	return (
-		<Drawer open={isOpen} onDrag={onClose} onAnimationEnd={() => onClose()}>
+		<Drawer
+			open={isOpen}
+			onOpenChange={setIsDetailSheetOpen}
+			closeThreshold={0.5}
+			onAnimationEnd={() => onClose()}
+		>
 			<DrawerContent className="w-full rounded-t-[20px] border-0 bg-component-gray-secondary pb-[33px] pt-2">
 				<div className="relative mb-[30px] flex items-center justify-between pt-10">
 					<DialogHeader className="absolute inset-x-0 text-center">
