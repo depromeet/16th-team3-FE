@@ -16,7 +16,7 @@ import {
 import type { Task, TaskWithPersona } from "@/types/task";
 import { parseDateAndTime } from "@/utils/dateFormat";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 
 import Loader from "@/components/loader/Loader";
@@ -26,14 +26,8 @@ import CharacterDialog from "../(create)/_components/characterDialog/CharacterDi
 import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
 
 const HomePageContent = () => {
-	const pathname = usePathname();
 	const router = useRouter();
-	const {
-		data: homeData,
-		isLoading: isLoadingHome,
-		error: homeError,
-		isPending,
-	} = useHomeData();
+	const { data: homeData, isLoading: isLoadingHome, isPending } = useHomeData();
 
 	const isUserProfileLoading = useAuthStore(
 		(state) => state.isUserProfileLoading,
@@ -135,9 +129,6 @@ const HomePageContent = () => {
 				return false;
 			}
 
-			const isPastToday = dueDate > today;
-			const isAfterThisWeek = dueDate > sundayOfThisWeek;
-
 			if (task.status === "inProgress" || task.status === "INPROGRESS") {
 				return false;
 			}
@@ -175,7 +166,6 @@ const HomePageContent = () => {
 	const [detailTask, setDetailTask] = useState<Task | null>(null);
 	const [showExpiredTaskSheet, setShowExpiredTaskSheet] = useState(false);
 	const [expiredTask, setExpiredTask] = useState<Task | null>(null);
-	// const [isReentry, setIsReentry] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isFailedDialogOpen, setIsFailedDialogOpen] = useState(false);
 	const [personaId, setPersonaId] = useState<number | undefined>(undefined);
@@ -194,32 +184,6 @@ const HomePageContent = () => {
 		router.push(`/retrospection/${taskId}`);
 		setShowExpiredTaskSheet(false);
 	};
-
-	const expiredTasks = useMemo(() => {
-		if (!isLoadingHome && allTasks.length > 0) {
-			const now = new Date();
-			return allTasks.filter((task) => {
-				let dueDate;
-
-				if (task.dueDatetime) {
-					dueDate = new Date(task.dueDatetime);
-				} else if (task.dueDate) {
-					dueDate = parseDateAndTime(
-						task.dueDate,
-						task.dueTime || "오후 11시 59분",
-					);
-				} else {
-					return false;
-				}
-				return (
-					dueDate.getTime() < now.getTime() &&
-					task.status !== "reflected" &&
-					task.status !== "completed"
-				);
-			});
-		}
-		return [];
-	}, [allTasks, isLoadingHome]);
 
 	// 이벤트 핸들러 함수
 	const handleCloseExpiredSheet = () => {
@@ -362,22 +326,6 @@ const HomePageContent = () => {
 		}
 	}, [searchParams]);
 
-	// ! 불필요할 것 같음.
-	// useEffect(() => {
-	// 	const handleVisibilityChange = () => {
-	// 		if (document.visibilityState === "visible" && pathname === "/") {
-	// 			// 앱이 포그라운드로 돌아오고 현재 경로가 홈일 때 실행할 로직
-	// 			setIsReentry(true);
-	// 		}
-	// 	};
-
-	// 	document.addEventListener("visibilitychange", handleVisibilityChange);
-	// 	return () => {
-	// 		document.removeEventListener("visibilitychange", handleVisibilityChange);
-	// 		setIsReentry(false);
-	// 	};
-	// }, [pathname]);
-
 	// 툴팁 표시 관련 로직
 	useEffect(() => {
 		const hasVisited = localStorage.getItem("hasVisitedBefore");
@@ -387,61 +335,6 @@ const HomePageContent = () => {
 			localStorage.setItem("hasVisitedBefore", "true");
 		}
 	}, []);
-
-	// 앱 재진입과 만료된 작업 확인 연결
-	// useEffect(() => {
-	// 	// 재진입 상태이고, 만료된 작업이 있을 때 바텀시트 표시
-	// 	if (isReentry && expiredTasks.length > 0) {
-	// 		setExpiredTask(expiredTasks[0]);
-	// 		setShowExpiredTaskSheet(true);
-	// 	}
-	// }, [isReentry, expiredTasks]);
-
-	// 앱 진입 시 마감 지난 태스크 확인
-	// ! 위의 코드와 중복됨
-	// useEffect(() => {
-	// 	// 마감 지난 태스크가 있으면 첫 번째 태스크로 바텀시트 표시
-	// 	if (expiredTasks.length > 0) {
-	// 		setExpiredTask(expiredTasks[0]);
-	// 		setShowExpiredTaskSheet(true);
-	// 	}
-	// }, [expiredTasks]);
-
-	// ! 이 로직도 필요한지 검토 필요
-	// 다른 페이지에서 돌아올 때 재진입으로 간주
-	// useEffect(() => {
-	// 	const handleRouteChange = (url: string) => {
-	// 		if (url === "/" || url === "/home") {
-	// 			setIsReentry(true);
-	// 			setTimeout(() => {
-	// 				setIsReentry(false);
-	// 			}, 1000);
-	// 		}
-	// 	};
-	// 	window.addEventListener("popstate", () =>
-	// 		handleRouteChange(window.location.pathname),
-	// 	);
-
-	// 	return () => {
-	// 		window.removeEventListener("popstate", () =>
-	// 			handleRouteChange(window.location.pathname),
-	// 		);
-	// 	};
-	// }, []);
-
-	// ! 이 로직도 필요한지 검토 필요
-	// 세션 스토리지를 사용해 더 확실한 재진입 감지
-	// useEffect(() => {
-	// 	const isFirstVisit = sessionStorage.getItem("visited");
-	// 	if (isFirstVisit) {
-	// 		console.log('재진입 감지1');
-	// 		setIsReentry(true);
-	// 	} else {
-	// 		sessionStorage.setItem("visited", "true");
-	// 		console.log('재진입 감지2');
-	// 		setIsReentry(false);
-	// 	}
-	// }, []);
 
 	// 로딩 상태 처리
 	if (isUserProfileLoading || isPending) {

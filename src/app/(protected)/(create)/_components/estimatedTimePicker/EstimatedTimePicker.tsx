@@ -13,7 +13,6 @@ const EstimatedTimePicker = ({
 	handleHourSelect,
 	handleMinuteSelect,
 }: EstimatedTimePickerProps) => {
-	console.log("Math.floor(leftMinutes / 5)", Math.floor(leftMinutes / 5));
 	return (
 		<div className="background-primary flex h-[200px] justify-center gap-10 px-6">
 			{leftHours > 0 && (
