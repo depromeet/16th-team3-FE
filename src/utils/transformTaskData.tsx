@@ -31,8 +31,8 @@ export const transformScheduledTaskData = (
 	const hours = data.estimatedHour ? Number(data.estimatedHour) : 0;
 	const minutes = data.estimatedMinute ? Number(data.estimatedMinute) : 0;
 	const totalEstimatedMinutes = days * 1440 + hours * 60 + minutes;
-	const scaledEstimatedMinutes = totalEstimatedMinutes * 1.5;
-	const alarmDateTime = subMinutes(dueDateTime, scaledEstimatedMinutes);
+	// const scaledEstimatedMinutes = totalEstimatedMinutes * 1.5;
+	const alarmDateTime = subMinutes(dueDateTime, totalEstimatedMinutes);
 	const triggerActionAlarmTimeStr = format(
 		alarmDateTime,
 		"yyyy-MM-dd HH:mm:ss",
