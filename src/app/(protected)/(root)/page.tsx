@@ -22,6 +22,7 @@ import Loader from "@/components/loader/Loader";
 import { useAuthStore } from "@/store";
 import Link from "next/link";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
+import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
 
 const HomePageContent = () => {
 	const pathname = usePathname();
@@ -175,6 +176,7 @@ const HomePageContent = () => {
 	const [expiredTask, setExpiredTask] = useState<Task | null>(null);
 	// const [isReentry, setIsReentry] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isFailedDialogOpen, setIsFailedDialogOpen] = useState(false);
 	const [personaId, setPersonaId] = useState<number | undefined>(undefined);
 	const [isCreateSheetOpen, setIsCreateSheetOpen] = useState(false);
 
@@ -268,6 +270,10 @@ const HomePageContent = () => {
 		}
 	};
 
+	const handleFailedDialogButtonClick = () => {
+		setIsFailedDialogOpen(false);
+	};
+
 	// 진행 중인 작업 계속하기
 	const handleContinueTask = (taskId: number) => {
 		// 해당 태스크 찾기
@@ -309,6 +315,10 @@ const HomePageContent = () => {
 			setIsDialogOpen(true);
 		}
 
+		if (searchParams.get("dialog") === "error") {
+			setIsFailedDialogOpen(true);
+		}
+
 		const taskParam = searchParams.get("task");
 		if (taskParam) {
 			setTaskName(taskParam);
@@ -320,7 +330,9 @@ const HomePageContent = () => {
 		}
 
 		const personaIdParam = searchParams.get("personaId");
-		const personaId = personaIdParam ? parseInt(personaIdParam, 10) : undefined;
+		const personaId = personaIdParam
+			? Number.parseInt(personaIdParam, 10)
+			: undefined;
 
 		if (personaId) {
 			setPersonaId(personaId);
@@ -1133,6 +1145,11 @@ const HomePageContent = () => {
 				personaName={personaName}
 				personaId={personaId}
 				onClick={handleCharacterDialogButtonClick}
+			/>
+
+			<FailedDialog
+				isOpen={isFailedDialogOpen}
+				onClick={handleFailedDialogButtonClick}
 			/>
 
 			<CreateTaskSheet

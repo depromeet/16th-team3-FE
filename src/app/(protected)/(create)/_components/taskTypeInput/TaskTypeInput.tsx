@@ -45,12 +45,6 @@ const TaskTypeInput = ({ context, isIdle, onClick }: TaskTypeInputProps) => {
 		setMoodType(type);
 	};
 
-	const convertedData = transformScheduledTaskData({
-		...context,
-		taskType: taskType || "",
-		moodType: moodType || "",
-	});
-
 	const deadlineDateTime = combineDeadlineDateTimeToDate({
 		deadlineDate: context.deadlineDate,
 		deadlineTime: context.deadlineTime,
@@ -62,6 +56,15 @@ const TaskTypeInput = ({ context, isIdle, onClick }: TaskTypeInputProps) => {
 		context.estimatedHour,
 		context.estimatedMinute,
 	);
+
+	const convertedData = transformScheduledTaskData({
+		...context,
+		estimatedDay: finalDays.toString(),
+		estimatedHour: finalHours.toString(),
+		estimatedMinute: finalMinutes.toString(),
+		taskType: taskType || "",
+		moodType: moodType || "",
+	});
 
 	const timeParts = [] as string[];
 

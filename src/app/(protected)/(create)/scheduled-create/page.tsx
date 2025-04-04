@@ -125,9 +125,14 @@ const ScheduledTaskCreate = () => {
 					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&type=scheduled`,
 				);
 			}
+
+			if (response.error) {
+				router.push("/?dialog=error");
+			}
 		},
 		onError: (error) => {
 			console.error("Mutation failed:", error);
+			router.push("/");
 		},
 	});
 
