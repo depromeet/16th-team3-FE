@@ -18,13 +18,11 @@ import {
 
 interface DateSelectedComponentProps {
 	deadlineDate: Date | undefined;
-	isLastStepBufferTime?: boolean;
 	handleDateChange: (date: Date) => void;
 }
 
 const DateSelectedComponent = ({
 	deadlineDate,
-	isLastStepBufferTime,
 	handleDateChange,
 }: DateSelectedComponentProps) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -72,12 +70,6 @@ const DateSelectedComponent = ({
 			return () => clearTimeout(timer);
 		}
 	}, [toastMessage]);
-
-	useEffect(() => {
-		if (isLastStepBufferTime) {
-			setIsOpen(true);
-		}
-	}, [isLastStepBufferTime]);
 
 	return (
 		<Drawer open={isOpen} closeThreshold={0.5} onOpenChange={setIsOpen}>
