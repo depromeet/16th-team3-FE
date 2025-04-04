@@ -118,16 +118,24 @@ const Wheel = (props: {
 				e.stopPropagation();
 			}}
 		>
+			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 			<div
 				className="wheel__shadow-top text-disabled t1"
 				style={{
 					transform: `translateZ(${radius}px)`,
 					WebkitTransform: `translateZ(${radius}px)`,
 				}}
+				onClick={() => {
+					slider.current?.moveToIdx(
+						slider.current.track.details.abs - 1,
+						true,
+						{ duration: 300 },
+					);
+				}}
 			/>
 			<div className="wheel__inner">
 				<div className="wheel__slides t1" style={{ width: `${props.width}px` }}>
-					{slideValues().map(({ style, value }) => (
+					{slideValues().map(({ style, value }, idx) => (
 						<div className="wheel__slide text-strong" style={style} key={value}>
 							<span>{value}</span>
 						</div>
@@ -145,11 +153,19 @@ const Wheel = (props: {
 					</div>
 				)}
 			</div>
+			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 			<div
 				className="wheel__shadow-bottom text-disabled t1"
 				style={{
 					transform: `translateZ(${radius}px)`,
 					WebkitTransform: `translateZ(${radius}px)`,
+				}}
+				onClick={() => {
+					slider.current?.moveToIdx(
+						slider.current.track.details.abs + 1,
+						true,
+						{ duration: 300 },
+					);
 				}}
 			/>
 		</div>
