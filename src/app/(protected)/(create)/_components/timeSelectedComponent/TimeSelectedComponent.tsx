@@ -125,7 +125,7 @@ const TimeSelectedComponent = ({
 	}, [temporaryTime, deadlineDate]);
 
 	return (
-		<Drawer open={isOpen} onDrag={() => setIsOpen(false)}>
+		<Drawer open={isOpen} closeThreshold={0.5} onOpenChange={setIsOpen}>
 			<DrawerTrigger>
 				<div className="relative mt-2 w-full">
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}

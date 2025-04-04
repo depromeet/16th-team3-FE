@@ -1,5 +1,6 @@
 "use client";
 
+import Toast from "@/components/toast/Toast";
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -14,7 +15,7 @@ import { getTimeRemaining } from "@/utils/dateFormat";
 import { formatDistanceStrict, set } from "date-fns";
 import { ko } from "date-fns/locale";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { TaskInputType } from "../../context";
 import EstimatedDayPicker from "../estimatedDayPicker/EstimatedDayPicker";
 import EstimatedTimePicker from "../estimatedTimePicker/EstimatedTimePicker";
@@ -70,6 +71,7 @@ const EstimatedTimeInput = ({
 	const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
 	const [isOpenDay, setIsOpenDay] = useState<boolean>(false);
 	const [currentTab, setCurrentTab] = useState(historyDayData ? "일" : "시간");
+	const [toastMessage, setToastMessage] = useState<string>("");
 
 	const isEmptyValue =
 		(currentTab === "시간" &&
@@ -124,6 +126,19 @@ const EstimatedTimeInput = ({
 		setEstimatedDay(day);
 	};
 
+	useEffect(() => {
+		if (estimatedHour === "00" && estimatedMinute === "00") {
+			setToastMessage("올바른 시간을 설정해주세요.");
+		} else {
+			setToastMessage("");
+		}
+	}, [estimatedHour, estimatedMinute]);
+
+	console.log(days, hours, minutes);
+	console.log("estimatedHour", estimatedHour);
+	console.log("estimatedMinute", estimatedMinute);
+	console.log("toastMessage", toastMessage);
+
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div>
@@ -162,7 +177,7 @@ const EstimatedTimeInput = ({
 					<TabsContent value="시간">
 						<Drawer
 							open={isOpenTime}
-							onDrag={() => setIsOpenTime(false)}
+							closeThreshold={0.5}
 							onOpenChange={setIsOpenTime}
 						>
 							<div className="relative mt-6 w-full">
@@ -207,10 +222,12 @@ const EstimatedTimeInput = ({
 									handleHourSelect={handleHourSelect}
 									handleMinuteSelect={handleMinuteSelect}
 								/>
+								{toastMessage && <Toast message={toastMessage} />}
 								<DrawerFooter className="px-0">
 									<Button
 										variant="primary"
 										className="mt-4 flex w-full items-center justify-center"
+										disabled={!!toastMessage}
 										onClick={() => setIsOpenTime(false)}
 									>
 										확인
@@ -222,7 +239,7 @@ const EstimatedTimeInput = ({
 					<TabsContent value="일">
 						<Drawer
 							open={isOpenDay}
-							onDrag={() => setIsOpenDay(false)}
+							closeThreshold={0.5}
 							onOpenChange={setIsOpenDay}
 						>
 							<div className="relative mt-6 w-full">
