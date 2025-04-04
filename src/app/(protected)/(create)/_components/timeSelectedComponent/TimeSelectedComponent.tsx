@@ -77,7 +77,6 @@ const TimeSelectedComponent = ({
 
 	const handleMidnightButtonClick = () => {
 		setIsMidnight(true);
-		setIsOpen(false);
 		setTemporaryTime({
 			hour: "11",
 			minute: "59",
