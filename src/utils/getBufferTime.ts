@@ -15,7 +15,9 @@ const getBufferTime = (
 
 	const now = new Date();
 	const remainingMinutes = deadlineDateTime
-		? (deadlineDateTime.getTime() - now.getTime()) / (1000 * 60)
+		? Math.floor(
+				(deadlineDateTime.getTime() - now.getTime()) / (1000 * 60) / 5,
+			) * 5
 		: 0;
 
 	let bufferMinutes: number;
