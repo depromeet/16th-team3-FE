@@ -117,6 +117,7 @@ const EstimatedTimeInput = ({
 	const formattedDeadline = formatDistanceStrict(new Date(), deadline, {
 		addSuffix: true,
 		locale: ko,
+		roundingMethod: "ceil",
 	});
 
 	const resetInputValues = () => {
