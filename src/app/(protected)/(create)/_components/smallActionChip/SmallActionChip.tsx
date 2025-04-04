@@ -24,6 +24,7 @@ const SmallActionChip = ({ smallAction, onClick }: SmallActionChipProps) => {
 				width={24}
 				height={24}
 				className=""
+				priority
 			/>
 			<span className="l4">{SMALL_ACTION_LABELS[smallAction]}</span>
 		</div>

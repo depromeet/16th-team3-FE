@@ -124,10 +124,6 @@ const EstimatedTimeInput = ({
 		setEstimatedDay(day);
 	};
 
-	const handleConfirmButtonClick = () => {
-		setIsOpenTime(false);
-	};
-
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div>
@@ -147,20 +143,22 @@ const EstimatedTimeInput = ({
 					}}
 					className="mt-6 w-full p-1"
 				>
-					<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
-						<TabsTrigger
-							value="시간"
-							className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
-						>
-							시간
-						</TabsTrigger>
-						<TabsTrigger
-							value="일"
-							className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
-						>
-							일
-						</TabsTrigger>
-					</TabsList>
+					{hours > 23 && (
+						<TabsList className="w-full rounded-[10px] bg-component-gray-primary p-1">
+							<TabsTrigger
+								value="시간"
+								className={`l4 w-full p-[10px] ${currentTab === "시간" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+							>
+								시간
+							</TabsTrigger>
+							<TabsTrigger
+								value="일"
+								className={`l4 w-full p-[10px] ${currentTab === "일" ? "bg-component-gray-tertiary" : ""} rounded-[8px] h-[32px]`}
+							>
+								일
+							</TabsTrigger>
+						</TabsList>
+					)}
 					<TabsContent value="시간">
 						<Drawer
 							open={isOpenTime}
@@ -213,7 +211,7 @@ const EstimatedTimeInput = ({
 									<Button
 										variant="primary"
 										className="mt-4 flex w-full items-center justify-center"
-										onClick={handleConfirmButtonClick}
+										onClick={() => setIsOpenTime(false)}
 									>
 										확인
 									</Button>
@@ -223,9 +221,9 @@ const EstimatedTimeInput = ({
 					</TabsContent>
 					<TabsContent value="일">
 						<Drawer
-							open={isOpenTime}
-							onDrag={() => setIsOpenTime(false)}
-							onOpenChange={setIsOpenTime}
+							open={isOpenDay}
+							onDrag={() => setIsOpenDay(false)}
+							onOpenChange={setIsOpenDay}
 						>
 							<div className="relative mt-6 w-full">
 								{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -269,7 +267,7 @@ const EstimatedTimeInput = ({
 									<Button
 										variant="primary"
 										className="mt-4 flex w-full items-center justify-center"
-										onClick={handleConfirmButtonClick}
+										onClick={() => setIsOpenDay(false)}
 									>
 										확인
 									</Button>

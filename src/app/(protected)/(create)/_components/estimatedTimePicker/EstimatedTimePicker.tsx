@@ -13,15 +13,19 @@ const EstimatedTimePicker = ({
 	handleHourSelect,
 	handleMinuteSelect,
 }: EstimatedTimePickerProps) => {
+	const isOnlyMinutes = leftHours === 0;
+
 	return (
 		<div className="background-primary flex h-[180px] justify-center gap-10 px-6">
 			<div className="flex h-[180px] items-center gap-6">
 				<Wheel
-					initIdx={1}
-					length={leftHours}
+					initIdx={isOnlyMinutes ? 0 : 1}
+					length={isOnlyMinutes ? 1 : leftHours}
 					width={50}
-					loop={true}
+					loop={!isOnlyMinutes}
 					setValue={(relative) => {
+						if (isOnlyMinutes) return "00";
+
 						const modHour = relative % 24;
 						const hour = modHour.toString().padStart(2, "0");
 						return hour;
@@ -37,6 +41,10 @@ const EstimatedTimePicker = ({
 					width={50}
 					loop={true}
 					setValue={(relative) => {
+						if (isOnlyMinutes) {
+							const minute = String((relative + 1) * 5).padStart(2, "0");
+							return minute;
+						}
 						const minute = String(relative * 5).padStart(2, "0");
 						return minute;
 					}}
