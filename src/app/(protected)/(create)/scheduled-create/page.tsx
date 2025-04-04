@@ -16,6 +16,7 @@ import type {
 import BackHeader from "@/components/backHeader/BackHeader";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import TaskInput from "../_components/taskInput/TaskInput";
 
 const BufferTime = dynamic(
@@ -37,7 +38,8 @@ const SmallActionInput = dynamic(
 const TaskTypeInput = dynamic(
 	() =>
 		import(
-			/* webpackPrefetch: true */ "../_components/taskTypeInput/TaskTypeInput"
+			/* webpackPrefetch: true */
+			"../_components/taskTypeInput/TaskTypeInput"
 		),
 );
 
@@ -99,6 +101,7 @@ const ScheduledTaskCreate = () => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const { isMounted } = useMount();
+	const [isBackButtonClicked, setIsBackButtonClicked] = useState(false);
 
 	const { mutate: scheduledTaskMutation, isIdle } = useMutation({
 		mutationFn: async (data: ScheduledTaskType) => {
@@ -129,7 +132,7 @@ const ScheduledTaskCreate = () => {
 	});
 
 	const handleHistoryBack = () => {
-		if (lastStep === "bufferTime") {
+		if (isBackButtonClicked) {
 			funnel.history.push("bufferTime", {
 				task: funnel.context.task,
 				deadlineDate: funnel.context.deadlineDate,
@@ -182,6 +185,12 @@ const ScheduledTaskCreate = () => {
 			}
 		}
 	};
+
+	useEffect(() => {
+		if (funnel.step === "bufferTime") {
+			setIsBackButtonClicked(false);
+		}
+	}, [funnel.step]);
 
 	if (!isMounted) return null;
 
@@ -269,22 +278,24 @@ const ScheduledTaskCreate = () => {
 				bufferTime={({ context, history }) => (
 					<BufferTime
 						context={context}
-						handleDeadlineModify={() =>
+						handleDeadlineModify={() => {
 							history.push("taskForm", {
 								task: context.task,
 								deadlineDate: context.deadlineDate,
 								deadlineTime: context.deadlineTime,
-							})
-						}
-						handleSmallActionModify={() =>
+							});
+							setIsBackButtonClicked(true);
+						}}
+						handleSmallActionModify={() => {
 							history.push("smallActionInput", {
 								task: context.task,
 								deadlineDate: context.deadlineDate,
 								deadlineTime: context.deadlineTime,
 								smallAction: context.smallAction,
-							})
-						}
-						handleEstimatedTimeModify={() =>
+							});
+							setIsBackButtonClicked(true);
+						}}
+						handleEstimatedTimeModify={() => {
 							history.push("estimatedTimeInput", {
 								task: context.task,
 								deadlineDate: context.deadlineDate,
@@ -293,8 +304,9 @@ const ScheduledTaskCreate = () => {
 								estimatedHour: context.estimatedHour,
 								estimatedMinute: context.estimatedMinute,
 								estimatedDay: context.estimatedDay,
-							})
-						}
+							});
+							setIsBackButtonClicked(true);
+						}}
 						onNext={() =>
 							history.push("taskTypeInput", {
 								task: context.task,
