@@ -39,7 +39,8 @@ const TimePicker = ({
 					initIdx={meridiemInitIdx}
 					length={2}
 					width={50}
-					wheelSize={15}
+					wheelSize={10}
+					loop={true}
 					setValue={(relative) => (relative % 2 === 0 ? "오전" : "오후")}
 					onChange={(selected) => handleSelectedMeridiem(selected as string)}
 				/>

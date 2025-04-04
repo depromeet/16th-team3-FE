@@ -21,8 +21,8 @@ const Wheel = (props: {
 	const wheelSize = props.wheelSize || 20;
 	const slides = props.length;
 	const slideDegree = 360 / wheelSize;
-	const slidesPerView = props.loop ? 3 : 1;
-	const spacing = 50;
+	const slidesPerView = props.loop ? 2 : 1;
+	const spacing = 25;
 
 	const [sliderState, setSliderState] = useState<TrackDetails | null>(null);
 	const size = useRef(0);
