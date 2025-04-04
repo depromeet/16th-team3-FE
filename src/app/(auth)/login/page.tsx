@@ -157,34 +157,38 @@ const LoginPage = () => {
 			</div>
 
 			<div className="relative z-10 pb-[40px] flex w-full flex-col gap-4">
-				<div className="b3 absolute bottom-[200px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
-					3초만에 바로 시작하기
-					<div
-						className="absolute h-0 w-0"
-						style={{
-							bottom: "-11px",
-							right: "3rem",
-							transform: "translateX(50%)",
-							borderStyle: "solid",
-							borderWidth: "12px 7px 0 7px",
-							borderColor: "#6B6BE1 transparent transparent transparent",
-						}}
-					/>
-				</div>
+				{process.env.NODE_ENV === "development" && (
+					<>
+						<div className="b3 absolute bottom-[200px] right-4 z-10 rounded-[12px] bg-component-accent-primary px-4 py-3 text-text-strong shadow-lg">
+							3초만에 바로 시작하기
+							<div
+								className="absolute h-0 w-0"
+								style={{
+									bottom: "-11px",
+									right: "3rem",
+									transform: "translateX(50%)",
+									borderStyle: "solid",
+									borderWidth: "12px 7px 0 7px",
+									borderColor: "#6B6BE1 transparent transparent transparent",
+								}}
+							/>
+						</div>
 
-				<Button
-					variant="default"
-					className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
-					onClick={handleKakaoLogin}
-				>
-					<Image
-						src="/icons/login/kakao.svg"
-						alt="kakao"
-						width={24}
-						height={24}
-					/>
-					<span className="pt-0.5">카카오로 계속하기</span>
-				</Button>
+						<Button
+							variant="default"
+							className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
+							onClick={handleKakaoLogin}
+						>
+							<Image
+								src="/icons/login/kakao.svg"
+								alt="kakao"
+								width={24}
+								height={24}
+							/>
+							<span className="pt-0.5">카카오로 계속하기</span>
+						</Button>
+					</>
+				)}
 
 				<Button
 					variant="default"
