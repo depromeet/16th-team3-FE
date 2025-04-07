@@ -77,7 +77,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 							});
 						}}
 					>
-						<div className="mb-3 flex items-center overflow-hidden rounded-[20px]">
+						<div className="mb-3 flex items-center rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<img
 									src="/icons/home/gp-clock.svg"

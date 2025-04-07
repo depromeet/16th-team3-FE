@@ -74,6 +74,14 @@ export async function POST(req: NextRequest) {
 			maxAge: 60 * 60 * 24 * 7,
 		});
 
+		nextResponse.cookies.set("userData", JSON.stringify(userData), {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			path: "/",
+			maxAge: 31536000,
+		});
+
 		return nextResponse;
 	} catch (error) {
 		console.error("Error in POST /auth:", error);

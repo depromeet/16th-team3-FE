@@ -1,8 +1,29 @@
 import { serverApi } from "@/lib/serverKy";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
 	try {
+		const userDataCookie = req.cookies.get("user");
+
+		if (userDataCookie) {
+			let userData: {
+				memberId: number;
+				nickname: string;
+				email: string;
+				profileImageUrl: string;
+			} | null = null;
+
+			try {
+				userData = JSON.parse(userDataCookie.value);
+			} catch (error) {
+				console.error("userData 쿠키 파싱 오류:", error);
+			}
+
+			if (userData?.nickname && userData.nickname !== "") {
+				return NextResponse.json(userData);
+			}
+		}
+
 		const response = await serverApi.get("v1/members/me");
 
 		if (!response.ok) {
@@ -16,8 +37,15 @@ export async function GET() {
 		}
 
 		const data = await response.json();
-
 		const nextResponse = NextResponse.json(data);
+
+		nextResponse.cookies.set("user", JSON.stringify(data), {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			path: "/",
+			maxAge: 31536000,
+		});
 
 		return nextResponse;
 	} catch (error) {

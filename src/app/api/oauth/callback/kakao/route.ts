@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
 		nextResponse.cookies.set("accessToken", accessToken, {
 			httpOnly: true,
-			secure: true, // ! TODO: 앱 심사 받을 때, true로 변경 / 로컬(웹)에서 테스트할 떄, true로 변경 / 로컬(앱)에서 테스트할 때, false로 변경
+			secure: true,
 			sameSite: "none",
 			path: "/",
 			maxAge: 60 * 60,
@@ -66,6 +66,14 @@ export async function POST(req: NextRequest) {
 			sameSite: "none",
 			path: "/",
 			maxAge: 60 * 60 * 24 * 7,
+		});
+
+		nextResponse.cookies.set("user", JSON.stringify(userData), {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			path: "/",
+			maxAge: 31536000,
 		});
 
 		return nextResponse;
