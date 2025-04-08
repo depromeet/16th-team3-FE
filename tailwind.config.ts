@@ -7,12 +7,6 @@ export default {
 		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 	],
-	safelist: [
-		"text-hologram",
-		"text-component-accent-secondary",
-		"text-component-accent-primary",
-		"text-component-accent-red",
-	],
 	theme: {
 		extend: {
 			height: {
