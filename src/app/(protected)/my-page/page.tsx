@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import ProfileImage from "@/components/ProfileImage";
 import Loader from "@/components/loader/Loader";
+import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
@@ -17,7 +18,7 @@ export default function MyPage() {
 
 	const [pageLoading, setPageLoading] = useState(true);
 
-	const { data: myPageData } = useQuery({
+	const { data: myPageData } = useQuery<MyData>({
 		queryKey: ["my-page"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
 		enabled: !!userData.memberId,
@@ -114,15 +115,65 @@ export default function MyPage() {
 			)}
 			{/* 나의 회고 */}
 			<RetrospectSection
-				satisfactionPercentage={50}
-				concentrationPercentage={30}
+				satisfactionPercentage={myPageData?.satisfactionAvg || 0}
+				concentrationPercentage={myPageData?.concentrationAvg || 0}
 			/>
 
+			<div className="px-5 mt-2">
+				<div className="flex items-center justify-between py-4">
+					<div className="text-s2 text-gray-normal">역대 몰입캐릭터</div>
+					<span className="c1 text-gray-neutral">전체 보기</span>
+				</div>
+				<div className="flex items-center justify-between gap-3 overflow-x-auto">
+					{myPageData?.personas.map((persona) => (
+						<div
+							key={persona.id}
+							className="flex flex-col items-center justify-between gap-3"
+						>
+							<div className="flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary">
+								<Image
+									src={`/icons/character/${persona.id}.png`}
+									alt="캐릭터"
+									width={72}
+									height={72}
+								/>
+							</div>
+							<span className="text-gray-neutral c2">{persona.name}</span>
+						</div>
+					))}
+
+					{(myPageData?.personas?.length ?? 0) < 4 &&
+						Array.from({
+							length: 24 - (myPageData?.personas?.length ?? 0),
+						}).map((_, idx) => (
+							<div
+								key={`lock-${
+									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+									idx
+								}`}
+								className="flex flex-col items-center justify-between gap-3"
+							>
+								<div className="flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary">
+									<Image
+										src="/icons/mypage/lock.svg"
+										alt="lock"
+										width={24}
+										height={24}
+									/>
+								</div>
+								<span className="text-gray-neutral c2">???</span>
+							</div>
+						))}
+				</div>
+			</div>
+
 			{/* 완료한 일, 미룬 일 */}
-			<TaskContainer
-				completedTasks={mockTasks.completed}
-				postponedTasks={mockTasks.postponed}
-			/>
+			{myPageData && (
+				<TaskContainer
+					completedTasks={myPageData.completedTasks}
+					postponedTasks={myPageData.procrastinatedTasks}
+				/>
+			)}
 		</div>
 	);
 }
