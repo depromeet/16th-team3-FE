@@ -37,6 +37,7 @@ const LoginPage = () => {
 		window.Kakao.Auth.authorize({
 			redirectUri: REDIRECT_URI_KAKAO,
 			scope: SCOPE_KAKAO,
+			throughTalk: !navigator.userAgent.match(/Android/i), // ! 안드로이드 이슈로 추가 예외처리
 		});
 	}, [isKakaoLoaded]);
 
