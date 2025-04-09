@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import ProfileImage from "@/components/ProfileImage";
+import Loader from "@/components/loader/Loader";
+import { useQuery } from "@tanstack/react-query";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
 
@@ -14,6 +16,14 @@ export default function MyPage() {
 	const setUser = useUserStore((state) => state.setUser);
 
 	const [pageLoading, setPageLoading] = useState(true);
+
+	const { data: myPageData } = useQuery({
+		queryKey: ["my-page"],
+		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
+		enabled: !!userData.memberId,
+	});
+
+	console.log(myPageData);
 
 	const mockTasks = {
 		completed: [
@@ -84,10 +94,7 @@ export default function MyPage() {
 
 			{/* 프로필 정보 */}
 			{pageLoading ? (
-				<div className="mb-8 mt-[23px] flex flex-col items-center justify-center">
-					<div className="mb-[14px] h-20 w-20 animate-pulse rounded-full bg-gray-200" />
-					<div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
-				</div>
+				<Loader />
 			) : (
 				<>
 					<div className="mb-8 mt-[23px] flex flex-col items-center justify-center">

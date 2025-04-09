@@ -1,6 +1,5 @@
 "use client";
 
-import { TYPE_LABELS } from "@/app/(protected)/(create)/context";
 import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
 import TaskFilterDropdown from "@/app/(protected)/(root)/_components/TaskFilterDropdown";
 import WeeklyTaskItem from "@/app/(protected)/(root)/_components/WeeklyTaskItem";
