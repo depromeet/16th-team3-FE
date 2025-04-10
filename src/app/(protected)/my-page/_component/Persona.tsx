@@ -1,13 +1,21 @@
+import { Badge } from "@/components/component/Badge";
 import Image from "next/image";
 
 interface PersonaProps {
 	id: number;
 	name: string;
 	selectedPersona?: boolean;
+	isCharacterPage?: boolean;
 	onClick?: (id: number) => void;
 }
 
-const Persona = ({ id, name, selectedPersona, onClick }: PersonaProps) => {
+const Persona = ({
+	id,
+	name,
+	selectedPersona,
+	isCharacterPage,
+	onClick,
+}: PersonaProps) => {
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
@@ -25,7 +33,11 @@ const Persona = ({ id, name, selectedPersona, onClick }: PersonaProps) => {
 					height={72}
 				/>
 			</div>
-			<span className="text-gray-neutral c2">{name}</span>
+			{isCharacterPage ? (
+				<Badge>{name}</Badge>
+			) : (
+				<span className="text-gray-neutral c2">{name}</span>
+			)}
 		</div>
 	);
 };

@@ -11,6 +11,7 @@ import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Persona from "./_component/Persona";
+import PersonaSection from "./_component/PersonaSection";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
 
@@ -19,9 +20,7 @@ export default function MyPage() {
 	const userData = useUserStore((state) => state.userData);
 	const setUser = useUserStore((state) => state.setUser);
 
-	const [pageLoading, setPageLoading] = useState(true);
-
-	const { data: myPageData } = useQuery<MyData>({
+	const { data: myPageData, isFetching } = useQuery<MyData>({
 		queryKey: ["my-page"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
 		enabled: !!userData.memberId,
@@ -55,8 +54,6 @@ export default function MyPage() {
 				console.error("사용자 정보 로드 실패:", error);
 				setUser({});
 			}
-
-			setPageLoading(false);
 		};
 
 		fetchUser();
@@ -87,7 +84,7 @@ export default function MyPage() {
 			</div>
 
 			{/* 프로필 정보 */}
-			{pageLoading ? (
+			{isFetching ? (
 				<Loader />
 			) : (
 				<>
@@ -106,59 +103,19 @@ export default function MyPage() {
 					</div>
 				</>
 			)}
+
 			{/* 나의 회고 */}
 			<RetrospectSection
 				satisfactionPercentage={myPageData?.satisfactionAvg || 0}
 				concentrationPercentage={myPageData?.concentrationAvg || 0}
 			/>
 
-			<div className="px-5 mt-2">
-				<div className="flex items-center justify-between py-4">
-					<div className="text-s2 text-gray-normal">역대 몰입 캐릭터</div>
-					<Link href="/my-page/characters">
-						<span className="c1 text-gray-neutral">전체 보기</span>
-					</Link>
-				</div>
-				<div
-					className="flex items-center justify-between gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden"
-					style={{
-						scrollbarWidth: "none",
-						msOverflowStyle: "none",
-					}}
-				>
-					{myPageData?.personas.map((persona) => (
-						<Persona
-							key={persona.id}
-							id={persona.id}
-							name={persona.name}
-							onClick={() => handlePersonaClick(persona.id)}
-						/>
-					))}
-
-					{(myPageData?.personas?.length ?? 0) < 4 &&
-						Array.from({
-							length: 24 - (myPageData?.personas?.length ?? 0),
-						}).map((_, idx) => (
-							<div
-								key={`lock-${
-									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-									idx
-								}`}
-								className="flex flex-col items-center justify-between gap-3"
-							>
-								<div className="flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary">
-									<Image
-										src="/icons/mypage/lock.svg"
-										alt="lock"
-										width={24}
-										height={24}
-									/>
-								</div>
-								<span className="text-gray-neutral c2">???</span>
-							</div>
-						))}
-				</div>
-			</div>
+			{myPageData && (
+				<PersonaSection
+					personas={myPageData.personas}
+					handlePersonaClick={handlePersonaClick}
+				/>
+			)}
 
 			{/* 완료한 일, 미룬 일 */}
 			{myPageData && (

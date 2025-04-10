@@ -1,15 +1,18 @@
 "use client";
 
+import Loader from "@/components/loader/Loader";
 import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Persona from "../_component/Persona";
 
-const CharactersPage = () => {
+const CharactersPageContent = () => {
 	const searchParams = useSearchParams();
 	const characterId = searchParams.get("id");
+	const pathname = usePathname();
 
 	const { data: myPageData } = useQuery<MyData>({
 		queryKey: ["my-page"],
@@ -32,7 +35,7 @@ const CharactersPage = () => {
 				</div>
 			</div>
 
-			<div className="flex mt-[65px] w-full px-5 pb-5 gap-[2px]">
+			<div className="flex mt-[65px] w-full pb-5 gap-[2px]">
 				<span className="t3 text-gray-strong">내 캐릭터</span>
 				<Image
 					src="/icons/info-circle.svg"
@@ -49,6 +52,7 @@ const CharactersPage = () => {
 							key={persona.id}
 							id={persona.id}
 							name={persona.name}
+							isCharacterPage={pathname.includes("characters")}
 							selectedPersona={Boolean(persona.id === Number(characterId))}
 						/>
 					))}
@@ -80,5 +84,11 @@ const CharactersPage = () => {
 		</div>
 	);
 };
+
+const CharactersPage = () => (
+	<Suspense fallback={<Loader />}>
+		<CharactersPageContent />
+	</Suspense>
+);
 
 export default CharactersPage;
