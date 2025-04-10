@@ -90,6 +90,7 @@ const CharactersPageContent = () => {
 											alt="lock"
 											width={24}
 											height={24}
+											priority
 										/>
 									</div>
 									<span className="text-gray-neutral c2">???</span>

@@ -31,6 +31,7 @@ const Persona = ({
 					alt={`persona-character-${id}`}
 					width={72}
 					height={72}
+					priority
 				/>
 			</div>
 			{isCharacterPage ? (
