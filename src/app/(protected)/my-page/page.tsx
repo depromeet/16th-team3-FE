@@ -3,14 +3,14 @@
 import { useUserStore } from "@/store/useUserStore";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import ProfileImage from "@/components/ProfileImage";
 import Loader from "@/components/loader/Loader";
 import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import Persona from "./_component/Persona";
+
 import PersonaSection from "./_component/PersonaSection";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";

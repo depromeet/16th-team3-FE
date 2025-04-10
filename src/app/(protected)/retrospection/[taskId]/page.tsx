@@ -1,5 +1,5 @@
 import { fetchServerTask } from "@/lib/serverTask";
-import { TaskResponse } from "@/types/task";
+import type { TaskResponse } from "@/types/task";
 import RetrospectionPageClient from "./RetrospectionPageClient";
 
 // 회고 화면
@@ -7,12 +7,12 @@ import RetrospectionPageClient from "./RetrospectionPageClient";
 // 화면에 task name이 있어서 가져와야 함.
 
 export default async function RetrospectPage({
-    params,
+	params,
 }: {
-    params: Promise<{ taskId: string }>;
+	params: Promise<{ taskId: string }>;
 }) {
+	const { taskId } = await params;
+	const task: TaskResponse = await fetchServerTask(taskId);
 
-    const { taskId } = await params;
-    const task: TaskResponse = await fetchServerTask(taskId);
-    return <RetrospectionPageClient task={task} />;
+	return <RetrospectionPageClient task={task} />;
 }

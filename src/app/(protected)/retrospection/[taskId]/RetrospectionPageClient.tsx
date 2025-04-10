@@ -1,9 +1,11 @@
 "use client";
 
+import Loader from "@/components/loader/Loader";
 import Modal from "@/components/modal/Modal";
 import { Button } from "@/components/ui/button";
 import { createRetrospect } from "@/services/taskService";
-import { TaskResponse } from "@/types/task";
+import type { TaskResponse } from "@/types/task";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,14 +19,16 @@ type Props = {
 	task: TaskResponse;
 };
 
-export default function RetrospectionPageClient({ task }: Props) {
-	const NOT_SELECTED = -1;
+const NOT_SELECTED = -1;
 
+export default function RetrospectionPageClient({ task }: Props) {
 	const router = useRouter();
+	const queryClient = useQueryClient();
+
 	const [retrospectContent, setRetrospectContent] = useState<RetrospectContent>(
 		{
-			result: NOT_SELECTED,
-			focus: 0,
+			satisfaction: NOT_SELECTED,
+			concentration: 0,
 			comment: "",
 		},
 	);
@@ -32,16 +36,23 @@ export default function RetrospectionPageClient({ task }: Props) {
 	const [openLeaveModal, setOpenLeaveModal] = useState(false);
 
 	const hasSelectedResult = () => {
-		return retrospectContent.result !== -1;
+		return retrospectContent.satisfaction !== -1;
 	};
 
 	const hasRequiredContent =
-		hasSelectedResult() && retrospectContent.focus !== undefined;
+		hasSelectedResult() && retrospectContent.satisfaction !== undefined;
 
-	const handleComplete = async () => {
-		await createRetrospect(task.id, retrospectContent);
-		router.push("/retrospection/complete");
-	};
+	const { mutate: createRetrospectMutation, isIdle } = useMutation({
+		mutationFn: ({
+			taskId,
+			retrospection,
+		}: { taskId: number; retrospection: RetrospectContent }) =>
+			createRetrospect({ taskId, retrospection }),
+		onSuccess: () => {
+			router.push("/retrospection/complete");
+			queryClient.invalidateQueries({ queryKey: ["my-page", "tasks", "home"] });
+		},
+	});
 
 	const retrospectItems: RetrospectItems = {
 		result: {
@@ -62,6 +73,7 @@ export default function RetrospectionPageClient({ task }: Props) {
 		<div className="flex h-full flex-col bg-background-primary">
 			{/* ===================== [START] 상단 헤더 ===================== */}
 			<div className="fixed left-0 right-0 top-0 z-10 mt-[44px] mx-5 flex items-center bg-background-primary py-[14.5px]">
+				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 				<button
 					className="absolute left-0"
 					onClick={() => setOpenLeaveModal(true)}
@@ -71,6 +83,7 @@ export default function RetrospectionPageClient({ task }: Props) {
 						alt="Back"
 						width={18}
 						height={16}
+						priority
 					/>
 				</button>
 				<h1 className="s2 w-full text-center text-lg font-semibold text-text-normal">
@@ -146,10 +159,19 @@ export default function RetrospectionPageClient({ task }: Props) {
 				<Button
 					variant="primary"
 					className="w-full"
-					onClick={handleComplete}
-					disabled={!hasRequiredContent}
+					onClick={() =>
+						createRetrospectMutation({
+							taskId: task.id,
+							retrospection: {
+								...retrospectContent,
+								satisfaction: retrospectContent.satisfaction * 20,
+								concentration: retrospectContent.concentration * 20,
+							},
+						})
+					}
+					disabled={!hasRequiredContent || !isIdle}
 				>
-					완료
+					{!isIdle ? <Loader width={24} height={24} /> : "완료"}
 				</Button>
 			</div>
 		</div>
