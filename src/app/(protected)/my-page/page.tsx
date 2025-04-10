@@ -9,11 +9,13 @@ import ProfileImage from "@/components/ProfileImage";
 import Loader from "@/components/loader/Loader";
 import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import Persona from "./_component/Persona";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
 
 export default function MyPage() {
+	const router = useRouter();
 	const userData = useUserStore((state) => state.userData);
 	const setUser = useUserStore((state) => state.setUser);
 
@@ -25,7 +27,9 @@ export default function MyPage() {
 		enabled: !!userData.memberId,
 	});
 
-	console.log(myPageData);
+	const handlePersonaClick = (id: number) => {
+		router.push(`/my-page/characters?id=${id}`);
+	};
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -123,7 +127,12 @@ export default function MyPage() {
 					}}
 				>
 					{myPageData?.personas.map((persona) => (
-						<Persona key={persona.id} id={persona.id} name={persona.name} />
+						<Persona
+							key={persona.id}
+							id={persona.id}
+							name={persona.name}
+							onClick={() => handlePersonaClick(persona.id)}
+						/>
 					))}
 
 					{(myPageData?.personas?.length ?? 0) < 4 &&

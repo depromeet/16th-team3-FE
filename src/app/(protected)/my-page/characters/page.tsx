@@ -4,9 +4,13 @@ import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import Persona from "../_component/Persona";
 
 const CharactersPage = () => {
+	const searchParams = useSearchParams();
+	const characterId = searchParams.get("id");
+
 	const { data: myPageData } = useQuery<MyData>({
 		queryKey: ["my-page"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
@@ -41,7 +45,12 @@ const CharactersPage = () => {
 			{myPageData && (
 				<div className="grid grid-cols-3 justify-items-center gap-[32px]">
 					{myPageData.personas.map((persona) => (
-						<Persona key={persona.id} id={persona.id} name={persona.name} />
+						<Persona
+							key={persona.id}
+							id={persona.id}
+							name={persona.name}
+							selectedPersona={Boolean(persona.id === Number(characterId))}
+						/>
 					))}
 
 					{(myPageData.personas.length ?? 0) < 4 &&
