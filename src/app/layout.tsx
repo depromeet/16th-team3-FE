@@ -34,7 +34,7 @@ export default function RootLayout({
 					/>
 				</head>
 				<body
-					className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] antialiased`}
+					className={`${pretendard.className} mt-[44px] h-[calc(100vh-44px)] antialiased bg-background-primary`}
 				>
 					{children}
 					<Script

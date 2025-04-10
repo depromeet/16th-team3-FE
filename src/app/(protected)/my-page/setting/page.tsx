@@ -131,7 +131,7 @@ export default function MyPage() {
 	return (
 		<div className="flex flex-col">
 			{/* 헤더 부분 */}
-			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[44px]">
+			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[60px]">
 				<Link href="/my-page">
 					<Image
 						src="/icons/ArrowLeft.svg"

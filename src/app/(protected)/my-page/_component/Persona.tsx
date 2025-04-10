@@ -20,7 +20,7 @@ const Persona = ({
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
 			key={id}
-			className="flex flex-col items-center justify-between gap-3"
+			className="flex flex-col items-center gap-3"
 			onClick={() => onClick?.(id)}
 		>
 			<div
@@ -36,7 +36,7 @@ const Persona = ({
 			{isCharacterPage ? (
 				<Badge>{name}</Badge>
 			) : (
-				<span className="text-gray-neutral c2">{name}</span>
+				<span className="text-gray-neutral c2">{name}dwqdqw</span>
 			)}
 		</div>
 	);

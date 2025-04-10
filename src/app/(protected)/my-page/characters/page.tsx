@@ -21,7 +21,7 @@ const CharactersPageContent = () => {
 
 	return (
 		<div className="background-primary flex h-[calc(100vh-80px)] w-full flex-col items-center justify-start overflow-y-auto px-5">
-			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[44px]">
+			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[60px]">
 				<Link href="/my-page" shallow={true}>
 					<Image
 						src="/icons/ArrowLeft.svg"
@@ -57,7 +57,7 @@ const CharactersPageContent = () => {
 						/>
 					))}
 
-					{(myPageData.personas.length ?? 0) < 4 &&
+					{(myPageData.personas.length ?? 0) < 24 &&
 						Array.from({
 							length: 24 - (myPageData.personas?.length ?? 0),
 						}).map((_, idx) => (
@@ -66,7 +66,7 @@ const CharactersPageContent = () => {
 									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									idx
 								}`}
-								className="flex flex-col items-center justify-between gap-3"
+								className="flex flex-col items-center gap-3"
 							>
 								<div className="flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary">
 									<Image

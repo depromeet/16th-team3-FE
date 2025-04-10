@@ -21,7 +21,7 @@ const PersonaSection = ({
 				</Link>
 			</div>
 			<div
-				className="flex items-center justify-between gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+				className="flex justify-between gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden"
 				style={{
 					scrollbarWidth: "none",
 					msOverflowStyle: "none",
@@ -36,7 +36,7 @@ const PersonaSection = ({
 					/>
 				))}
 
-				{(personas?.length ?? 0) < 4 &&
+				{(personas?.length ?? 0) < 24 &&
 					Array.from({
 						length: 24 - (personas?.length ?? 0),
 					}).map((_, idx) => (
@@ -45,7 +45,7 @@ const PersonaSection = ({
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								idx
 							}`}
-							className="flex flex-col items-center justify-between gap-3"
+							className="flex flex-col items-center gap-3"
 						>
 							<div className="flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary">
 								<Image
