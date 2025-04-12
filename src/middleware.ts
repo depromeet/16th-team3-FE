@@ -12,6 +12,7 @@ export async function middleware(request: NextRequest) {
 		"/api/oauth/callback/apple",
 		"/firebase-messaging-sw.js",
 		"/oauth/callback/kakao",
+		"/oauth/callback/apple",
 	];
 
 	const isOpenPath = openPaths.some(
