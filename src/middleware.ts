@@ -18,12 +18,12 @@ export async function middleware(request: NextRequest) {
 		(openPath) => path === openPath || path.startsWith(`${openPath}/`),
 	);
 
-	if (isOpenPath && accessToken) {
-		return NextResponse.redirect(new URL("/", request.url));
-	}
-
 	if (!isOpenPath && !refreshToken) {
 		return NextResponse.redirect(new URL("/login", request.url));
+	}
+
+	if (isOpenPath && accessToken) {
+		return NextResponse.redirect(new URL("/", request.url));
 	}
 
 	return NextResponse.next();

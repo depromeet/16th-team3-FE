@@ -177,13 +177,11 @@ const HomePageContent = () => {
 		undefined,
 	);
 
-	// TODO: 회고 페이지로 이동
 	const handleGoToReflection = (taskId: number) => {
 		router.push(`/retrospection/${taskId}`);
 		setShowExpiredTaskSheet(false);
 	};
 
-	// 이벤트 핸들러 함수
 	const handleCloseExpiredSheet = () => {
 		setShowExpiredTaskSheet(false);
 	};
@@ -496,6 +494,7 @@ const HomePageContent = () => {
 									<div className="rounded-[20px] bg-component-gray-secondary p-4">
 										{todayTasks.map((task, index) => (
 											<React.Fragment key={task.id}>
+												{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 												<div
 													className="flex items-center justify-between"
 													onClick={() => handleTaskClick(task)}
@@ -520,7 +519,7 @@ const HomePageContent = () => {
 																	height={14}
 																	className="mr-[4px]"
 																/>
-																<span className="c3 text-text-neutral">
+																<span className="c3 text-text-neutral whitespace-nowrap">
 																	{task.timeRequired || "1시간 소요"}
 																</span>
 															</span>
@@ -530,7 +529,8 @@ const HomePageContent = () => {
 														</div>
 													</div>
 													<button
-														className={`l4 rounded-[10px] px-[12px] py-[9.5px] ${
+														type="button"
+														className={`l4 rounded-[10px] px-[12px] py-[9.5px] whitespace-nowrap ${
 															(task.ignoredAlerts && task.ignoredAlerts >= 3) ||
 															task.status === "procrastinating"
 																? "bg-hologram text-text-inverse"
@@ -561,7 +561,7 @@ const HomePageContent = () => {
 													</button>
 												</div>
 												{index < todayTasks.length - 1 && (
-													<div className="h-[20px] w-full bg-component-gray-secondary"></div>
+													<div className="h-[20px] w-full bg-component-gray-secondary" />
 												)}
 											</React.Fragment>
 										))}
@@ -570,6 +570,7 @@ const HomePageContent = () => {
 
 								<div>
 									<button
+										type="button"
 										className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
 										onClick={() => router.push("/weekly-tasks")}
 									>
@@ -604,6 +605,7 @@ const HomePageContent = () => {
 
 								<div>
 									<button
+										type="button"
 										className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
 										onClick={() => router.push("/weekly-tasks")}
 									>
@@ -628,6 +630,7 @@ const HomePageContent = () => {
 									<div className="rounded-[20px] bg-component-gray-secondary p-4">
 										{todayTasks.map((task, index) => (
 											<React.Fragment key={task.id}>
+												{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 												<div
 													className="flex items-center justify-between"
 													onClick={() => handleTaskClick(task)}
@@ -662,6 +665,7 @@ const HomePageContent = () => {
 														</div>
 													</div>
 													<button
+														type="button"
 														className={`l4 rounded-[10px] px-[12px] py-[9.5px] ${
 															(task.ignoredAlerts && task.ignoredAlerts >= 3) ||
 															task.status === "procrastinating"
@@ -693,7 +697,7 @@ const HomePageContent = () => {
 													</button>
 												</div>
 												{index < todayTasks.length - 1 && (
-													<div className="bg-divider-weak h-[20px] w-full"></div>
+													<div className="bg-divider-weak h-[20px] w-full" />
 												)}
 											</React.Fragment>
 										))}
@@ -701,6 +705,7 @@ const HomePageContent = () => {
 								</div>
 								<div>
 									<button
+										type="button"
 										className="flex w-full items-center justify-between rounded-[20px] bg-component-gray-secondary px-4 py-4"
 										onClick={() => router.push("/weekly-tasks")}
 									>
@@ -763,6 +768,7 @@ const HomePageContent = () => {
 
 								<div>
 									<button
+										type="button"
 										className="flex w-full items-center justify-between px-4 py-4"
 										onClick={() => router.push("/weekly-tasks")}
 									>
@@ -827,6 +833,7 @@ const HomePageContent = () => {
 
 								<div>
 									<button
+										type="button"
 										className="flex w-full items-center justify-between px-4 py-4"
 										onClick={() => setActiveTab("all")}
 									>
@@ -864,6 +871,7 @@ const HomePageContent = () => {
 										</p>
 									</div>
 									<button
+										type="button"
 										className="l2 mb-3 w-full rounded-[16px] bg-component-accent-primary py-4 text-white"
 										onClick={() => handleGoToReflection(expiredTask.id)}
 									>
@@ -871,6 +879,7 @@ const HomePageContent = () => {
 									</button>
 
 									<button
+										type="button"
 										className="l2 w-full py-4 text-text-neutral"
 										onClick={handleCloseExpiredSheet}
 									>
@@ -883,42 +892,39 @@ const HomePageContent = () => {
 				)}
 
 				{/* 전체 할일 탭 */}
-				{activeTab === "all" && (
-					<>
-						{isAllEmpty ? (
-							<div className="mt-[130px]">
-								<div className="flex h-full flex-col items-center justify-center px-4 text-center">
-									<div className="mb-[40px]">
-										<Image
-											src="/icons/home/rocket.svg"
-											alt="Rocket"
-											width={142}
-											height={80}
-											className="mx-auto"
-										/>
-									</div>
-									<h2 className="t3 mb-[8px] text-text-strong">
-										이번주 할일이 없어요.
-										<br />
-										마감할 일을 추가해볼까요?
-									</h2>
-									<p className="b3 text-text-alternative">
-										미루지 않도록 알림을 보내 챙겨드릴게요.
-									</p>
+				{activeTab === "all" &&
+					(isAllEmpty ? (
+						<div className="mt-[130px]">
+							<div className="flex h-full flex-col items-center justify-center px-4 text-center">
+								<div className="mb-[40px]">
+									<Image
+										src="/icons/home/rocket.svg"
+										alt="Rocket"
+										width={142}
+										height={80}
+										className="mx-auto"
+									/>
 								</div>
+								<h2 className="t3 mb-[8px] text-text-strong">
+									이번주 할일이 없어요.
+									<br />
+									마감할 일을 추가해볼까요?
+								</h2>
+								<p className="b3 text-text-alternative">
+									미루지 않도록 알림을 보내 챙겨드릴게요.
+								</p>
 							</div>
-						) : (
-							<AllTasksTab
-								inProgressTasks={inProgressTasks}
-								todayTasks={todayTasks}
-								weeklyTasks={weeklyTasks}
-								futureTasks={futureTasks}
-								onTaskClick={handleTaskClick}
-								onDeleteTask={handleDeleteTask}
-							/>
-						)}
-					</>
-				)}
+						</div>
+					) : (
+						<AllTasksTab
+							inProgressTasks={inProgressTasks}
+							todayTasks={todayTasks}
+							weeklyTasks={weeklyTasks}
+							futureTasks={futureTasks}
+							onTaskClick={handleTaskClick}
+							onDeleteTask={handleDeleteTask}
+						/>
+					))}
 			</main>
 
 			<footer className="fixed bottom-0 left-0 right-0 z-10">
@@ -946,7 +952,7 @@ const HomePageContent = () => {
 									borderWidth: "12px 7px 0 7px",
 									borderColor: "#6B6BE1 transparent transparent transparent",
 								}}
-							></div>
+							/>
 						</div>
 					)}
 					<Button
