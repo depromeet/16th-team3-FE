@@ -129,7 +129,7 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 			</div>
 
 			{/* 스크롤 영역이 될 중간 부분 */}
-			<div className="flex-1 overflow-y-auto">
+			<div className="flex-1">
 				<div className="relative z-10">
 					<div className="relative">
 						<div className="absolute inset-0 -top-5 h-[500px]">
