@@ -47,38 +47,9 @@ const LoginPage = () => {
 			const response: AppleAuthorizationResponse =
 				await window.AppleID.auth.signIn();
 
+			// ! TODO(prgmr99) : Need to improve
 			const encodedResponse = encodeURIComponent(JSON.stringify(response));
 			router.push(`/oauth/callback/apple?response=${encodedResponse}`);
-
-			// const oauthResponse = await fetch("/api/oauth/callback/apple", {
-			// 	method: "POST",
-			// 	headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			// 	body: JSON.stringify({
-			// 		...response,
-			// 	}),
-			// });
-
-			// if (!oauthResponse.ok) {
-			// 	const errorText = await oauthResponse.text();
-			// 	console.error("Error oauthResponse:", errorText);
-			// 	return;
-			// }
-			// const responseText = await oauthResponse.text();
-			// const oauthData = JSON.parse(responseText);
-
-			// if (oauthData.success) {
-			// 	setUser(oauthData.userData);
-
-			// 	if (oauthData.isNewUser) {
-			// 		router.push("/signup-complete");
-
-			// 		return;
-			// 	}
-
-			// 	router.push("/");
-			// } else {
-			// 	console.error("Failed to login");
-			// }
 		} catch (err) {
 			console.error("Apple login error: ", err);
 		}
