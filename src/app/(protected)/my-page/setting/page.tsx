@@ -1,6 +1,5 @@
 "use client";
 
-import ProfileImage from "@/components/ProfileImage";
 import Loader from "@/components/loader/Loader";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
@@ -8,17 +7,13 @@ import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function MyPage() {
 	const router = useRouter();
-
-	const userData = useUserStore((state) => state.userData);
-	const setUser = useUserStore((state) => state.setUser);
 	const clearUser = useUserStore((state) => state.clearUser);
 
 	const [appVersion] = useState("V.0.0.1");
-	const [pageLoading, setPageLoading] = useState(true);
 	const [showLogoutModal, setShowLogoutModal] = useState(false);
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
@@ -96,37 +91,6 @@ export default function MyPage() {
 	const cancelWithdraw = () => {
 		setShowWithdrawModal(false);
 	};
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			try {
-				if (userData.memberId === -1) {
-					const response = await fetch("/api/auth/members/me", {
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json",
-						},
-					});
-
-					if (!response.ok) {
-						setUser({});
-						return;
-					}
-
-					const data = await response.json();
-
-					setUser(data);
-				}
-			} catch (error) {
-				console.error("사용자 정보 로드 실패:", error);
-				setUser({});
-			}
-
-			setPageLoading(false);
-		};
-
-		fetchUser();
-	}, [userData.memberId, setUser]);
 
 	return (
 		<div className="flex flex-col">

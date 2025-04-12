@@ -1,7 +1,7 @@
 import { serverApi } from "@/lib/serverKy";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
 	try {
 		// ! AbortController를 사용하여 요청 시간이 10초를 초과하면 요청을 취소합니다. - 이거 필요할까?
 		const controller = new AbortController();
@@ -28,10 +28,6 @@ export async function GET(request: NextRequest) {
 				{ error: "요청 시간이 초과되었습니다." },
 				{ status: 408 },
 			);
-		}
-
-		if (error.response?.status === 401) {
-			return NextResponse.redirect(new URL("/login", request.url));
 		}
 
 		return NextResponse.json(
