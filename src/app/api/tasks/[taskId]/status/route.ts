@@ -38,8 +38,8 @@ export async function PATCH(
 
 		const data = await response.json();
 		return NextResponse.json(data);
-	} catch (error: any) {
-		if (error.name === "AbortError") {
+	} catch (error) {
+		if (error instanceof Error && error.name === "AbortError") {
 			return NextResponse.json(
 				{ error: "요청 시간이 초과되었습니다." },
 				{ status: 408 },

@@ -100,25 +100,26 @@ const BufferTime = ({
 	return (
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div className="relative mt-[0.1vh]">
-				<div className="flex flex-col items-center gap-3">
+				<div className="relative flex flex-col items-center gap-3">
 					<Image src="/icons/Bell.svg" alt="bell" width={60} height={60} />
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
-						className="relative flex h-[26px] items-center gap-1 overflow-hidden rounded-[8px] px-[7px] py-[6px] text-black before:absolute before:inset-0 before:-z-10 before:bg-[conic-gradient(from_220deg_at_50%_50%,_#F2F0E7_0%,_#BBBBF1_14%,_#B8E2FB_24%,_#F2EFE8_37%,_#CCE4FF_48%,_#BBBBF1_62%,_#C7EDEB_72%,_#E7F5EB_83%,_#F2F0E7_91%,_#F2F0E7_100%)] before:[transform:scale(4,1)]"
+						className="relative flex h-[26px] items-center gap-1 overflow-hidden rounded-[8px] px-[7px] py-[6px] text-black before:absolute before:inset-0 before:bg-[conic-gradient(from_220deg_at_50%_50%,_#F2F0E7_0%,_#BBBBF1_14%,_#B8E2FB_24%,_#F2EFE8_37%,_#CCE4FF_48%,_#BBBBF1_62%,_#C7EDEB_72%,_#E7F5EB_83%,_#F2F0E7_91%,_#F2F0E7_100%)] before:[transform:scale(4,1)]"
 						onClick={handleToggle}
 					>
-						<span className="l6 text-inverse">{`${currentRatio}배의 여유시간 적용`}</span>
+						<span className="l6 text-inverse z-10">{`${currentRatio}배의 여유시간 적용`}</span>
 						{availableMultipliers.length > 1 && (
 							<Image
 								src="/icons/edit-dark.svg"
 								alt="edit"
 								width={14}
 								height={14}
+								className="z-10"
 							/>
 						)}
 					</div>
 					{isOpen && (
-						<div className="absolute left-20 top-28 w-[189px] pt-5 pb-[10px] px-5 bg-component-gray-tertiary rounded-[16px] shadow-[0px_0px_14px_2px_rgba(18,18,18,0.5)] z-50">
+						<div className="absolute left-20 top-28 w-[189px] pt-5 pb-[10px] px-5 bg-component-gray-tertiary rounded-[16px] shadow-[0px_0px_14px_2px_rgba(18,18,18,0.5)]">
 							<span className="c2 text-gray-alternative">여유시간</span>
 							{availableMultipliers.map((multiplier) => (
 								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -144,8 +145,10 @@ const BufferTime = ({
 						</div>
 					)}
 				</div>
-				<div className="bg-blur-purple absolute left-0 right-0 top-20 z-[-1] h-[240px] w-[100vw] blur-[75px]" />
-				<div className="z-50 mt-[3vh] flex flex-col items-center">
+				{/* 1번 항목 */}
+				<div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] w-[100%] blur-[75px]" />
+				{/* 2번 항목 */}
+				<div className="relative z-50 mt-[3vh] flex flex-col items-center">
 					<div>
 						<span className="t2 text-primary">{timeString}</span>
 						<span className="t2 text-strong"> 전에는</span>
