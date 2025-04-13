@@ -23,7 +23,7 @@ const RetrospectResultContent = ({
 				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 				<div key={index} onClick={() => handleResultContentClick(num)}>
 					<Image
-						src={`/retro1-${num}-${retrospectContent.satisfaction === num ? 1 : 0}.svg`}
+						src={`/icons/retro/retro1-${num}-${retrospectContent.satisfaction === num ? 1 : 0}.svg`}
 						alt="retro content index"
 						width={40}
 						height={40}

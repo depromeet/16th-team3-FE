@@ -63,7 +63,7 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 			components={{
 				IconLeft: () => (
 					<Image
-						src="/icons/CalendarLeft.svg"
+						src="/icons/common/CalendarLeft.svg"
 						alt="left"
 						width={11.275}
 						height={18.155}
@@ -71,7 +71,7 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 				),
 				IconRight: () => (
 					<Image
-						src="/icons/CalendarRight.svg"
+						src="/icons/common/CalendarRight.svg"
 						alt="right"
 						width={11.275}
 						height={18.155}

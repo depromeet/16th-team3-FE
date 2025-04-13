@@ -117,7 +117,7 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 				<Link href="/">
 					<div className="flex items-center">
 						<Image
-							src="/arrow-left.svg"
+							src="/icons/common/arrow-left.svg"
 							alt="왼쪽 화살표"
 							width={24}
 							height={24}

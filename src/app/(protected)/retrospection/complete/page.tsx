@@ -7,7 +7,7 @@ export default function RetrospectionCompletePage() {
 		<div className="flex h-full flex-col bg-background-primary">
 			<div className="mt-[180px] flex flex-col items-center">
 				<Image
-					src="/retro-complete.svg"
+					src="/icons/retro/retro-complete.svg"
 					alt="logo"
 					width={142}
 					height={68}

@@ -101,7 +101,12 @@ const BufferTime = ({
 		<div className="relative flex h-full w-full flex-col justify-between">
 			<div className="relative mt-[0.1vh]">
 				<div className="relative flex flex-col items-center gap-3">
-					<Image src="/icons/Bell.svg" alt="bell" width={60} height={60} />
+					<Image
+						src="/icons/common/Bell.svg"
+						alt="bell"
+						width={60}
+						height={60}
+					/>
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						className="relative flex h-[26px] items-center gap-1 overflow-hidden rounded-[8px] px-[7px] py-[6px] text-black before:absolute before:inset-0 before:bg-[conic-gradient(from_220deg_at_50%_50%,_#F2F0E7_0%,_#BBBBF1_14%,_#B8E2FB_24%,_#F2EFE8_37%,_#CCE4FF_48%,_#BBBBF1_62%,_#C7EDEB_72%,_#E7F5EB_83%,_#F2F0E7_91%,_#F2F0E7_100%)] before:[transform:scale(4,1)]"
@@ -134,7 +139,7 @@ const BufferTime = ({
 									<span>{`${multiplier}배`}</span>
 									{currentRatio === multiplier && (
 										<Image
-											src="/check-primary.svg"
+											src="/icons/common/check-primary.svg.svg"
 											alt="check"
 											width={20}
 											height={20}

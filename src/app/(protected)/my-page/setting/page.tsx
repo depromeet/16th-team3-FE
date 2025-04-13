@@ -98,7 +98,7 @@ export default function MyPage() {
 			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[60px]">
 				<Link href="/my-page">
 					<Image
-						src="/icons/ArrowLeft.svg"
+						src="/icons/common/ArrowLeft.svg"
 						alt="뒤로가기"
 						width={24}
 						height={24}

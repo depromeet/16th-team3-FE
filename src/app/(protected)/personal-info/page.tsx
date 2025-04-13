@@ -16,7 +16,7 @@ export default function TermsPage() {
 			<div className="px-5 py-[14px] relative flex items-center">
 				<button onClick={handleGoBack} className="absolute left-5">
 					<Image
-						src="/icons/ArrowLeft.svg"
+						src="/icons/common/ArrowLeft.svg"
 						alt="뒤로가기"
 						width={24}
 						height={24}

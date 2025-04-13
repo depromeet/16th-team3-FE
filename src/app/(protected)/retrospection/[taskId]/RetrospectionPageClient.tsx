@@ -79,7 +79,7 @@ export default function RetrospectionPageClient({ task }: Props) {
 					onClick={() => setOpenLeaveModal(true)}
 				>
 					<Image
-						src="/icons/home/arrow-left.svg"
+						src="/icons/common/arrow-left.svg"
 						alt="Back"
 						width={18}
 						height={16}

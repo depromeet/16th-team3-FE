@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
 		<header className="fixed left-0 right-0 top-0 z-10 mt-[60px] flex items-center bg-background-primary px-5 py-[14.5px]">
 			<button onClick={() => router.back()}>
 				<Image
-					src="/icons/home/arrow-left.svg"
+					src="/icons/common/arrow-left.svg"
 					alt="Back"
 					width={18}
 					height={16}
