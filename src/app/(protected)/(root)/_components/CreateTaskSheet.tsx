@@ -7,6 +7,7 @@ import {
 	DrawerTitle,
 } from "@/components/ui/drawer";
 import { useTransitionRouter } from "next-view-transitions";
+import Image from "next/image";
 import Link from "next/link";
 
 interface CreateTaskSheetProps {
@@ -79,11 +80,12 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 					>
 						<div className="mb-3 flex items-center rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
-								<img
+								<Image
 									src="/icons/home/gp-clock.svg"
 									alt="Clock"
 									width={30}
 									height={30}
+									priority
 								/>
 							</div>
 							<div className="flex h-[64px] flex-1 items-center justify-between pl-3">
@@ -97,11 +99,12 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										알림 받고 나중에 시작
 									</p>
 									<div className="text-text-neutral">
-										<img
+										<Image
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
 											width={7}
 											height={12}
+											priority
 										/>
 									</div>
 								</div>
@@ -121,11 +124,12 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 					>
 						<div className="mb-8 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
-								<img
+								<Image
 									src="/icons/home/heartfire.svg"
 									alt="Heart"
 									width={30}
 									height={30}
+									priority
 								/>
 							</div>
 							<div className="flex h-[64px] flex-1 flex-row items-center justify-between pl-3">
@@ -137,11 +141,12 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										알림 없이 바로 몰입
 									</p>
 									<div className="text-text-neutral">
-										<img
+										<Image
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
 											width={7}
 											height={12}
+											priority
 										/>
 									</div>
 								</div>
