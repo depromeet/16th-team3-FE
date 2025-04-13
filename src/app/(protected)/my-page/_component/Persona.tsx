@@ -1,5 +1,6 @@
 import { Badge } from "@/components/component/Badge";
 import Image from "next/image";
+import { memo } from "react";
 
 interface PersonaProps {
 	id: number;
@@ -43,4 +44,4 @@ const Persona = ({
 	);
 };
 
-export default Persona;
+export default memo(Persona);

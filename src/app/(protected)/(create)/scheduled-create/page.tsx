@@ -120,7 +120,7 @@ const ScheduledTaskCreate = () => {
 			if (response.success) {
 				const personaName = response.personaName;
 
-				queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
+				queryClient.invalidateQueries({ queryKey: ["tasks", "home", "page"] });
 				router.push(
 					`/?dialog=success&task=${funnel.context.task}&personaName=${personaName}&type=scheduled`,
 				);

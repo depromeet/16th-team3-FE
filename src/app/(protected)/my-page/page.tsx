@@ -11,6 +11,7 @@ import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
+import CustomBackHeader from "@/components/customBackHeader/CustomBackHeader";
 import PersonaSection from "./_component/PersonaSection";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
@@ -62,17 +63,7 @@ export default function MyPage() {
 	return (
 		<div className="flex min-h-screen flex-col pb-[34px]">
 			{/* 헤더 부분 */}
-			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] pt-[60px] bg-background-primary">
-				<Link href="/">
-					<Image
-						src="/icons/ArrowLeft.svg"
-						alt="뒤로가기"
-						width={24}
-						height={24}
-					/>
-				</Link>
-				<div className="s2 w-full text-center text-gray-normal">마이페이지</div>
-				{/* TODO : 설정 버튼 링크 추가 */}
+			<CustomBackHeader title="마이페이지" backRoute="/">
 				<Link href="/my-page/setting">
 					<Image
 						src="/icons/mypage/setting.svg"
@@ -81,7 +72,7 @@ export default function MyPage() {
 						height={24}
 					/>
 				</Link>
-			</div>
+			</CustomBackHeader>
 
 			{/* 프로필 정보 */}
 			{isFetching ? (

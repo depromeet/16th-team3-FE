@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
 	);
 
 	if (!isOpenPath && !refreshToken) {
-		return NextResponse.redirect(new URL("/login", request.url));
+		return NextResponse.redirect(new URL("/login", request.url), 302);
 	}
 
 	if (isOpenPath && accessToken) {
