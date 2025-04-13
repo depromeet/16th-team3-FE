@@ -564,8 +564,8 @@ const HomePageContent = () => {
 											<Image
 												src="/icons/home/arrow-right.svg"
 												alt="Arrow Right"
-												width={7}
-												height={12}
+												width={24}
+												height={24}
 											/>
 										</button>
 									</div>
@@ -599,8 +599,8 @@ const HomePageContent = () => {
 											<Image
 												src="/icons/home/arrow-right.svg"
 												alt="Arrow Right"
-												width={7}
-												height={12}
+												width={24}
+												height={24}
 											/>
 										</button>
 									</div>
@@ -702,8 +702,8 @@ const HomePageContent = () => {
 											<Image
 												src="/icons/home/arrow-right.svg"
 												alt="Arrow Right"
-												width={7}
-												height={12}
+												width={24}
+												height={24}
 											/>
 										</button>
 									</div>
@@ -767,8 +767,8 @@ const HomePageContent = () => {
 											<Image
 												src="/icons/home/arrow-right.svg"
 												alt="Arrow Right"
-												width={7}
-												height={12}
+												width={24}
+												height={24}
 											/>
 										</button>
 									</div>
@@ -832,8 +832,8 @@ const HomePageContent = () => {
 											<Image
 												src="/icons/home/arrow-right.svg"
 												alt="Arrow Right"
-												width={7}
-												height={12}
+												width={24}
+												height={24}
 											/>
 										</button>
 									</div>

@@ -102,8 +102,8 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										<Image
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
-											width={7}
-											height={12}
+											width={24}
+											height={24}
 											priority
 										/>
 									</div>
@@ -144,8 +144,8 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 										<Image
 											src="/icons/home/arrow-right.svg"
 											alt="Arrow"
-											width={7}
-											height={12}
+											width={24}
+											height={24}
 											priority
 										/>
 									</div>
