@@ -157,7 +157,6 @@ const HomePageContent = () => {
 	const resetAlerts = useResetAlerts();
 
 	// 화면 분기 처리를 위한 상태
-	const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 	const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 	const [showTooltip, setShowTooltip] = useState(true);
 	const [activeTab, setActiveTab] = useState<"today" | "all">("today");
@@ -176,6 +175,8 @@ const HomePageContent = () => {
 	const [urgentTaskId, setUrgentTaskId] = useState<number | undefined>(
 		undefined,
 	);
+
+	console.log("personaId", personaId);
 
 	const handleGoToReflection = (taskId: number) => {
 		router.push(`/retrospection/${taskId}`);
@@ -199,7 +200,6 @@ const HomePageContent = () => {
 	};
 
 	const handleTaskClick = (task: Task) => {
-		setSelectedTask(task);
 		setDetailTask(task);
 		setIsDetailSheetOpen(true);
 	};
@@ -233,17 +233,6 @@ const HomePageContent = () => {
 
 	const handleFailedDialogButtonClick = () => {
 		setIsFailedDialogOpen(false);
-	};
-
-	// 진행 중인 작업 계속하기
-	const handleContinueTask = (taskId: number) => {
-		// 해당 태스크 찾기
-		const taskToContinue = inProgressTasks.find((task) => task.id === taskId);
-
-		if (taskToContinue) {
-			// TODO: 몰입 화면으로 이동
-			router.push(`/immersion/${taskId}`);
-		}
 	};
 
 	// 마감이 임박한 순으로 정렬된 이번주 할 일 (최대 2개)

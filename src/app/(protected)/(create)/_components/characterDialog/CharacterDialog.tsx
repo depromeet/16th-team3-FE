@@ -56,8 +56,8 @@ const CharacterDialog = ({
 						<Image
 							src={personaImageSrc}
 							alt={`${personaName}-character`}
-							width={54}
-							height={54}
+							width={80}
+							height={80}
 							priority
 						/>
 					</div>
