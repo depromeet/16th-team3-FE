@@ -134,9 +134,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 	};
 
 	const handleEditTitle = () => {
-		if (!isInProgress) {
-			router.push(`/edit/deadline-date/${task.id}`);
-		}
+		router.push(`/edit/deadline-date/${task.id}?editTitle=true`);
 
 		setShowMenu(false);
 	};

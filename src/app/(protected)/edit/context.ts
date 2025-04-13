@@ -11,5 +11,6 @@ export interface EditPageProps {
 		triggerActionAlarmTime?: string;
 		isUrgent?: boolean;
 		type?: string;
+		editTitle?: string;
 	}>;
 }

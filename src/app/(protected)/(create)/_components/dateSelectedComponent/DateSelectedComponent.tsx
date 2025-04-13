@@ -17,11 +17,13 @@ import {
 } from "../../../../../components/ui/drawer";
 
 interface DateSelectedComponentProps {
+	editTitle?: string | null;
 	deadlineDate: Date | undefined;
 	handleDateChange: (date: Date) => void;
 }
 
 const DateSelectedComponent = ({
+	editTitle,
 	deadlineDate,
 	handleDateChange,
 }: DateSelectedComponentProps) => {
@@ -73,7 +75,7 @@ const DateSelectedComponent = ({
 
 	return (
 		<Drawer open={isOpen} closeThreshold={0.5} onOpenChange={setIsOpen}>
-			<DrawerTrigger>
+			<DrawerTrigger disabled={editTitle === "true"}>
 				<div className="relative mt-2 w-full">
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
@@ -88,7 +90,9 @@ const DateSelectedComponent = ({
 							마감일 선택
 						</span>
 						<div className="flex w-full items-center justify-between pt-4">
-							<span className="t3 text-base font-semibold">
+							<span
+								className={`t3 ${editTitle === "true" ? "text-gray-disabled" : "text-base"} font-semibold`}
+							>
 								{!deadlineDate
 									? ""
 									: format(deadlineDate, "M월 d일 (E)", { locale: ko })}

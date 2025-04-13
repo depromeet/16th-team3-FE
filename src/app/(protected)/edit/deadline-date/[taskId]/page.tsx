@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useRef, useState } from "react";
 
 import DateSelectedComponent from "@/app/(protected)/(create)/_components/dateSelectedComponent/DateSelectedComponent";
@@ -31,7 +31,7 @@ import {
 	convertToFormattedTime,
 } from "@/utils/dateFormat";
 import getBufferTime from "@/utils/getBufferTime";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { EditPageProps } from "../../context";
 
 const MAX_TASK_LENGTH = 16;
@@ -39,6 +39,9 @@ const WAITING_TIME = 200;
 
 const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 	const { taskId } = use(params);
+
+	const searchParams = useSearchParams();
+	const editTitle = searchParams.get("editTitle");
 
 	const router = useRouter();
 	const queryClient = useQueryClient();
@@ -110,8 +113,35 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 		setIsFocused(value);
 	};
 
+	const { mutate: mutateTaskName, isIdle } = useMutation({
+		mutationFn: async () =>
+			await fetch(`/api/tasks/${taskId}`, {
+				method: "PATCH",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ name: task }),
+			}),
+		onSuccess: async (res) => {
+			const text = await res.text();
+			const response = text ? JSON.parse(text) : {};
+
+			if (response.success) {
+				router.push("/");
+				queryClient.invalidateQueries({ queryKey: ["tasks", "home"] });
+			}
+		},
+		onError: (error) => {
+			console.error("Error updating task name:", error);
+			router.push("/");
+		},
+	});
+
 	const handleConfirmButtonClick = () => {
 		if (!deadlineDate) return;
+
+		if (editTitle === "true") {
+			mutateTaskName();
+			return;
+		}
 
 		const query = new URLSearchParams({
 			task,
@@ -240,12 +270,14 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 							</div>
 
 							<DateSelectedComponent
+								editTitle={editTitle}
 								deadlineDate={deadlineDate}
 								handleDateChange={handleDateChange}
 							/>
 
 							{deadlineDate !== undefined && (
 								<TimeSelectedComponent
+									editTitle={editTitle}
 									deadlineTime={deadlineTime}
 									deadlineDate={deadlineDate}
 									handleTimeChange={handleTimeChange}
@@ -260,9 +292,9 @@ const DeadlineDateEditPage = ({ params }: EditPageProps) => {
 						variant="primary"
 						className="mt-6"
 						onClick={handleConfirmButtonClick}
-						disabled={isInvalid}
+						disabled={isInvalid || !isIdle}
 					>
-						확인
+						{isIdle ? "확인" : <Loader width={24} height={24} />}
 					</Button>
 				</div>
 			</div>
