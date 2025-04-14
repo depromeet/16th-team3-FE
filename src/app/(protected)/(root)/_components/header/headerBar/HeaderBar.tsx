@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 
 const HeaderBar = () => {
 	return (
@@ -26,4 +27,4 @@ const HeaderBar = () => {
 	);
 };
 
-export default HeaderBar;
+export default memo(HeaderBar);

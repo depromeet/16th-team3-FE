@@ -162,9 +162,9 @@ const HomePageContent = () => {
 			.slice(0, 2);
 	}, [allTasks]);
 
-	const handleTabChange = (tab: "today" | "all") => {
+	const handleTabChange = useCallback((tab: "today" | "all") => {
 		setActiveTab(tab);
-	};
+	}, []);
 
 	useEffect(() => {
 		if (searchParams.get("dialog") === "success") {

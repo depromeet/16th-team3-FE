@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { memo } from "react";
 import HeaderBar from "./headerBar/HeaderBar";
 
 interface HeaderProps {
@@ -65,4 +66,4 @@ const Header = ({
 	);
 };
 
-export default Header;
+export default memo(Header);
