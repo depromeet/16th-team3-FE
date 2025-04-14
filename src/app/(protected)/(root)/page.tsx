@@ -22,6 +22,7 @@ import { useAuthStore } from "@/store";
 import Link from "next/link";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
 import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
+import Header from "./_components/header/Header";
 
 const HomePageContent = () => {
 	const router = useRouter();
@@ -357,70 +358,21 @@ const HomePageContent = () => {
 	const hasTodayTasksOnly =
 		inProgressTasks.length === 0 && todayTasks.length > 0;
 
+	const numberOfTodayTask = useMemo(
+		() => todayTasks.length + inProgressTasks.length,
+		[todayTasks, inProgressTasks],
+	);
+
+	const numberOfAllTask = useMemo(() => allTasks.length, [allTasks]);
+
 	return (
 		<div className="flex flex-col overflow-hidden bg-background-primary">
-			<header className="z-20 fixed top-0 w-[100vw] bg-background-primary pt-[44px]">
-				<div className="flex items-center justify-between px-[20px] py-[15px] h-[60px]">
-					<Image
-						src="/icons/home/spurt.svg"
-						alt="SPURT"
-						width={54}
-						height={20}
-						priority
-						className="w-[54px]"
-					/>
-					<Link href="/my-page">
-						<button type="button">
-							<Image
-								src="/icons/home/mypage.svg"
-								alt="마이페이지"
-								width={20}
-								height={20}
-							/>
-						</button>
-					</Link>
-				</div>
-				<div className="px-[20px] py-[11px]">
-					<div className="flex space-x-4">
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-						<div
-							onClick={() => {
-								handleTabChange("today");
-								router.replace("/?tab=today", { scroll: true });
-							}}
-						>
-							<span
-								className={`t3 ${activeTab === "today" ? "text-text-normal" : "text-text-disabled"}`}
-							>
-								오늘 할일
-							</span>
-							<span
-								className={`s1 ml-1 ${activeTab === "today" ? "text-text-primary" : "text-text-disabled"}`}
-							>
-								{todayTasks.length + inProgressTasks.length}
-							</span>
-						</div>
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-						<div
-							onClick={() => {
-								handleTabChange("all");
-								router.replace("/?tab=all", { scroll: true });
-							}}
-						>
-							<span
-								className={`t3 ${activeTab === "all" ? "text-text-normal" : "text-text-disabled"}`}
-							>
-								전체 할일
-							</span>
-							<span
-								className={`s1 ml-1 ${activeTab === "all" ? "text-text-primary" : "text-text-disabled"}`}
-							>
-								{allTasks.length}
-							</span>
-						</div>
-					</div>
-				</div>
-			</header>
+			<Header
+				activeTab={activeTab}
+				numberOfTodayTasks={numberOfTodayTask}
+				numberOfAllTasks={numberOfAllTask}
+				handleTabChange={handleTabChange}
+			/>
 
 			{/* 메인 영역 - flex-1과 overflow-y-auto로 설정 */}
 			{isUserProfileLoading || isPending ? (
