@@ -1,4 +1,5 @@
 import { EditTaskInputType } from "@/app/(protected)/(create)/context";
+import { TaskOrigin } from "@/types/myPage";
 import type { Task as TaskType } from "@/types/task";
 import { create } from "zustand";
 
@@ -40,12 +41,22 @@ type TaskStore = {
 	setCurrentTask: (task: TaskType) => void;
 };
 
+type ExpiredTaskStore = {
+	currentTask: TaskOrigin | null;
+	setCurrentTask: (task: TaskOrigin) => void;
+};
+
 export const useTaskProgressStore = create<TaskProgressStore>((set) => ({
 	currentTask: null,
 	setCurrentTask: (task) => set({ currentTask: task }),
 }));
 
 export const useThisWeekTaskStore = create<TaskStore>((set) => ({
+	currentTask: null,
+	setCurrentTask: (task) => set({ currentTask: task }),
+}));
+
+export const useExpiredTaskStore = create<ExpiredTaskStore>((set) => ({
 	currentTask: null,
 	setCurrentTask: (task) => set({ currentTask: task }),
 }));
