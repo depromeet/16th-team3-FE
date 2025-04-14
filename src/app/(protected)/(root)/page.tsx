@@ -1,11 +1,9 @@
 "use client";
 
-import AllTasksTab from "@/app/(protected)/(root)/_components/AllTasksTab";
 import CreateTaskSheet from "@/app/(protected)/(root)/_components/CreateTaskSheet";
 import InProgressTaskItem from "@/app/(protected)/(root)/_components/InProgressTaskItem";
 import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
 import TaskItem from "@/app/(protected)/(root)/_components/TaskItem";
-import { Button } from "@/components/ui/button";
 import {
 	useDeleteTask,
 	useHomeData,
@@ -15,14 +13,21 @@ import {
 import type { Task, TaskWithPersona } from "@/types/task";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState, useEffect, useMemo, Suspense } from "react";
+import React, {
+	useState,
+	useEffect,
+	useMemo,
+	Suspense,
+	useCallback,
+} from "react";
 
 import Loader from "@/components/loader/Loader";
+import useTaskFiltering from "@/hooks/useTaskFilter";
 import useTaskStatus from "@/hooks/useTaskStatus";
 import { useAuthStore } from "@/store";
-import Link from "next/link";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
 import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
+import AllTaskTabWrapper from "./_components/allTaskTabWrapper/AllTaskTabWrapper";
 import Footer from "./_components/footer/Footer";
 import Header from "./_components/header/Header";
 
@@ -34,130 +39,13 @@ const HomePageContent = () => {
 		(state) => state.isUserProfileLoading,
 	);
 
-	// 데이터 구조 분해
-	const allTasks = useMemo(
-		() => homeData?.allTasks || [],
-		[homeData?.allTasks],
-	);
-
-	const todayTasks = useMemo(() => {
-		const tasks = homeData?.todayTasks || [];
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-		const tomorrow = new Date(today);
-		tomorrow.setDate(tomorrow.getDate() + 1);
-		return tasks.filter((task) => {
-			const taskDueDate = task.dueDatetime
-				? new Date(task.dueDatetime)
-				: new Date(task.dueDate);
-			const taskDate = new Date(taskDueDate);
-			taskDate.setHours(0, 0, 0, 0);
-			return (
-				taskDate.getTime() === today.getTime() && task.status !== "inProgress"
-			);
-		});
-	}, [homeData?.todayTasks]);
-
-	const weeklyTasks = useMemo(() => {
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-
-		const tomorrow = new Date(today);
-		tomorrow.setDate(today.getDate() + 1);
-
-		// 이번주의 월요일 찾기
-		const mondayOfThisWeek = new Date(today);
-		const dayOfWeek = today.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
-		const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 일요일인 경우 이전 주의 월요일까지 거슬러 올라감
-		mondayOfThisWeek.setDate(today.getDate() - daysFromMonday);
-
-		// 이번주의 일요일 찾기 (일요일 23:59:59)
-		const sundayOfThisWeek = new Date(mondayOfThisWeek);
-		sundayOfThisWeek.setDate(mondayOfThisWeek.getDate() + 6);
-		sundayOfThisWeek.setHours(23, 59, 59, 999);
-
-		return allTasks.filter((task) => {
-			if (task.status === "inProgress" || task.status === "INPROGRESS")
-				return false;
-
-			// 날짜 계산
-			const taskDueDate = task.dueDatetime
-				? new Date(task.dueDatetime)
-				: task.dueDate
-					? new Date(task.dueDate)
-					: null;
-			if (!taskDueDate) return false;
-
-			const taskDateOnly = new Date(taskDueDate);
-			taskDateOnly.setHours(0, 0, 0, 0);
-
-			const taskIsAfterToday = taskDateOnly.getTime() >= tomorrow.getTime();
-
-			const taskIsBeforeSunday = taskDueDate <= sundayOfThisWeek;
-
-			// 오늘 이후(또는 오늘 새벽 1시 이후)이고 이번주 일요일 이전인 작업
-			return taskIsAfterToday && taskIsBeforeSunday;
-		});
-	}, [allTasks]);
-
-	const inProgressTasks = useMemo(
-		() => homeData?.inProgressTasks || [],
-		[homeData?.inProgressTasks],
-	);
-
-	// 미래 할일
-	const futureTasks = useMemo(() => {
-		const today = new Date();
-		today.setHours(0, 0, 0, 0);
-		// 이번주의 일요일 계산
-		const dayOfWeek = today.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
-		const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-		const mondayOfThisWeek = new Date(today);
-		mondayOfThisWeek.setDate(today.getDate() - daysFromMonday);
-		const sundayOfThisWeek = new Date(mondayOfThisWeek);
-		sundayOfThisWeek.setDate(mondayOfThisWeek.getDate() + 6);
-		sundayOfThisWeek.setHours(23, 59, 59, 999);
-
-		// 모든 작업에서 미래 작업 필터링
-		return allTasks.filter((task) => {
-			const dueDate = task.dueDatetime
-				? new Date(task.dueDatetime)
-				: task.dueDate
-					? new Date(task.dueDate)
-					: null;
-
-			if (!dueDate) {
-				return false;
-			}
-
-			if (task.status === "inProgress" || task.status === "INPROGRESS") {
-				return false;
-			}
-
-			if (
-				dueDate.getDate() === today.getDate() &&
-				dueDate.getMonth() === today.getMonth() &&
-				dueDate.getFullYear() === today.getFullYear()
-			) {
-				return false;
-			}
-
-			// 이번주 작업 제외 (오늘 이후, 이번주 일요일 이전)
-			if (dueDate > today && dueDate <= sundayOfThisWeek) {
-				return false;
-			}
-			// 이번주 이후의 작업만 포함
-			const isAfterSunday = dueDate > sundayOfThisWeek;
-			return isAfterSunday;
-		});
-	}, [allTasks]);
-
-	// StartTask 뮤테이션 훅
 	const { mutate: startTaskMutation } = useStartTask();
 	const { mutate: deleteTaskMutation } = useDeleteTask();
 
-	// Reset Alerts 훅
 	const resetAlerts = useResetAlerts();
+
+	const { allTasks, todayTasks, weeklyTasks, inProgressTasks, futureTasks } =
+		useTaskFiltering(homeData);
 
 	const {
 		isTotallyEmpty,
@@ -209,24 +97,26 @@ const HomePageContent = () => {
 		setIsDetailSheetOpen(true);
 	};
 
-	const handleDeleteTask = (taskId: number) => {
-		deleteTaskMutation(taskId);
-		if (isDetailSheetOpen && detailTask && detailTask.id === taskId) {
-			setIsDetailSheetOpen(false);
-		}
-	};
+	const handleDeleteTask = useCallback(
+		(taskId: number) => {
+			deleteTaskMutation(taskId);
+			if (isDetailSheetOpen && detailTask && detailTask.id === taskId) {
+				setIsDetailSheetOpen(false);
+			}
+		},
+		[deleteTaskMutation, isDetailSheetOpen, detailTask],
+	);
 
-	const handleTaskClick = (task: Task) => {
+	const handleTaskClick = useCallback((task: Task) => {
 		setDetailTask(task);
 		setIsDetailSheetOpen(true);
-	};
+	}, []);
 
 	const handleCloseDetailSheet = () => {
 		setIsDetailSheetOpen(false);
 	};
 
 	const handleStartTask = (taskId: number) => {
-		// React Query mutation 실행
 		startTaskMutation(taskId);
 		setIsDetailSheetOpen(false);
 		router.push(`/immersion/${taskId}`);
@@ -337,7 +227,6 @@ const HomePageContent = () => {
 					handleTabChange={handleTabChange}
 				/>
 
-				{/* 메인 영역 - flex-1과 overflow-y-auto로 설정 */}
 				{isUserProfileLoading || isPending ? (
 					<Loader />
 				) : (
@@ -806,55 +695,33 @@ const HomePageContent = () => {
 						)}
 
 						{/* 전체 할일 탭 */}
-						{activeTab === "all" &&
-							(isAllEmpty ? (
-								<div className="mt-[130px]">
-									<div className="flex h-full flex-col items-center justify-center px-4 text-center">
-										<div className="mb-[40px]">
-											<Image
-												src="/icons/home/rocket.svg"
-												alt="Rocket"
-												width={142}
-												height={80}
-												className="mx-auto"
-											/>
-										</div>
-										<h2 className="t3 mb-[8px] text-text-strong">
-											이번주 할일이 없어요.
-											<br />
-											마감할 일을 추가해볼까요?
-										</h2>
-										<p className="b3 text-text-alternative">
-											미루지 않도록 알림을 보내 챙겨드릴게요.
-										</p>
-									</div>
-								</div>
-							) : (
-								<AllTasksTab
-									inProgressTasks={inProgressTasks}
-									todayTasks={todayTasks}
-									weeklyTasks={weeklyTasks}
-									futureTasks={futureTasks}
-									onTaskClick={handleTaskClick}
-									onDeleteTask={handleDeleteTask}
-								/>
-							))}
+						{activeTab === "all" && (
+							<AllTaskTabWrapper
+								isAllEmpty={isAllEmpty}
+								inProgressTasks={inProgressTasks}
+								todayTasks={todayTasks}
+								weeklyTasks={weeklyTasks}
+								futureTasks={futureTasks}
+								onTaskClick={handleTaskClick}
+								onDeleteTask={handleDeleteTask}
+							/>
+						)}
 					</main>
 				)}
 
 				<Footer onClick={handleAddTask} />
-
-				{detailTask && (
-					<TaskDetailSheet
-						isOpen={isDetailSheetOpen}
-						onClose={handleCloseDetailSheet}
-						task={detailTask as TaskWithPersona}
-						onDelete={handleDeleteTask}
-						onStart={handleStartTask}
-						setIsDetailSheetOpen={setIsDetailSheetOpen}
-					/>
-				)}
 			</div>
+
+			{detailTask && (
+				<TaskDetailSheet
+					isOpen={isDetailSheetOpen}
+					onClose={handleCloseDetailSheet}
+					task={detailTask as TaskWithPersona}
+					onDelete={handleDeleteTask}
+					onStart={handleStartTask}
+					setIsDetailSheetOpen={setIsDetailSheetOpen}
+				/>
+			)}
 
 			<CharacterDialog
 				isOpen={isDialogOpen}
