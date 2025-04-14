@@ -10,6 +10,7 @@ const nextConfig = {
 		],
 		dangerouslyAllowSVG: true,
 		contentSecurityPolicy: "default-src 'self'; img-src 'self' data: https:;",
+		minimumCacheTTL: 60 * 60 * 24 * 365,
 	},
 	env: {
 		NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
