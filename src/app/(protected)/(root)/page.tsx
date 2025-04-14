@@ -122,9 +122,9 @@ const HomePageContent = () => {
 		router.push(`/immersion/${taskId}`);
 	};
 
-	const handleAddTask = () => {
+	const handleAddTask = useCallback(() => {
 		setIsCreateSheetOpen(true);
-	};
+	}, []);
 
 	const handleCloseCreateSheet = () => {
 		setIsCreateSheetOpen(false);
