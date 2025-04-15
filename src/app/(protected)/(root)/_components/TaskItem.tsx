@@ -1,6 +1,5 @@
 "use client";
 
-import { useResetAlerts } from "@/hooks/useTasks";
 import type { TaskStatus } from "@/types/task";
 import {
 	calculateRemainingTime,
@@ -10,7 +9,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type TaskItemProps = {
 	title: string;
@@ -22,6 +21,7 @@ type TaskItemProps = {
 	onPreviewStart?: (taskId?: number) => void;
 	ignoredAlerts?: number;
 	timeRequired: string;
+	resetAlerts?: (taskId: number) => void;
 	dueDatetime?: string;
 	status?: TaskStatus;
 };
@@ -36,6 +36,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 	onDelete,
 	onPreviewStart = () => {},
 	ignoredAlerts = 0,
+	resetAlerts = () => {},
 	dueDatetime,
 	status,
 }) => {
@@ -44,8 +45,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
 		useState<boolean>(false);
 	const [remainingTime, setRemainingTime] = useState<string>("");
 	const [isUrgent, setIsUrgent] = useState<boolean>(false);
-
-	const resetAlerts = useResetAlerts();
 
 	// 진행 중인 태스크인지 확인
 	const isInProgress = status === "inProgress";
@@ -282,4 +281,4 @@ const TaskItem: React.FC<TaskItemProps> = ({
 	);
 };
 
-export default memo(TaskItem);
+export default TaskItem;
