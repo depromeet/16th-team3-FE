@@ -124,7 +124,7 @@ const BufferTime = ({
 						)}
 					</div>
 					{isOpen && (
-						<div className="absolute left-20 top-28 w-[189px] pt-5 pb-[10px] px-5 bg-component-gray-tertiary rounded-[16px] shadow-[0px_0px_14px_2px_rgba(18,18,18,0.5)]">
+						<div className="absolute left-20 top-28 w-[189px] pt-5 pb-[10px] px-5 bg-component-gray-tertiary rounded-[16px] shadow-[0px_0px_14px_2px_rgba(18,18,18,0.5)] z-50">
 							<span className="c2 text-gray-alternative">여유시간</span>
 							{availableMultipliers.map((multiplier) => (
 								// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
@@ -139,7 +139,7 @@ const BufferTime = ({
 									<span>{`${multiplier}배`}</span>
 									{currentRatio === multiplier && (
 										<Image
-											src="/icons/common/check-primary.svg.svg"
+											src="/icons/common/check-primary.svg"
 											alt="check"
 											width={20}
 											height={20}
@@ -153,7 +153,7 @@ const BufferTime = ({
 				{/* 1번 항목 */}
 				<div className="bg-blur-purple absolute left-0 right-0 top-20 h-[240px] w-[100%] blur-[75px]" />
 				{/* 2번 항목 */}
-				<div className="relative z-50 mt-[3vh] flex flex-col items-center">
+				<div className="relative z-40 mt-[3vh] flex flex-col items-center">
 					<div>
 						<span className="t2 text-primary">{timeString}</span>
 						<span className="t2 text-strong"> 전에는</span>
