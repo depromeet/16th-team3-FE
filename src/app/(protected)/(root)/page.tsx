@@ -1,7 +1,5 @@
 "use client";
 
-import CreateTaskSheet from "@/app/(protected)/(root)/_components/CreateTaskSheet";
-import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
 import { useDeleteTask, useHomeData, useStartTask } from "@/hooks/useTasks";
 import type { Task, TaskWithPersona } from "@/types/task";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,12 +9,45 @@ import Loader from "@/components/loader/Loader";
 import useTaskFiltering from "@/hooks/useTaskFilter";
 import useTaskStatus from "@/hooks/useTaskStatus";
 import { useAuthStore } from "@/store";
-import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
-import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
-import AllTaskTabWrapper from "./_components/allTaskTabWrapper/AllTaskTabWrapper";
+import dynamic from "next/dynamic";
 import Footer from "./_components/footer/Footer";
 import Header from "./_components/header/Header";
-import TodayTaskTabWrapper from "./_components/todayTaskTabWrapper/TodayTaskTabWrapper";
+
+const TodayTaskTabWrapper = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "./_components/todayTaskTabWrapper/TodayTaskTabWrapper"
+		),
+);
+
+const AllTaskTabWrapper = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "./_components/allTaskTabWrapper/AllTaskTabWrapper"
+		),
+);
+
+const TaskDetailSheet = dynamic(
+	() => import(/* webpackPrefetch: true */ "./_components/TaskDetailSheet"),
+);
+
+const CreateTaskSheet = dynamic(
+	() => import(/* webpackPrefetch: true */ "./_components/CreateTaskSheet"),
+);
+
+const FailedDialog = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../(create)/_components/failedDialog/FailedDialog"
+		),
+);
+
+const CharacterDialog = dynamic(
+	() => import("../(create)/_components/characterDialog/CharacterDialog"),
+	{
+		ssr: false,
+	},
+);
 
 const HomePageContent = () => {
 	const router = useRouter();

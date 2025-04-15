@@ -3,13 +3,49 @@
 import type { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ExpiredTaskDrawer from "../expiredTaskDrawer/ExpiredTaskDrawer";
-import HasAllTasksOnlyScreen from "../hasAllTasksOnlyScreen/HasAllTasksOnlyScreen";
-import HasInProgressTasksOnlyScreen from "../hasInProgressTasksOnlyScreen/HasInProgressTasksOnlyScreen";
-import HasTodayAndInProgressTasksScreen from "../hasTodayAndInProgressTasksScreen/HasTodayAndInProgressTasksScreen";
-import HasTodayTasksOnlyScreen from "../hasTodayTasksOnlyScreen/HasTodayTasksOnlyScreen";
-import HasWeeklyTasksOnlyScreen from "../hasWeeklyTasksOnlyScreen/HasWeeklyTasksOnlyScreen";
-import IsEmptyScreen from "../isEmptyScreen/IsEmptyScreen";
+
+import dynamic from "next/dynamic";
+
+const IsEmptyScreen = dynamic(
+	() => import(/* webpackPrefetch: true */ "../isEmptyScreen/IsEmptyScreen"),
+);
+
+const HasTodayAndInProgressTasksScreen = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../hasTodayAndInProgressTasksScreen/HasTodayAndInProgressTasksScreen"
+		),
+);
+const HasInProgressTasksOnlyScreen = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../hasInProgressTasksOnlyScreen/HasInProgressTasksOnlyScreen"
+		),
+);
+const HasTodayTasksOnlyScreen = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../hasTodayTasksOnlyScreen/HasTodayTasksOnlyScreen"
+		),
+);
+const HasWeeklyTasksOnlyScreen = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../hasWeeklyTasksOnlyScreen/HasWeeklyTasksOnlyScreen"
+		),
+);
+const HasAllTasksOnlyScreen = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../hasAllTasksOnlyScreen/HasAllTasksOnlyScreen"
+		),
+);
+const ExpiredTaskDrawer = dynamic(
+	() =>
+		import(
+			/* webpackPrefetch: true */ "../expiredTaskDrawer/ExpiredTaskDrawer"
+		),
+);
 
 interface TodayTaskTabWrapperProps {
 	taskType: string;
