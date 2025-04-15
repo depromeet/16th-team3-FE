@@ -1,9 +1,28 @@
+import useTaskFiltering from "@/hooks/useTaskFilter";
+import { useHomeData, useStartTask } from "@/hooks/useTasks";
+import type { Task } from "@/types/task";
 import Image from "next/image";
 import React from "react";
 import InProgressTaskItem from "../InProgressTaskItem";
 import ThisWeekTaskButton from "../thisWeekTaskButton/ThisWeekTaskButton";
 
-const HasTodayAndInProgressTasksScreen = () => {
+interface HasTodayAndInProgressTasksScreenProps {
+	taskType: string;
+	handleTaskClick: (task: Task) => void;
+	handleDetailTask: (task: Task) => void;
+}
+
+const HasTodayAndInProgressTasksScreen = ({
+	taskType,
+	handleTaskClick,
+	handleDetailTask,
+}: HasTodayAndInProgressTasksScreenProps) => {
+	const { data: homeData } = useHomeData();
+
+	const { mutate: startTaskMutation } = useStartTask();
+
+	const { todayTasks, inProgressTasks } = useTaskFiltering(homeData);
+
 	return (
 		<>
 			{/* 진행 중 섹션 */}
@@ -75,7 +94,7 @@ const HasTodayAndInProgressTasksScreen = () => {
 											(task.ignoredAlerts && task.ignoredAlerts >= 3) ||
 											task.status === "procrastinating"
 										) {
-											handleDetailTask(task); // 상세 시트를 보여주거나 시작 로직 추가
+											handleDetailTask(task);
 										} else {
 											startTaskMutation(task.id);
 										}

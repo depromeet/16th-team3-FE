@@ -1,12 +1,26 @@
+import useTaskFiltering from "@/hooks/useTaskFilter";
+import { useHomeData } from "@/hooks/useTasks";
+import type { Task } from "@/types/task";
 import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
 import InProgressTaskItem from "../InProgressTaskItem";
 
-const HasInProgressTasksOnlyScreen = () => {
+interface HasInProgressTasksOnlyScreenProps {
+	taskType: string;
+	handleDetailTask: (task: Task) => void;
+}
+
+const HasInProgressTasksOnlyScreen = ({
+	taskType,
+	handleDetailTask,
+}: HasInProgressTasksOnlyScreenProps) => {
+	const { data: homeData } = useHomeData();
+
+	const { inProgressTasks } = useTaskFiltering(homeData);
+
 	return (
 		<>
-			{/* 진행 중 섹션 */}
 			<div className="mb-7">
 				<h3 className="s3 mb-2 text-text-neutral">진행 중</h3>
 				{inProgressTasks.map((task, index) => (
@@ -35,7 +49,6 @@ const HasInProgressTasksOnlyScreen = () => {
 					/>
 				</button>
 			</Link>
-			{/* 진행 예정 섹션 */}
 		</>
 	);
 };

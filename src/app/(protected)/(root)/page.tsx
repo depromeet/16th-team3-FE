@@ -1,25 +1,11 @@
 "use client";
 
 import CreateTaskSheet from "@/app/(protected)/(root)/_components/CreateTaskSheet";
-import InProgressTaskItem from "@/app/(protected)/(root)/_components/InProgressTaskItem";
 import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
-import TaskItem from "@/app/(protected)/(root)/_components/TaskItem";
-import {
-	useDeleteTask,
-	useHomeData,
-	useResetAlerts,
-	useStartTask,
-} from "@/hooks/useTasks";
+import { useDeleteTask, useHomeData, useStartTask } from "@/hooks/useTasks";
 import type { Task, TaskWithPersona } from "@/types/task";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, {
-	useState,
-	useEffect,
-	useMemo,
-	Suspense,
-	useCallback,
-} from "react";
+import React, { useState, useEffect, Suspense, useCallback } from "react";
 
 import Loader from "@/components/loader/Loader";
 import useTaskFiltering from "@/hooks/useTaskFilter";
@@ -42,8 +28,6 @@ const HomePageContent = () => {
 
 	const { mutate: startTaskMutation } = useStartTask();
 	const { mutate: deleteTaskMutation } = useDeleteTask();
-
-	const resetAlerts = useResetAlerts();
 
 	const { allTasks, todayTasks, weeklyTasks, inProgressTasks, futureTasks } =
 		useTaskFiltering(homeData);
@@ -69,8 +53,6 @@ const HomePageContent = () => {
 	const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState<"today" | "all">("today");
 	const [detailTask, setDetailTask] = useState<Task | null>(null);
-	const [showExpiredTaskSheet, setShowExpiredTaskSheet] = useState(false);
-	const [expiredTask, setExpiredTask] = useState<Task | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isFailedDialogOpen, setIsFailedDialogOpen] = useState(false);
 	const [personaId, setPersonaId] = useState<number | undefined>(undefined);
@@ -83,15 +65,6 @@ const HomePageContent = () => {
 	const [urgentTaskId, setUrgentTaskId] = useState<number | undefined>(
 		undefined,
 	);
-
-	const handleGoToReflection = (taskId: number) => {
-		router.push(`/retrospection/${taskId}`);
-		setShowExpiredTaskSheet(false);
-	};
-
-	const handleCloseExpiredSheet = () => {
-		setShowExpiredTaskSheet(false);
-	};
 
 	const handleDetailTask = (task: Task) => {
 		setDetailTask(task);
@@ -142,26 +115,6 @@ const HomePageContent = () => {
 	const handleFailedDialogButtonClick = () => {
 		setIsFailedDialogOpen(false);
 	};
-
-	// 마감이 임박한 순으로 정렬된 이번주 할 일 (최대 2개)
-	const topWeeklyTasks = useMemo(() => {
-		return [...weeklyTasks]
-			.sort(
-				(a, b) =>
-					new Date(a.dueDatetime).getTime() - new Date(b.dueDatetime).getTime(),
-			)
-			.slice(0, 2);
-	}, [weeklyTasks]);
-
-	// 마감이 임박한 순으로 정렬된 전체 할 일 (최대 2개)
-	const topAllTasks = useMemo(() => {
-		return [...allTasks]
-			.sort(
-				(a, b) =>
-					new Date(a.dueDatetime).getTime() - new Date(b.dueDatetime).getTime(),
-			)
-			.slice(0, 2);
-	}, [allTasks]);
 
 	const handleTabChange = useCallback((tab: "today" | "all") => {
 		setActiveTab(tab);
@@ -233,7 +186,20 @@ const HomePageContent = () => {
 				) : (
 					<main className="flex-1 overflow-y-auto px-5 pb-40 pt-28">
 						{/* 오늘 할일 탭 */}
-						{activeTab === "today" && <TodayTaskTabWrapper />}
+						{activeTab === "today" && (
+							<TodayTaskTabWrapper
+								taskType={taskType}
+								isTotallyEmpty={isTotallyEmpty}
+								hasWeeklyTasksOnly={hasWeeklyTasksOnly}
+								hasAllTasksOnly={hasAllTasksOnly}
+								hasTodayAndInProgressTasks={hasTodayAndInProgressTasks}
+								hasInProgressTasksOnly={hasInProgressTasksOnly}
+								hasTodayTasksOnly={hasTodayTasksOnly}
+								handleTaskClick={handleTaskClick}
+								handleDetailTask={handleDetailTask}
+								handleDeleteTask={handleDeleteTask}
+							/>
+						)}
 
 						{/* 전체 할일 탭 */}
 						{activeTab === "all" && (
