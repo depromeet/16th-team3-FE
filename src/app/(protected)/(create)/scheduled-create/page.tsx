@@ -20,20 +20,13 @@ import { useEffect, useState } from "react";
 import TaskInput from "../_components/taskInput/TaskInput";
 
 const BufferTime = dynamic(
-	() =>
-		import(/* webpackPrefetch: true */ "../_components/bufferTime/BufferTime"),
+	() => import("../_components/bufferTime/BufferTime"),
 );
 const EstimatedTimeInput = dynamic(
-	() =>
-		import(
-			/* webpackPrefetch: true */ "../_components/estimatedTimeInput/EstimatedTimeInput"
-		),
+	() => import("../_components/estimatedTimeInput/EstimatedTimeInput"),
 );
 const SmallActionInput = dynamic(
-	() =>
-		import(
-			/* webpackPrefetch: true */ "../_components/smallActionInput/SmallActionInput"
-		),
+	() => import("../_components/smallActionInput/SmallActionInput"),
 );
 const TaskTypeInput = dynamic(
 	() =>

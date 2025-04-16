@@ -15,25 +15,15 @@ import Header from "./_components/header/Header";
 import TodayTaskTabWrapper from "./_components/todayTaskTabWrapper/TodayTaskTabWrapper";
 
 const AllTaskTabWrapper = dynamic(
-	() =>
-		import(
-			/* webpackPrefetch: true */ "./_components/allTaskTabWrapper/AllTaskTabWrapper"
-		),
+	() => import("./_components/allTaskTabWrapper/AllTaskTabWrapper"),
 );
 
-const TaskDetailSheet = dynamic(
-	() => import(/* webpackPrefetch: true */ "./_components/TaskDetailSheet"),
-);
+const TaskDetailSheet = dynamic(() => import("./_components/TaskDetailSheet"));
 
-const CreateTaskSheet = dynamic(
-	() => import(/* webpackPrefetch: true */ "./_components/CreateTaskSheet"),
-);
+const CreateTaskSheet = dynamic(() => import("./_components/CreateTaskSheet"));
 
 const FailedDialog = dynamic(
-	() =>
-		import(
-			/* webpackPrefetch: true */ "../(create)/_components/failedDialog/FailedDialog"
-		),
+	() => import("../(create)/_components/failedDialog/FailedDialog"),
 );
 
 const CharacterDialog = dynamic(
