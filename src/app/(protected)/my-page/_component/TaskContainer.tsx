@@ -15,7 +15,7 @@ const TaskItem = ({ task }: { task: TaskOrigin }) => {
 
 	const handleTaskClick = () => {
 		setCurrentTask(task);
-		router.push('/my-page/task-detail');
+		router.push(`/my-page/task-detail/${task.id}`);
 	};
 
 	return (

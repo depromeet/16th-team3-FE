@@ -57,3 +57,18 @@ export interface MyData {
 	completedTaskCount: number;
 	procrastinatedTaskCount: number;
 }
+
+export interface TaskWithRetrospection {
+	id: number,
+	name: string,
+	personaId: number,
+	personaName: string,
+	triggerAction: string,
+	estimatedTime: number,
+	dueDateTime: string,
+	status: string,
+	updatedAt: string,
+	satisfaction: number,
+	concentration: number,
+	comment: string
+}
