@@ -44,7 +44,7 @@ const CharacterDialog = ({
 					<DialogDescription className="max-w-[190px] flex-wrap self-center">
 						{`‘${personaName}’ ${userData.nickname}님!`}
 					</DialogDescription>
-					<DialogDescription className="max-w-[190px] flex-wrap self-center">
+					<DialogDescription className="max-w-[190px] flex-wrap self-center font-semibold">
 						{task}
 					</DialogDescription>
 					<DialogDescription className="max-w-[190px] flex-wrap self-center">

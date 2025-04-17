@@ -25,6 +25,8 @@ export default function MyPage() {
 		queryKey: ["my-page"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
 		enabled: !!userData.memberId,
+		staleTime: 1000 * 60 * 5,
+		gcTime: 1000 * 60 * 60,
 	});
 
 	const handlePersonaClick = (id: number) => {

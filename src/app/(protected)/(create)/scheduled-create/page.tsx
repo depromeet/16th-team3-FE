@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import TaskInput from "../_components/taskInput/TaskInput";
+import TaskTypeInput from "../_components/taskTypeInput/TaskTypeInput";
 
 const BufferTime = dynamic(
 	() => import("../_components/bufferTime/BufferTime"),
@@ -27,13 +28,6 @@ const EstimatedTimeInput = dynamic(
 );
 const SmallActionInput = dynamic(
 	() => import("../_components/smallActionInput/SmallActionInput"),
-);
-const TaskTypeInput = dynamic(
-	() =>
-		import(
-			/* webpackPrefetch: true */
-			"../_components/taskTypeInput/TaskTypeInput"
-		),
 );
 
 type FormState = {

@@ -85,6 +85,7 @@ const CharactersPageContent = () => {
 									width={13}
 									height={12}
 									className="absolute top-8 left-[81px]"
+									priority
 								/>
 								<p className="absolute b2 text-white top-10 left-0 px-4 py-3 rounded-[12px] bg-component-gray-tertiary backdrop-blur-[7px]">
 									할 일 추가 시, 마감 유형과 분위기에 맞춘 캐릭터가 만들어져요

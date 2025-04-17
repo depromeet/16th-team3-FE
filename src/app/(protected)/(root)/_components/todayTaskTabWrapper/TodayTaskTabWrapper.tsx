@@ -5,30 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import dynamic from "next/dynamic";
+import ExpiredTaskDrawer from "../expiredTaskDrawer/ExpiredTaskDrawer";
+import HasAllTasksOnlyScreen from "../hasAllTasksOnlyScreen/HasAllTasksOnlyScreen";
+import HasInProgressTasksOnlyScreen from "../hasInProgressTasksOnlyScreen/HasInProgressTasksOnlyScreen";
+import HasTodayAndInProgressTasksScreen from "../hasTodayAndInProgressTasksScreen/HasTodayAndInProgressTasksScreen";
+import HasTodayTasksOnlyScreen from "../hasTodayTasksOnlyScreen/HasTodayTasksOnlyScreen";
+import HasWeeklyTasksOnlyScreen from "../hasWeeklyTasksOnlyScreen/HasWeeklyTasksOnlyScreen";
 
 const IsEmptyScreen = dynamic(() => import("../isEmptyScreen/IsEmptyScreen"));
-
-const HasTodayAndInProgressTasksScreen = dynamic(
-	() =>
-		import(
-			"../hasTodayAndInProgressTasksScreen/HasTodayAndInProgressTasksScreen"
-		),
-);
-const HasInProgressTasksOnlyScreen = dynamic(
-	() => import("../hasInProgressTasksOnlyScreen/HasInProgressTasksOnlyScreen"),
-);
-const HasTodayTasksOnlyScreen = dynamic(
-	() => import("../hasTodayTasksOnlyScreen/HasTodayTasksOnlyScreen"),
-);
-const HasWeeklyTasksOnlyScreen = dynamic(
-	() => import("../hasWeeklyTasksOnlyScreen/HasWeeklyTasksOnlyScreen"),
-);
-const HasAllTasksOnlyScreen = dynamic(
-	() => import("../hasAllTasksOnlyScreen/HasAllTasksOnlyScreen"),
-);
-const ExpiredTaskDrawer = dynamic(
-	() => import("../expiredTaskDrawer/ExpiredTaskDrawer"),
-);
 
 interface TodayTaskTabWrapperProps {
 	taskType: string;

@@ -9,29 +9,14 @@ import Loader from "@/components/loader/Loader";
 import useTaskFiltering from "@/hooks/useTaskFilter";
 import useTaskStatus from "@/hooks/useTaskStatus";
 import { useAuthStore } from "@/store";
-import dynamic from "next/dynamic";
+import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
+import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
+import CreateTaskSheet from "./_components/CreateTaskSheet";
+import TaskDetailSheet from "./_components/TaskDetailSheet";
+import AllTaskTabWrapper from "./_components/allTaskTabWrapper/AllTaskTabWrapper";
 import Footer from "./_components/footer/Footer";
 import Header from "./_components/header/Header";
 import TodayTaskTabWrapper from "./_components/todayTaskTabWrapper/TodayTaskTabWrapper";
-
-const AllTaskTabWrapper = dynamic(
-	() => import("./_components/allTaskTabWrapper/AllTaskTabWrapper"),
-);
-
-const TaskDetailSheet = dynamic(() => import("./_components/TaskDetailSheet"));
-
-const CreateTaskSheet = dynamic(() => import("./_components/CreateTaskSheet"));
-
-const FailedDialog = dynamic(
-	() => import("../(create)/_components/failedDialog/FailedDialog"),
-);
-
-const CharacterDialog = dynamic(
-	() => import("../(create)/_components/characterDialog/CharacterDialog"),
-	{
-		ssr: false,
-	},
-);
 
 const HomePageContent = () => {
 	const router = useRouter();
