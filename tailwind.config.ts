@@ -41,6 +41,7 @@ export default {
 				b1: ["18px", { lineHeight: "145%", fontWeight: "400" }],
 				b2: ["16px", { lineHeight: "145%", fontWeight: "400" }],
 				b3: ["14px", { lineHeight: "145%", fontWeight: "400" }],
+				b3Bold: ["14px", { lineHeight: "145%", fontWeight: "600" }],
 
 				/* Caption */
 				c1: ["13px", { lineHeight: "150%", fontWeight: "400" }],

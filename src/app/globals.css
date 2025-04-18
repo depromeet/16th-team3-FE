@@ -51,7 +51,7 @@ body {
 /* 배경색 설정 */
 html {
 	@apply bg-background-primary;
-  }
+}
 
 /* 기본 헤더 스타일 */
 .h1 {
@@ -103,6 +103,10 @@ html {
 
 .b3 {
 	@apply text-b3;
+}
+
+.b3Bold {
+	@apply text-b3 font-semibold;
 }
 
 /* 캡션 스타일 */

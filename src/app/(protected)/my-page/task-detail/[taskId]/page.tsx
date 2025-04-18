@@ -1,7 +1,7 @@
-import ExpiredTaskDetailPage from "./ExpiredTaskDetailPage";
 import { serverApi } from "@/lib/serverKy";
+import type { TaskWithRetrospection } from "@/types/myPage";
 import { HTTPError } from "ky";
-import { TaskWithRetrospection } from "@/types/myPage";
+import ExpiredTaskDetailPage from "./ExpiredTaskDetailPage";
 
 const fetchServerTaskWithRetrospection = async (
 	taskId: string,
@@ -22,14 +22,14 @@ const fetchServerTaskWithRetrospection = async (
 	return response as TaskWithRetrospection;
 };
 
-
 export default async function RetrospectPage({
-    params,
+	params,
 }: {
-    params: Promise<{ taskId: string }>;
+	params: Promise<{ taskId: string }>;
 }) {
-    const { taskId } = await params;
-    const task: TaskWithRetrospection = await fetchServerTaskWithRetrospection(taskId);
+	const { taskId } = await params;
+	const task: TaskWithRetrospection =
+		await fetchServerTaskWithRetrospection(taskId);
 
-    return <ExpiredTaskDetailPage task={task} />;
+	return <ExpiredTaskDetailPage task={task} />;
 }
