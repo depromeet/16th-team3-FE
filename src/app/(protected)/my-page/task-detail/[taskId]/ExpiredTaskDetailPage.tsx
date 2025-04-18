@@ -6,6 +6,8 @@ import { TaskOrigin, TaskWithRetrospection } from "@/types/myPage";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "@/components/component/Badge";
+import { useUserStore } from "@/store";
 
 type Props = {
     task: TaskWithRetrospection;
@@ -13,7 +15,9 @@ type Props = {
 
 export default function ExpiredTaskDetailPage({task} :Props) {
     const router = useRouter();
+    const { userData } = useUserStore();
     console.log(task);
+    console.log(userData);
 
     const taskStatus = task.status === "COMPLETE" ? "COMPLETE" : "FAIL";
 
@@ -29,7 +33,7 @@ export default function ExpiredTaskDetailPage({task} :Props) {
     }
 
     return (
-        <div className="flex min-h-screen flex-col pb-[34px]">
+        <div className="flex min-h-screen flex-col pb-[34px] bg-background-primary">
             {/* 헤더 부분 */}
             <CustomBackHeader title={PHRASE[taskStatus].topBar} backRoute="/my-page">
             </CustomBackHeader>
@@ -49,13 +53,19 @@ export default function ExpiredTaskDetailPage({task} :Props) {
                     {/* Contents - 작업 개요 - 작업 정보 */}
                     <div className="flex flex-col gap-6">
                         {/* Contents - 작업 개요 - 작업 정보 - 페르소나 */}
-                        <div className="flex flex-col gap-3">
-                            <div className="relative h-[120px]">
-                                <Image
-                                    src="/icons/mypage/mypage-character.png"
-                                    alt="mypage-character"
-                                    fill
-                                />
+                        <div className="flex flex-col gap-3 justify-center">
+                            <div className="relative flex w-full h-[120px] overflow-visible justify-center items-center">
+                                <div className="absolute top-1/2 -translate-y-1/2 items-center">
+                                    <Image
+                                        src="/icons/mypage/mypage-character.png"
+                                        alt="mypage-character"
+                                        width={335}
+                                        height={254}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex w-full justify-center">
+                                <Badge>{task.personaName} {userData.nickname}</Badge>
                             </div>
                         </div>
 
