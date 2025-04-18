@@ -48,12 +48,7 @@ export default function ExpiredTaskDetailPage({task} :Props) {
             name: "마감일",
             onlyComplete: false,
             content: convertIsoToMonthDayTimeText(task.dueDateTime)
-        },
-        // {
-        //     name: "완료일",
-        //     onlyComplete: true,
-        //     content: convertIsoToMonthDayTimeText(task.updatedAt)
-        // },
+        }
     ]
 
     const filtered = keys.filter((item) => {
@@ -112,6 +107,7 @@ export default function ExpiredTaskDetailPage({task} :Props) {
                                     <span className="b3 text-gray-normal">{item.content}</span>
                                 </div>
                             ))}
+                                {/* 완료일 정보는 따로 */}
                                 {
                                     taskStatus === "COMPLETE" &&
                                     <div className="flex justify-between items-center w-full">
