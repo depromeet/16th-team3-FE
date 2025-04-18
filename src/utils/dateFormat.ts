@@ -349,3 +349,30 @@ export const getTimeRemaining = (
 
 	return { days, hours, minutes };
 };
+
+// 120분 => 2시간, 50분 => 50분, 90분 => 1시간 30분
+export const formatTimeFromMinutes = (minutes: number): string => {
+	const hours = Math.floor(minutes / 60);
+	const mins = minutes % 60;
+  
+	if (hours === 0 && mins === 0) return "0분";
+	if (hours === 0) return `${mins}분`;
+	if (mins === 0) return `${hours}시간`;
+	return `${hours}시간 ${mins}분`;
+}
+
+// 2025-03-05T16:00:00 -> "3월 5일, 오후 4:00"
+export const convertIsoToMonthDayTimeText = (input: string): string => {
+	const date = new Date(input);
+  
+	const month = date.getMonth() + 1;
+	const day = date.getDate();
+  
+	const time = date.toLocaleTimeString("ko-KR", {
+	  hour: "numeric",
+	  minute: "2-digit",
+	  hour12: true,
+	});
+  
+	return `${month}월 ${day}일, ${time}`;
+  }

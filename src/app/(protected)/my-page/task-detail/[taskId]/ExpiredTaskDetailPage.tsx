@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/component/Badge";
 import { useUserStore } from "@/store";
+import { convertIsoToMonthDayTimeText, formatTimeFromMinutes } from "@/utils/dateFormat";
 
 type Props = {
     task: TaskWithRetrospection;
@@ -32,6 +33,37 @@ export default function ExpiredTaskDetailPage({task} :Props) {
         }
     }
 
+    const keys = [
+        {
+            name: "작은 행동",
+            onlyComplete: false,
+            content: task.triggerAction
+        },
+        {
+            name: "예상 소요시간",
+            onlyComplete: false,
+            content: formatTimeFromMinutes(task.estimatedTime)
+        },
+        {
+            name: "마감일",
+            onlyComplete: false,
+            content: convertIsoToMonthDayTimeText(task.dueDateTime)
+        },
+        // {
+        //     name: "완료일",
+        //     onlyComplete: true,
+        //     content: convertIsoToMonthDayTimeText(task.updatedAt)
+        // },
+    ]
+
+    const filtered = keys.filter((item) => {
+        if (!item.onlyComplete) {
+          return item.onlyComplete === false;
+        }
+        // onlyComplete === true 인 경우, 조건 함수까지 만족해야 함
+        return item.onlyComplete === true && taskStatus === "COMPLETE";
+      });
+
     return (
         <div className="flex min-h-screen flex-col pb-[34px] bg-background-primary">
             {/* 헤더 부분 */}
@@ -45,7 +77,7 @@ export default function ExpiredTaskDetailPage({task} :Props) {
                     {/* Contents - 작업 개요 - 문구*/}
                     <div className="t3 flex mt-4 mb-5 justify-start">
                         <p>
-                            {task.name} <br />
+                            {task.name} <br />  {/* TODO: 이 task.name 이 새로고침 해야 나옴.. 뭔가 고쳐야 함*/}
                             {PHRASE[taskStatus].main}
                         </p>
                     </div>
@@ -70,8 +102,37 @@ export default function ExpiredTaskDetailPage({task} :Props) {
                         </div>
 
                         {/* Contents - 작업 개요 - 작업 정보 - 페르소나 제외 작업 정보 */}
-                        <div>
-
+                        <div className="flex flex-col gap-4 p-5 bg-component-gray-secondary rounded-[16px]">
+                            {keys.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex justify-between items-center w-full"
+                                >
+                                    <span className="b3 text-gray-alternative">{item.name}</span>
+                                    <span className="b3 text-gray-normal">{item.content}</span>
+                                </div>
+                            ))}
+                                {
+                                    taskStatus === "COMPLETE" &&
+                                    <div className="flex justify-between items-center w-full">
+                                        <span className="b3 text-gray-alternative">완료 일</span>
+                                        <div className="inline-flex gap-1 items-center">
+                                            <Image
+                                                src="/icons/mypage/clap.svg"
+                                                alt="mypage-character"
+                                                width={23}
+                                                height={23}
+                                            />
+                                            <span className="b3 font-semibold text-component-accent-primary"> {/* TODO: text-component-accent-secondary가 없는듯.. + semibold 적용 안되는 듯*/}{convertIsoToMonthDayTimeText(task.updatedAt)}</span>
+                                            <Image
+                                                src="/icons/mypage/clap.svg"
+                                                alt="mypage-character"
+                                                width={23}
+                                                height={23}
+                                            />
+                                        </div>
+                                    </div>
+                                }
                         
                         </div>
                     </div>
