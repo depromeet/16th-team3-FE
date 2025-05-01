@@ -15,7 +15,7 @@ export const serverApi = ky.create({
 	retry: {
 		limit: 2,
 		methods: ["get", "post"],
-		statusCodes: [401, 408, 413, 429, 500, 502, 503, 504],
+		statusCodes: [408, 413, 429, 500, 502, 503, 504],
 	},
 	hooks: {
 		beforeRequest: [
