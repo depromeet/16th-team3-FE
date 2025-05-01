@@ -12,7 +12,6 @@ import {
 } from "@/utils/dateFormat";
 import { getPersonaImage } from "@/utils/getPersonaImage";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 interface TaskWithPersona extends Omit<Task, "persona" | "dueDatetime"> {
 	persona: NonNullable<Task["persona"]>;
@@ -149,6 +148,7 @@ export default function ExpiredTaskDetailPage({ task, initialTask }: Props) {
 						<div className="flex flex-col gap-4 p-5 bg-component-gray-secondary rounded-[16px]">
 							{filtered.map((item, index) => (
 								<div
+									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 									key={index}
 									className="flex justify-between items-center w-full"
 								>

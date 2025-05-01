@@ -90,7 +90,6 @@ const useReminderCount = (initialCount: number = DEFAULT_VALUES.COUNT) => {
 };
 
 function formatTimestamp(timestamp: string): string {
-	console.log(timestamp);
 	return timestamp.slice(0, 19).replace("T", " ");
 	// return timestamp.replace('T', ' ');
 }
@@ -121,9 +120,7 @@ export default function ActionRemindPageClient({
 		}
 		setToggleForRepeatableToast(!toggleForRepeatableToast);
 		setToastMessage("");
-		console.log(selectedInterval, count);
-		console.log(initialTask.triggerActionAlarmTime);
-		console.log(formatTimestamp(initialTask.triggerActionAlarmTime));
+
 		mutate({
 			taskId: initialTask?.id.toString() ?? "",
 			data: {

@@ -29,7 +29,6 @@ export default function Complete() {
 
 	useEffect(() => {
 		setCapturedImage(localStorage.getItem("capturedImage") || "");
-		console.log("capturedImage", capturedImage);
 	}, []);
 
 	useEffect(() => {

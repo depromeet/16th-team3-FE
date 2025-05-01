@@ -8,7 +8,6 @@ import React, { useState, useEffect, Suspense, useCallback } from "react";
 import Loader from "@/components/loader/Loader";
 import useTaskFiltering from "@/hooks/useTaskFilter";
 import useTaskStatus from "@/hooks/useTaskStatus";
-import { useAuthStore } from "@/store";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
 import FailedDialog from "../(create)/_components/failedDialog/FailedDialog";
 import CreateTaskSheet from "./_components/CreateTaskSheet";
@@ -21,10 +20,6 @@ import TodayTaskTabWrapper from "./_components/todayTaskTabWrapper/TodayTaskTabW
 const HomePageContent = () => {
 	const router = useRouter();
 	const { data: homeData, isPending } = useHomeData();
-
-	const isUserProfileLoading = useAuthStore(
-		(state) => state.isUserProfileLoading,
-	);
 
 	const { mutate: startTaskMutation } = useStartTask();
 	const { mutate: deleteTaskMutation } = useDeleteTask();
@@ -181,7 +176,7 @@ const HomePageContent = () => {
 					handleTabChange={handleTabChange}
 				/>
 
-				{isUserProfileLoading || isPending ? (
+				{isPending ? (
 					<Loader />
 				) : (
 					<main className="flex-1 overflow-y-auto px-5 pb-40 pt-28">

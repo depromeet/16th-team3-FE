@@ -144,11 +144,6 @@ const WeeklyTasksPage = () => {
 	const groupTasksByCategory = useCallback((tasks: Task[]) => {
 		const grouped: Record<string, Task[]> = {};
 
-		// 개발 환경에서 디버깅용 로그
-		if (process.env.NODE_ENV === "development" && tasks.length > 0) {
-			console.log("Sample task:", tasks[0]);
-		}
-
 		for (const task of tasks) {
 			// persona.taskKeywordsCombination.taskType.name에서 카테고리 정보 가져오기
 			const category =
