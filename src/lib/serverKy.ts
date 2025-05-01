@@ -1,10 +1,14 @@
-import ky from "ky";
+import ky, { type KyResponse } from "ky";
 
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 const REFRESH_ENDPOINT = "/v1/auth/token/refresh";
 const UNAUTHORIZED_CODE = 401;
+
+let refreshPromise:
+	| (() => Promise<NextResponse<unknown> | KyResponse<unknown>>)
+	| null = null;
 
 export const serverApi = ky.create({
 	prefixUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -15,7 +19,7 @@ export const serverApi = ky.create({
 	retry: {
 		limit: 2,
 		methods: ["get", "post"],
-		statusCodes: [401, 408, 413, 429, 500, 502, 503, 504],
+		statusCodes: [408, 413, 429, 500, 502, 503, 504],
 	},
 	hooks: {
 		beforeRequest: [
@@ -34,60 +38,67 @@ export const serverApi = ky.create({
 				const currentAccessToken = cookieStore.get("accessToken")?.value;
 				const refreshToken = cookieStore.get("refreshToken")?.value;
 
-				if (response.status === UNAUTHORIZED_CODE || !currentAccessToken) {
-					try {
-						const refreshResponse = await fetch(
-							`${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
-							{
-								method: "POST",
-								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({
-									refreshToken: refreshToken,
-								}),
-							},
-						);
+				if (
+					(response.status === UNAUTHORIZED_CODE || !currentAccessToken) &&
+					refreshPromise !== null
+				) {
+					refreshPromise = async () => {
+						try {
+							const refreshResponse = await fetch(
+								`${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
+								{
+									method: "POST",
+									headers: { "Content-Type": "application/json" },
+									body: JSON.stringify({
+										refreshToken: refreshToken,
+									}),
+								},
+							);
 
-						if (!refreshResponse.ok) {
-							const errText = await refreshResponse.text();
+							if (!refreshResponse.ok) {
+								const errText = await refreshResponse.text();
 
-							console.error("Refresh API 실패:", errText);
+								console.error("Refresh API 실패:", errText);
 
-							cookieStore.delete("accessToken");
-							cookieStore.delete("refreshToken");
+								cookieStore.delete("accessToken");
+								cookieStore.delete("refreshToken");
+
+								return NextResponse.redirect(new URL("/login", request.url));
+							}
+
+							const {
+								accessToken: newAccessToken,
+								refreshToken: newRefreshToken,
+							} = (await refreshResponse.json()) as {
+								accessToken: string;
+								refreshToken: string;
+							};
+
+							cookieStore.set("accessToken", newAccessToken, {
+								httpOnly: true,
+								secure: true,
+								sameSite: "none",
+								path: "/",
+								maxAge: 60 * 60,
+							});
+
+							cookieStore.set("refreshToken", newRefreshToken, {
+								httpOnly: true,
+								secure: true,
+								sameSite: "none",
+								path: "/",
+								maxAge: 60 * 60 * 24 * 7,
+							});
+
+							return serverApi(request, options);
+						} catch (error) {
+							console.error("refresh 요청 중 에러 발생:", error);
 
 							return NextResponse.redirect(new URL("/login", request.url));
+						} finally {
+							refreshPromise = null;
 						}
-
-						const {
-							accessToken: newAccessToken,
-							refreshToken: newRefreshToken,
-						} = (await refreshResponse.json()) as {
-							accessToken: string;
-							refreshToken: string;
-						};
-
-						cookieStore.set("accessToken", newAccessToken, {
-							httpOnly: true,
-							secure: true,
-							sameSite: "none",
-							path: "/",
-							maxAge: 60 * 60,
-						});
-
-						cookieStore.set("refreshToken", newRefreshToken, {
-							httpOnly: true,
-							secure: true,
-							sameSite: "none",
-							path: "/",
-							maxAge: 60 * 60 * 24 * 7,
-						});
-
-						return serverApi(request, options);
-					} catch (error) {
-						console.error("refresh 요청 중 에러 발생:", error);
-
-						return NextResponse.redirect(new URL("/login", request.url));
-					}
+					};
 				}
 
 				return response;
