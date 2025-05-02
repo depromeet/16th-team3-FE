@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 import ProfileImage from "@/components/ProfileImage";
-import Loader from "@/components/loader/Loader";
 import type { MyData } from "@/types/myPage";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import CustomBackHeader from "@/components/customBackHeader/CustomBackHeader";
+import SpurtyLoader from "@/components/spurtyLoader/SpurtyLoader";
 import PersonaSection from "./_component/PersonaSection";
 import RetrospectSection from "./_component/RetroSpectSection";
 import TaskContainer from "./_component/TaskContainer";
@@ -78,7 +78,7 @@ export default function MyPage() {
 
 			{/* 프로필 정보 */}
 			{isFetching ? (
-				<Loader />
+				<SpurtyLoader />
 			) : (
 				<>
 					<div className="mb-8 mt-[65px] flex flex-col items-center justify-center">

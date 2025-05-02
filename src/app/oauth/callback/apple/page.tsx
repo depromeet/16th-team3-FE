@@ -1,6 +1,6 @@
 "use client";
 
-import Loader from "@/components/loader/Loader";
+import SpurtyLoader from "@/components/spurtyLoader/SpurtyLoader";
 import { useUserStore } from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect } from "react";
@@ -57,20 +57,14 @@ const AppleLoginContent = () => {
 
 	return (
 		<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
-			<Loader />
+			<SpurtyLoader />
 		</div>
 	);
 };
 
 const AppleLoginPage = () => {
 	return (
-		<Suspense
-			fallback={
-				<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
-					<Loader />
-				</div>
-			}
-		>
+		<Suspense>
 			<AppleLoginContent />
 		</Suspense>
 	);

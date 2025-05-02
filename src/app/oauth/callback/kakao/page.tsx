@@ -1,6 +1,6 @@
 "use client";
 
-import Loader from "@/components/loader/Loader";
+import SpurtyLoader from "@/components/spurtyLoader/SpurtyLoader";
 import { useUserStore } from "@/store/useUserStore";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -30,11 +30,11 @@ const KakaoTalk = () => {
 				setUser(response.userData);
 
 				if (response.isNewUser) {
-					router.push("/onboarding");
+					router.push("/signup-complete");
 					return;
 				}
 
-				router.push("/"); // TODO: Redirect to the home page('/')
+				router.push("/");
 			} else {
 				console.error("Failed to login");
 			}
@@ -50,20 +50,14 @@ const KakaoTalk = () => {
 
 	return (
 		<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
-			<Loader />
+			<SpurtyLoader />
 		</div>
 	);
 };
 
 const KakaoTalkPage = () => {
 	return (
-		<Suspense
-			fallback={
-				<div className="flex h-screen items-center justify-center bg-background-primary px-5 py-12">
-					<Loader />
-				</div>
-			}
-		>
+		<Suspense>
 			<KakaoTalk />
 		</Suspense>
 	);

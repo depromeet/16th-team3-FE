@@ -7,14 +7,17 @@ import Link from "next/link";
 
 export default function SignupCompletePage() {
 	const { userData } = useUserStore();
+
+	const userNickname = userData?.nickname || "";
+
 	const formatNickname = (name: string) => {
 		if (!name) return "";
 		if (name.length > 9) {
-			return name.substring(0, 9) + "...";
+			return `${name.substring(0, 9)}...`;
 		}
 		return name;
 	};
-	const userNickname = userData?.nickname || "";
+
 	return (
 		<div className="relative h-full flex flex-col items-center justify-center bg-background-primary px-5 py-12">
 			<div className="bg-blur-purple absolute bottom-[120px] left-0 right-0 z-0 h-[240px] w-[100vw] blur-[75px]" />

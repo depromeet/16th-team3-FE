@@ -7,14 +7,7 @@ interface LoaderProps {
 
 const Loader = ({ width = 50, height = 50 }: LoaderProps) => {
 	return (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				height: "100vh",
-			}}
-		>
+		<div className="flex justify-center items-center h-screen">
 			<motion.div
 				style={{
 					width: width,

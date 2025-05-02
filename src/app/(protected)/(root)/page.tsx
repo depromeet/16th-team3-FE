@@ -5,7 +5,7 @@ import type { Task, TaskWithPersona } from "@/types/task";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect, Suspense, useCallback } from "react";
 
-import Loader from "@/components/loader/Loader";
+import SpurtyLoader from "@/components/spurtyLoader/SpurtyLoader";
 import useTaskFiltering from "@/hooks/useTaskFilter";
 import useTaskStatus from "@/hooks/useTaskStatus";
 import CharacterDialog from "../(create)/_components/characterDialog/CharacterDialog";
@@ -177,7 +177,7 @@ const HomePageContent = () => {
 				/>
 
 				{isPending ? (
-					<Loader />
+					<SpurtyLoader />
 				) : (
 					<main className="flex-1 overflow-y-auto px-5 pb-40 pt-28">
 						{/* 오늘 할일 탭 */}

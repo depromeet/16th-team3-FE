@@ -3,7 +3,8 @@
 import TaskDetailSheet from "@/app/(protected)/(root)/_components/TaskDetailSheet";
 import TaskFilterDropdown from "@/app/(protected)/(root)/_components/TaskFilterDropdown";
 import WeeklyTaskItem from "@/app/(protected)/(root)/_components/WeeklyTaskItem";
-import Loader from "@/components/loader/Loader";
+
+import SpurtyLoader from "@/components/spurtyLoader/SpurtyLoader";
 import Header from "@/components/ui/header";
 import { useDeleteTask, useHomeData, useStartTask } from "@/hooks/useTasks";
 import type { Task, TaskWithPersona } from "@/types/task";
@@ -278,7 +279,7 @@ const WeeklyTasksPage = () => {
 			<div className="flex h-screen flex-col bg-background-primary">
 				<Header title="이번주 할일" />
 				<div className="flex flex-1 items-center justify-center px-5 pb-24">
-					<Loader />
+					<SpurtyLoader />
 				</div>
 			</div>
 		);
