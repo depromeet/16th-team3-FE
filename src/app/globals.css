@@ -309,3 +309,7 @@ html {
 	z-index: 1;
 	animation: none !important;
 }
+
+.floating-persona {
+	@apply flex justify-center animate-floating-persona;
+}

@@ -166,6 +166,9 @@ export default {
 				"slide-left-in": "0.4s ease-out slide-left-in",
 				"slide-right-out": "0.4s ease-in forwards slide-right-out",
 				"slide-right-in": "0.4s ease-out slide-right-in",
+				"expand-down": "expandDown 0.3s ease-out forwards",
+				"expand-list-width": "expandListWidth 0.3s ease-out forwards",
+				"floating-persona": "floating 3s ease-in-out infinite",
 			},
 			keyframes: {
 				toast: {
@@ -189,6 +192,19 @@ export default {
 				"slide-right-in": {
 					from: { transform: "translateX(-100%)" },
 					to: { transform: "translateX(0)" },
+				},
+				expandDown: {
+					from: { opacity: "0", maxHeight: "0" },
+					to: { opacity: "1", maxHeight: "300px" },
+				},
+				expandListWidth: {
+					from: { width: "172px" },
+					to: { width: "243px" },
+				},
+				floating: {
+					"0%": { transform: "translateY(8px)" },
+					"50%": { transform: "translateY(-8px)" },
+					"100%": { transform: "translateY(8px)" },
 				},
 			},
 		},

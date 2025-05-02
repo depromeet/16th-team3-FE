@@ -367,47 +367,6 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 					</div>
 				</div>
 			)}
-
-			{/* CSS Animations */}
-			<style jsx global>{`
-			@keyframes expandDown {
-			from {
-				opacity: 0;
-				max-height: 0;
-			}
-			to {
-				opacity: 1;
-				max-height: 300px;
-			}
-			}
-
-			@keyframes expandListWidth {
-			from {
-				width: 172px;
-			}
-			to {
-				width: 243px;
-			}
-			}
-
-			@keyframes floating {
-			0% {
-				transform: translateY(8px);
-			}
-			50% {
-				transform: translateY(-8px);
-			}
-			100% {
-				transform: translateY(8px);
-			}
-			}
-
-			.floating-persona {
-			animation: floating 3s ease-in-out infinite;
-			display: flex;
-			justify-content: center;
-			}
-		`}</style>
 		</div>
 	);
 }
