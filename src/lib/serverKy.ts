@@ -5,7 +5,10 @@ import { NextResponse } from "next/server";
 const REFRESH_ENDPOINT = "/v1/auth/token/refresh";
 const UNAUTHORIZED_CODE = 401;
 
-let refreshPromise: Promise<string> | null = null;
+let refreshPromise: Promise<{
+	accessToken: string;
+	refreshToken: string;
+}> | null = null;
 
 export const serverApi = ky.create({
 	prefixUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -70,13 +73,33 @@ export const serverApi = ky.create({
 							maxAge: 60 * 60 * 24 * 7,
 						});
 
-						return accessToken;
+						return { accessToken, refreshToken: newRefreshToken };
 					})();
 				}
 
 				try {
-					const newToken = await refreshPromise;
-					request.headers.set("Authorization", `Bearer ${newToken}`);
+					const { accessToken, refreshToken: newRefreshToken } =
+						await refreshPromise;
+					request.headers.set("Authorization", `Bearer ${accessToken}`);
+
+					// ! 이 코드가 의미가 있을까..?
+					const cookieStore = await cookies();
+
+					cookieStore.set("accessToken", accessToken, {
+						httpOnly: true,
+						secure: true,
+						sameSite: "none",
+						path: "/",
+						maxAge: 60 * 60,
+					});
+					cookieStore.set("refreshToken", newRefreshToken, {
+						httpOnly: true,
+						secure: true,
+						sameSite: "none",
+						path: "/",
+						maxAge: 60 * 60 * 24 * 7,
+					});
+
 					return serverApi(request, options);
 				} catch (err) {
 					return NextResponse.redirect(new URL("/login", request.url));
