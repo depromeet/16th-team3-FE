@@ -89,11 +89,6 @@ export default function MyPage() {
 							{userData?.nickname || "사용자"}
 						</div>
 					</div>
-					<div className="flex flex-col items-start justify-start px-5 py-4">
-						<div className="b2 text-gray-normal">
-							로그인 정보 : {userData?.email || ""}
-						</div>
-					</div>
 				</>
 			)}
 

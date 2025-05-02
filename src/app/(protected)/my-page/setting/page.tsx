@@ -11,9 +11,9 @@ import { useState } from "react";
 
 export default function MyPage() {
 	const router = useRouter();
+	const userData = useUserStore((state) => state.userData);
 	const clearUser = useUserStore((state) => state.clearUser);
 
-	const [appVersion] = useState("V.0.0.1");
 	const [showLogoutModal, setShowLogoutModal] = useState(false);
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
@@ -110,11 +110,14 @@ export default function MyPage() {
 			</div>
 
 			<div className="px-5 mt-[65px]">
-				<div className="l5 pb-4 text-gray-alternative">서비스 관리</div>
-
+				<div className="l5 text-gray-alternative">서비스 관리</div>
 				<div className="flex items-center justify-between py-4">
+					<div className="b2 text-base text-gray-normal">로그인 정보</div>
+					<div className="l5 text-gray-neutral">{userData?.email || ""}</div>
+				</div>
+				<div className="flex items-center justify-between pt-0 pb-4">
 					<div className="b2 text-base text-gray-normal">앱 버전</div>
-					<div className="l5 text-gray-neutral">{appVersion} 최신 버전</div>
+					<div className="l5 text-gray-neutral">v1.0.4 최신 버전</div>
 				</div>
 
 				<Link
@@ -162,7 +165,7 @@ export default function MyPage() {
 			<div className="px-5">
 				<button
 					type="button"
-					className="b2 w-full pb-4 pt-6 text-left text-base text-gray-normal"
+					className="b2 w-full pb-4 pt-5 text-left text-base text-gray-normal"
 					onClick={handleLogout}
 				>
 					로그아웃
