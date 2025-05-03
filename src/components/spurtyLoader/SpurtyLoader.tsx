@@ -47,7 +47,7 @@ const SpurtyLoader = () => {
 				/>
 			</div>
 			<div className="mt-2 flex justify-center whitespace-pre-line text-center b2">
-				로딩 중...
+				잠시만 기다려주세요
 			</div>
 		</div>
 	);
