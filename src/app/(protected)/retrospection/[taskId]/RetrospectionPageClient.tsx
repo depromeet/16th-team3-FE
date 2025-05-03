@@ -50,7 +50,7 @@ export default function RetrospectionPageClient({ task }: Props) {
 			createRetrospect({ taskId, retrospection }),
 		onSuccess: () => {
 			router.push("/retrospection/complete");
-			queryClient.invalidateQueries({ queryKey: ["my-page", "tasks", "home"] });
+			queryClient.invalidateQueries({ queryKey: ["tasks", "home", "myPage"] });
 		},
 	});
 

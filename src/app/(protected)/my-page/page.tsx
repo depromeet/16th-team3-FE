@@ -22,11 +22,10 @@ export default function MyPage() {
 	const setUser = useUserStore((state) => state.setUser);
 
 	const { data: myPageData, isFetching } = useQuery<MyData>({
-		queryKey: ["my-page"],
+		queryKey: ["myPage"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
 		enabled: !!userData.memberId,
 		staleTime: 1000 * 60 * 5,
-		gcTime: 1000 * 60 * 60,
 	});
 
 	const handlePersonaClick = (id: number) => {

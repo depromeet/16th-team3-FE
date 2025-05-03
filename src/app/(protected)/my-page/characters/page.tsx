@@ -24,7 +24,7 @@ const CharactersPageContent = () => {
 	const tooltipWrapperRef = useRef<HTMLDivElement>(null);
 
 	const { data: myPageData } = useQuery<MyData>({
-		queryKey: ["my-page"],
+		queryKey: ["myPage"],
 		queryFn: async () => await fetch("/api/my-page").then((res) => res.json()),
 	});
 
