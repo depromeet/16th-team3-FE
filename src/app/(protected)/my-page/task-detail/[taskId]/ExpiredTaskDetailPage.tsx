@@ -270,7 +270,7 @@ export default function ExpiredTaskDetailPage({ task, initialTask }: Props) {
 										style={{
 											width: `${BAR.SLIDER_RADIUS * 2}px`,
 											height: `${BAR.SLIDER_RADIUS * 2}px`,
-											left: `calc(${(task.concentration / 5) * 100}% - ${BAR.SLIDER_RADIUS * 2}px)`,
+											left: `calc(${task.concentration}% - ${BAR.SLIDER_RADIUS * 2}px)`,
 											transition: "left 0.2s ease",
 										}}
 									/>
