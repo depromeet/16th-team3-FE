@@ -46,8 +46,14 @@ const SpurtyLoader = () => {
 					priority
 				/>
 			</div>
-			<div className="mt-2 flex justify-center whitespace-pre-line text-center b2">
-				잠시만 기다려주세요
+			<div
+				className="s3 flex items-center justify-center whitespace-nowrap rounded-[999px] px-[14px] py-[10px] text-[#BDBDF5]"
+				style={{
+					background: "var(--Elevated-PointPriamry, rgba(107, 107, 225, 0.20))",
+					backdropFilter: "blur(30px)",
+				}}
+			>
+				<span>잠시만 기다려주세요</span>
 			</div>
 		</div>
 	);
