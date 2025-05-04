@@ -44,7 +44,6 @@ const HomePageContent = () => {
 		inProgressTasks,
 	});
 
-	// 화면 분기 처리를 위한 상태
 	const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState<"today" | "all">("today");
 	const [detailTask, setDetailTask] = useState<Task | null>(null);
