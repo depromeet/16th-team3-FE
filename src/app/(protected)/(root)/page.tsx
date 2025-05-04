@@ -59,6 +59,7 @@ const HomePageContent = () => {
 	const [urgentTaskId, setUrgentTaskId] = useState<number | undefined>(
 		undefined,
 	);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleDetailTask = (task: Task) => {
 		setDetailTask(task);
@@ -98,12 +99,15 @@ const HomePageContent = () => {
 		setIsCreateSheetOpen(false);
 	};
 
-	const handleCharacterDialogButtonClick = () => {
+	const handleCharacterDialogButtonClick = async () => {
 		if (taskType === "instant") {
-			router.push(`/immersion/${urgentTaskId}`);
+			setIsLoading(true);
+			await router.push(`/immersion/${urgentTaskId}`);
 		} else {
 			setIsDialogOpen(false);
 		}
+
+		setIsLoading(false);
 	};
 
 	const handleFailedDialogButtonClick = () => {
@@ -113,6 +117,12 @@ const HomePageContent = () => {
 	const handleTabChange = useCallback((tab: "today" | "all") => {
 		setActiveTab(tab);
 	}, []);
+
+	useEffect(() => {
+		if (isDialogOpen && taskType === "instant") {
+			router.prefetch(`immersion/${urgentTaskId}`);
+		}
+	}, [isDialogOpen, router, taskType, urgentTaskId]);
 
 	useEffect(() => {
 		if (searchParams.get("dialog") === "success") {
@@ -230,6 +240,7 @@ const HomePageContent = () => {
 				taskType={taskType}
 				personaName={personaName}
 				personaId={personaId}
+				isLoading={isLoading}
 				onClick={handleCharacterDialogButtonClick}
 			/>
 

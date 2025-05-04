@@ -1,25 +1,16 @@
 "use client";
 
 import BackHeader from "@/components/backHeader/BackHeader";
-import Loader from "@/components/loader/Loader";
+
 import useMount from "@/hooks/useMount";
 import type { InstantTaskType, TimePickerType } from "@/types/create";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFunnelSteps, useFunnel } from "@use-funnel/browser";
-import dynamic from "next/dynamic";
+
 import { useRouter } from "next/navigation";
+import InstantTaskTypeInput from "../_components/instantTaskTypeInput/InstantTaskTypeInput";
 import TaskInput from "../_components/taskInput/TaskInput";
 import type { InstantTaskInputType, TaskInputType } from "../context";
-
-const InstantTaskTypeInput = dynamic(
-	() =>
-		import(
-			"@/app/(protected)/(create)/_components/instantTaskTypeInput/InstantTaskTypeInput"
-		),
-	{
-		loading: () => <Loader />,
-	},
-);
 
 type FormState = {
 	task?: string;
