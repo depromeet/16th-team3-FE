@@ -1,10 +1,7 @@
 "use client";
 
 import type { Task } from "@/types/task";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
-import ExpiredTaskDrawer from "../expiredTaskDrawer/ExpiredTaskDrawer";
 import HasAllTasksOnlyScreen from "../hasAllTasksOnlyScreen/HasAllTasksOnlyScreen";
 import HasInProgressTasksOnlyScreen from "../hasInProgressTasksOnlyScreen/HasInProgressTasksOnlyScreen";
 import HasTodayAndInProgressTasksScreen from "../hasTodayAndInProgressTasksScreen/HasTodayAndInProgressTasksScreen";
@@ -37,20 +34,6 @@ const TodayTaskTabWrapper = ({
 	handleDetailTask,
 	handleDeleteTask,
 }: TodayTaskTabWrapperProps) => {
-	const router = useRouter();
-
-	const [showExpiredTaskSheet, setShowExpiredTaskSheet] = useState(false);
-	const [expiredTask, setExpiredTask] = useState<Task | null>(null);
-
-	const handleGoToReflection = (taskId: number) => {
-		router.push(`/retrospection/${taskId}`);
-		setShowExpiredTaskSheet(false);
-	};
-
-	const handleCloseExpiredSheet = () => {
-		setShowExpiredTaskSheet(false);
-	};
-
 	return (
 		<>
 			{isTotallyEmpty && <IsEmptyScreen />}
@@ -94,14 +77,14 @@ const TodayTaskTabWrapper = ({
 				/>
 			)}
 
-			{/* 뭔가 잘못된거 같음. expiredTask를 할당하는 로직이 없음. */}
+			{/* 뭔가 잘못된거 같음. expiredTask를 할당하는 로직이 없음.
 			{showExpiredTaskSheet && expiredTask && (
 				<ExpiredTaskDrawer
 					expiredTask={expiredTask}
 					handleGoToReflection={handleGoToReflection}
 					handleCloseExpiredSheet={handleCloseExpiredSheet}
 				/>
-			)}
+			)} */}
 		</>
 	);
 };

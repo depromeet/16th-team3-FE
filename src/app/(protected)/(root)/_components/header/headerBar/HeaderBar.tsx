@@ -10,8 +10,8 @@ const HeaderBar = () => {
 				alt="SPURT"
 				width={54}
 				height={20}
-				priority
 				className="w-[54px]"
+				priority
 			/>
 			<Link href="/my-page" className="flex items-center">
 				<button type="button">
@@ -20,6 +20,7 @@ const HeaderBar = () => {
 						alt="마이페이지"
 						width={20}
 						height={20}
+						priority
 					/>
 				</button>
 			</Link>
