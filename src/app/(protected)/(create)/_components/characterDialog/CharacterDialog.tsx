@@ -33,7 +33,7 @@ const CharacterDialog = ({
 	const personaImageSrc = getPersonaImage(personaId);
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onClick}>
+		<Dialog open={isOpen} onOpenChange={onClick} modal>
 			<DialogContent className="w-[328px] rounded-[24px] border-none bg-component-gray-secondary px-4 py-6">
 				<DialogHeader>
 					<DialogTitle className="text-normal t3 mb-1">
