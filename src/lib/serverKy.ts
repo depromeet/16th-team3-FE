@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 const REFRESH_ENDPOINT = "/v1/auth/token/refresh";
 const UNAUTHORIZED_CODE = 401;
 
-async function refreshTokenOnce(): Promise<string> {
+export async function refreshTokenOnce(): Promise<string> {
 	const cookieStore = await cookies();
 	const oldRefreshToken = cookieStore.get("refreshToken")?.value;
 
