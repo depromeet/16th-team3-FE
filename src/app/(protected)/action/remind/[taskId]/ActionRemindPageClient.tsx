@@ -15,6 +15,8 @@ import RemindLeaveModalContent from "./_component/RemindLeaveModalContent";
 import TaskDetails from "./_component/TaskDetails";
 import TimesList from "./_component/TimesList";
 
+import ArrowLeft from "@public/icons/common/arrow-left.svg";
+
 const REMINDER_LIMITS = {
 	MIN: 1,
 	MAX: 3,
@@ -186,7 +188,7 @@ export default function ActionRemindPageClient({
 			{/* TODO : 헤더 컴포넌트로 변경 예정 */}
 			<div className="flex items-center px-5 py-[14px]">
 				<Image
-					src="/icons/common/arrow-left.svg"
+					src={ArrowLeft}
 					alt="왼쪽 화살표"
 					width={24}
 					height={24}

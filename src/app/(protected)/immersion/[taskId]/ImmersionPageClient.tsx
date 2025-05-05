@@ -16,6 +16,7 @@ import Toast from "@/components/toast/Toast";
 import { Button } from "@/components/ui/button";
 import { useCompleteTask, useInProgressTasks } from "@/hooks/useTasks";
 import { getPersonaImage } from "@/utils/getPersonaImage";
+import ArrowLeft from "@public/icons/common/arrow-left.svg";
 import { Playlist } from "../_components/Playlist";
 
 // 페르소나와 dueDatetime이 모두 필수인 Task 타입 정의
@@ -165,10 +166,11 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 				<Link href="/">
 					<div className="flex items-center">
 						<Image
-							src="/icons/common/arrow-left.svg"
+							src={ArrowLeft}
 							alt="왼쪽 화살표"
 							width={24}
 							height={24}
+							priority
 						/>
 					</div>
 				</Link>

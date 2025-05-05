@@ -2,20 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { useWebViewMessage } from "@/hooks/useWebViewMessage";
-import { postFcmToken } from "@/lib/fcmToken";
 import { useUserStore } from "@/store/useUserStore";
-import { FcmDeviceType } from "@/types/create";
-import { useMutation } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const COOKIE_OPTIONS = {
-	expires: 30,
-	path: "/",
-	secure: false,
-} as const;
+import OnboardingFirst from "@public/icons/onboarding/onboarding1.png";
+import OnboardingSecond from "@public/icons/onboarding/onboarding2.png";
+import OnboardingThird from "@public/icons/onboarding/onboarding3.svg";
+import OnboardingFourth from "@public/icons/onboarding/onboarding4.png";
+import OnboardingFifth from "@public/icons/onboarding/onboarding5.svg";
+
+import Clap from "@public/icons/onboarding/clap.svg";
+import Clock from "@public/icons/onboarding/clock.svg";
+import Firework from "@public/icons/onboarding/firework.svg";
 
 export default function OnboardingPage() {
 	const router = useRouter();
@@ -38,34 +38,34 @@ export default function OnboardingPage() {
 			title: "여유 시간을 확보하고,\n후회 없이 끝내세요!",
 			description:
 				"여유 시간을 자동 추가하여 \n여유롭게 완료할 수 있도록 알림을 보낼게요",
-			image: "/icons/onboarding/onboarding1.png",
+			image: OnboardingFirst,
 			buttonText: "다음으로",
 		},
 		{
 			title: "1분 안에 작은 행동을 시작하면,\n미루기는 이제 그만!",
 			description:
 				"미룬 일을 시작하는 데 1분만 투자해요\n완료할 때까지 진동이 울려 시작을 도와줄게요",
-			image: "/icons/onboarding/onboarding2.png",
+			image: OnboardingSecond,
 			buttonText: "다음으로",
 		},
 		{
 			title: "캐릭터와 플레이리스트로\n몰입을 더 깊게!",
 			description:
 				"작업 키워드를 기반으로 몰입 캐릭터를 만들어\n맞춤 환경과 음악을 제공해요",
-			image: "/icons/onboarding/onboarding3.svg",
+			image: OnboardingThird,
 			buttonText: "다음으로",
 		},
 		{
 			title: "모든 기능을 제대로 쓰려면, \n알림이 꼭 필요해요",
 			description: "딱 맞는 타이밍에 시작을 끊을 수 있어요!",
-			image: "/icons/onboarding/onboarding4.png",
+			image: OnboardingFourth,
 			buttonText: "권한 허용하기",
 		},
 		{
 			title: "미루지 않는 하루,\n지금부터 만들어볼까요?",
 			description:
 				"지금 당장 시작할 일과, 여유롭게 준비할 일을\n구분해 추가해보세요!",
-			image: "/icons/onboarding/onboarding5.svg",
+			image: OnboardingFifth,
 			buttonText: "시작하기",
 		},
 	];
@@ -176,7 +176,7 @@ export default function OnboardingPage() {
 						<div className="absolute left-0 top-[-60px] flex w-full justify-center">
 							{/* 불꽃 이미지 */}
 							<Image
-								src="/icons/onboarding/firework.svg"
+								src={Firework}
 								alt="불꽃"
 								width={292}
 								height={292}
@@ -189,7 +189,7 @@ export default function OnboardingPage() {
 								<p className="flex flex-row items-center whitespace-nowrap">
 									<span>1.5배 더 여유있어졌어!</span>&nbsp;
 									<Image
-										src="/icons/onboarding/clock.svg"
+										src={Clock}
 										alt="시계"
 										width={20}
 										height={20}
@@ -297,7 +297,7 @@ export default function OnboardingPage() {
 								}}
 							>
 								<Image
-									src="/icons/onboarding/clap.svg"
+									src={Clap}
 									alt="박수"
 									width={20}
 									height={20}
@@ -340,7 +340,7 @@ export default function OnboardingPage() {
 
 			<div className="z-10 flex flex-1 flex-col items-center justify-center">
 				<Image
-					src="/icons/onboarding/onboarding4.png"
+					src={onboardingPages[3].image}
 					alt="온보딩 이미지 4"
 					width={375}
 					height={180}
@@ -388,7 +388,7 @@ export default function OnboardingPage() {
 
 			<div className="z-10 flex flex-1 flex-col items-center justify-center">
 				<Image
-					src="/icons/onboarding/onboarding5.svg"
+					src={onboardingPages[4].image}
 					alt="온보딩 이미지 5"
 					width={142}
 					height={80}

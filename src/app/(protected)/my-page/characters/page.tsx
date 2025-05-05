@@ -11,6 +11,9 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import LockedPersona from "../_component/LockedPersona";
 import Persona from "../_component/Persona";
 
+import InfoCircle from "@public/icons/info-circle.svg";
+import Polygon from "@public/icons/mypage/polygon.svg";
+
 const tooltipVariants = {
 	hidden: { opacity: 0, y: -10 },
 	visible: { opacity: 1, y: 0 },
@@ -59,7 +62,7 @@ const CharactersPageContent = () => {
 				<span className="t3 text-gray-strong">내 캐릭터</span>
 
 				<Image
-					src="/icons/info-circle.svg"
+					src={InfoCircle}
 					width={20}
 					height={20}
 					alt="info-circle"
@@ -80,7 +83,7 @@ const CharactersPageContent = () => {
 								className="absolute w-full"
 							>
 								<Image
-									src="/icons/mypage/polygon.svg"
+									src={Polygon}
 									alt="polygon"
 									width={13}
 									height={12}

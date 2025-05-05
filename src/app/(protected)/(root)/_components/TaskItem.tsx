@@ -7,6 +7,7 @@ import {
 	convertEstimatedTime,
 	parseDateAndTime,
 } from "@/utils/dateFormat";
+import Clock from "@public/icons/home/clock.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type React from "react";
@@ -217,7 +218,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 								<span>{formatDueTime()}</span>
 								<span className="c3 mx-1 text-text-neutral">•</span>
 								<Image
-									src="/icons/home/clock.svg"
+									src={Clock}
 									alt="Character"
 									width={14}
 									height={14}

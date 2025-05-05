@@ -1,3 +1,4 @@
+import ArrowRight from "@public/icons/home/arrow-right.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React, { memo } from "react";
@@ -11,7 +12,7 @@ const ThisWeekLeftTaskButton = () => {
 			>
 				<span className="s2 text-text-neutral">이번주 할일 더보기</span>
 				<Image
-					src="/icons/home/arrow-right.svg"
+					src={ArrowRight}
 					alt="Arrow Right"
 					width={24}
 					height={24}

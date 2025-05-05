@@ -6,6 +6,10 @@ import Image from "next/image";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
+import Clock from "@public/icons/home/clock.svg";
+import DotsVertical from "@public/icons/home/dots-vertical.svg";
+import Trashcan from "@public/icons/home/trashcan.svg";
+
 type WeeklyTaskItemProps = {
 	task: Task;
 	onClick: (task: Task) => void;
@@ -136,7 +140,7 @@ const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({
 						<span>{formatDateTime()}</span>
 						<span className="c3 mx-1 text-text-neutral">•</span>
 						<Image
-							src="/icons/home/clock.svg"
+							src={Clock}
 							alt="Clock"
 							width={14}
 							height={14}
@@ -154,12 +158,7 @@ const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({
 					className="mt-1 px-2"
 					onClick={handleMoreClick}
 				>
-					<Image
-						src="/icons/home/dots-vertical.svg"
-						alt="More"
-						width={4}
-						height={18}
-					/>
+					<Image src={DotsVertical} alt="More" width={4} height={18} />
 				</button>
 			</div>
 
@@ -181,7 +180,7 @@ const WeeklyTaskItem: React.FC<WeeklyTaskItemProps> = ({
 					>
 						삭제하기
 						<Image
-							src="/icons/home/trashcan.svg"
+							src={Trashcan}
 							alt="Delete"
 							width={16}
 							height={16}

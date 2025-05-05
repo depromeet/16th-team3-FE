@@ -1,3 +1,5 @@
+import Minus from "@public/icons/remind/minus.svg";
+import Plus from "@public/icons/remind/plus.svg";
 import Image from "next/image";
 
 interface ReminderCountSelectorProps {
@@ -23,12 +25,7 @@ export default function ReminderCountSelector({
 					className={`flex h-full w-1/3 cursor-pointer items-center justify-center rounded-[8px] text-center text-base leading-[145%] text-gray-normal bg-component-gray-secondary ${count === min || count === 0 ? "opacity-40" : ""}`}
 					onClick={onDecrease}
 				>
-					<Image
-						src="/icons/remind/minus.svg"
-						alt="왼쪽 화살표"
-						width={16}
-						height={16}
-					/>
+					<Image src={Minus} alt="minus" width={16} height={16} />
 				</div>
 				<div className="flex h-full w-1/3 items-center justify-center rounded-[8px] text-center text-s2 text-gray-normal">
 					{count}
@@ -37,12 +34,7 @@ export default function ReminderCountSelector({
 					className={`flex h-full w-1/3 cursor-pointer items-center justify-center rounded-[8px] text-center text-base leading-[145%] text-gray-normal bg-component-gray-secondary  ${count === max ? "opacity-40" : ""}`}
 					onClick={onIncrease}
 				>
-					<Image
-						src="/icons/remind/plus.svg"
-						alt="왼쪽 화살표"
-						width={16}
-						height={16}
-					/>
+					<Image src={Plus} alt="plus" width={16} height={16} />
 				</div>
 			</div>
 		</div>

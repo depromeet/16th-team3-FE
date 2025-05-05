@@ -3,6 +3,8 @@ import Image from "next/image";
 import React from "react";
 import AllTasksTab from "./allTasksTab/AllTasksTab";
 
+import Rocket from "@public/icons/home/rocket.svg";
+
 interface AllTaskTabWrapperProps {
 	isAllEmpty: boolean;
 	inProgressTasks: Task[];
@@ -27,7 +29,7 @@ const AllTaskTabWrapper = ({
 			<div className="flex h-full flex-col items-center justify-center px-4 text-center">
 				<div className="mb-[40px]">
 					<Image
-						src="/icons/home/rocket.svg"
+						src={Rocket}
 						alt="Rocket"
 						width={142}
 						height={80}

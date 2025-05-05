@@ -13,6 +13,8 @@ import {
 import { getPersonaImage } from "@/utils/getPersonaImage";
 import Image from "next/image";
 
+import Clap from "@public/icons/mypage/clap.svg";
+
 interface TaskWithPersona extends Omit<Task, "persona" | "dueDatetime"> {
 	persona: NonNullable<Task["persona"]>;
 	dueDatetime: string;
@@ -162,7 +164,7 @@ export default function ExpiredTaskDetailPage({ task, initialTask }: Props) {
 									<span className="b3 text-gray-alternative">완료 일</span>
 									<div className="inline-flex gap-1 items-center">
 										<Image
-											src="/icons/mypage/clap.svg"
+											src={Clap}
 											alt="mypage-character"
 											width={23}
 											height={23}
@@ -172,7 +174,7 @@ export default function ExpiredTaskDetailPage({ task, initialTask }: Props) {
 											{convertIsoToMonthDayTimeText(task.updatedAt)}
 										</span>
 										<Image
-											src="/icons/mypage/clap.svg"
+											src={Clap}
 											alt="mypage-character"
 											width={23}
 											height={23}

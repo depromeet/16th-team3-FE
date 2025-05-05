@@ -12,6 +12,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 
+import Rocket from "@public/icons/home/rocket.svg";
+
 // 유형별 우선순위 정의
 const CATEGORY_PRIORITY: Record<string, number> = {
 	과제: 1,
@@ -340,7 +342,7 @@ const WeeklyTasksPage = () => {
 						<div className="mt-[120px] flex h-full flex-col items-center justify-center px-4 text-center">
 							<div className="mb-[40px] mt-[60px]">
 								<Image
-									src="/icons/home/rocket.svg"
+									src={Rocket}
 									alt="Rocket"
 									width={142}
 									height={80}

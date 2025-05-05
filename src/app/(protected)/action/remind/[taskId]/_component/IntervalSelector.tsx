@@ -4,6 +4,9 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
+import CheckPrimary from "@public/icons/common/check-primary.svg";
+import Repeat from "@public/icons/common/repeat.svg";
+
 interface IntervalSelectorProps {
 	selectedInterval: number;
 	onIntervalChange: (interval: number) => void;
@@ -23,12 +26,7 @@ export default function IntervalSelector({
 	return (
 		<div className="flex items-center gap-3.5">
 			<div className="w-5">
-				<Image
-					src="/icons/common/repeat.svg"
-					alt="반복"
-					width={24}
-					height={24}
-				/>
+				<Image src={Repeat} alt="반복" width={24} height={24} />
 			</div>
 			<div className="relative w-full" onClick={() => setIsOpen(!isOpen)}>
 				<div className="flex items-center justify-between rounded-[10px] bg-component-gray-secondary px-4 py-[11px]">
@@ -62,12 +60,7 @@ export default function IntervalSelector({
 								{item.label}
 							</p>
 							{selectedInterval === item.value && (
-								<Image
-									src="/icons/common/check-primary.svg"
-									alt="체크"
-									width={20}
-									height={20}
-								/>
+								<Image src={CheckPrimary} alt="체크" width={20} height={20} />
 							)}
 						</div>
 					))}

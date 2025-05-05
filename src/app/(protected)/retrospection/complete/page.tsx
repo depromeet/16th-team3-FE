@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Complete from "@public/icons/retro/retro-complete.svg";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,7 +8,7 @@ export default function RetrospectionCompletePage() {
 		<div className="flex h-full flex-col bg-background-primary">
 			<div className="mt-[180px] flex flex-col items-center">
 				<Image
-					src="/icons/retro/retro-complete.svg"
+					src={Complete}
 					alt="logo"
 					width={142}
 					height={68}

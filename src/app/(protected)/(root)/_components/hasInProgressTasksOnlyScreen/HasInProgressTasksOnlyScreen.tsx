@@ -6,6 +6,8 @@ import Link from "next/link";
 import { memo } from "react";
 import InProgressTaskItem from "../InProgressTaskItem";
 
+import ArrowRight from "@public/icons/home/arrow-right.svg";
+
 interface HasInProgressTasksOnlyScreenProps {
 	taskType: string;
 	handleDetailTask: (task: Task) => void;
@@ -41,7 +43,7 @@ const HasInProgressTasksOnlyScreen = ({
 				>
 					<span className="s2 text-text-neutral">이번주 할일</span>
 					<Image
-						src="/icons/home/arrow-right.svg"
+						src={ArrowRight}
 						alt="Arrow Right"
 						width={24}
 						height={24}

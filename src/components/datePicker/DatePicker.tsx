@@ -2,6 +2,8 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import CalendarLeft from "@public/icons/common/CalendarLeft.svg";
+import CalendarRight from "@public/icons/common/CalendarRight.svg";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
@@ -62,16 +64,11 @@ const DatePicker = ({ deadlineDate, handleDateChange }: DatePickerProps) => {
 			}}
 			components={{
 				IconLeft: () => (
-					<Image
-						src="/icons/common/CalendarLeft.svg"
-						alt="left"
-						width={11.275}
-						height={18.155}
-					/>
+					<Image src={CalendarLeft} alt="left" width={11.275} height={18.155} />
 				),
 				IconRight: () => (
 					<Image
-						src="/icons/common/CalendarRight.svg"
+						src={CalendarRight}
 						alt="right"
 						width={11.275}
 						height={18.155}

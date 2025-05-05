@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
 
+import ArrowRight from "@public/icons/home/arrow-right.svg";
+
 const AllTaskButton = () => {
 	return (
 		<Link href="/?tab=all">
@@ -12,7 +14,7 @@ const AllTaskButton = () => {
 				>
 					<span className="s2 text-text-neutral">전체 할일 더보기</span>
 					<Image
-						src="/icons/home/arrow-right.svg"
+						src={ArrowRight}
 						alt="Arrow Right"
 						width={24}
 						height={24}

@@ -5,6 +5,7 @@ import Modal from "@/components/modal/Modal";
 import { Button } from "@/components/ui/button";
 import { createRetrospect } from "@/services/taskService";
 import type { TaskResponse } from "@/types/task";
+import ArrowLeft from "@public/icons/common/arrow-left.svg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -78,13 +79,7 @@ export default function RetrospectionPageClient({ task }: Props) {
 					className="absolute left-0"
 					onClick={() => setOpenLeaveModal(true)}
 				>
-					<Image
-						src="/icons/common/arrow-left.svg"
-						alt="Back"
-						width={18}
-						height={16}
-						priority
-					/>
+					<Image src={ArrowLeft} alt="Back" width={18} height={16} priority />
 				</button>
 				<h1 className="s2 w-full text-center text-lg font-semibold text-text-normal">
 					{task.name}

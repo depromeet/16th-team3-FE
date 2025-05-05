@@ -12,6 +12,8 @@ import { NewSubtaskForm } from "./NewSubtaskForm";
 import { SubtaskItem } from "./SubtaskItem";
 import { constants } from "./constants";
 
+import Plus from "@public/icons/immersion/plus.svg";
+
 interface DetailGoalsProps {
 	taskId: number;
 	onError: (type: "length" | "maxCount") => void;
@@ -189,12 +191,7 @@ export default function DetailGoals({ taskId, onError }: DetailGoalsProps) {
 					type="button"
 					disabled={isSubmitting}
 				>
-					<Image
-						src="/icons/immersion/plus.svg"
-						alt="추가"
-						width={24}
-						height={24}
-					/>
+					<Image src={Plus} alt="추가" width={24} height={24} />
 				</button>
 			</div>
 

@@ -5,6 +5,10 @@ import Image from "next/image";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
+import HomeClock from "@public/icons/home/clock.svg";
+import HomeDotVertical from "@public/icons/home/dots-vertical.svg";
+import TrashCan from "@public/icons/home/trashcan.svg";
+
 type AllTaskItemProps = {
 	task: Task;
 	onClick: (task: Task) => void;
@@ -286,7 +290,7 @@ const AllTaskItem: React.FC<AllTaskItemProps> = ({
 						<span>{formatDateTime()}</span>
 						<span className="c3 mx-1 text-text-neutral">•</span>
 						<Image
-							src="/icons/home/clock.svg"
+							src={HomeClock}
 							alt="Clock"
 							width={14}
 							height={14}
@@ -305,12 +309,7 @@ const AllTaskItem: React.FC<AllTaskItemProps> = ({
 					type="button"
 					aria-label="더 많은 옵션"
 				>
-					<Image
-						src="/icons/home/dots-vertical.svg"
-						alt="More"
-						width={4}
-						height={18}
-					/>
+					<Image src={HomeDotVertical} alt="More" width={4} height={18} />
 				</button>
 			</div>
 
@@ -327,7 +326,7 @@ const AllTaskItem: React.FC<AllTaskItemProps> = ({
 					>
 						삭제하기
 						<Image
-							src="/icons/home/trashcan.svg"
+							src={TrashCan}
 							alt="Delete"
 							width={16}
 							height={16}

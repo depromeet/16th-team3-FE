@@ -8,6 +8,8 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
+import Clap from "@public/icons/onboarding/clap.svg";
+
 interface PersonaMessageProps {
 	personaId: string;
 	dueDatetime: string;
@@ -68,7 +70,7 @@ export default function PersonaMessage({
 				}}
 			>
 				<Image
-					src="/icons/onboarding/clap.svg"
+					src={Clap}
 					alt="박수"
 					width={16}
 					height={15}

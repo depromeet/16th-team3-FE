@@ -9,6 +9,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import ArrowLeft from "@public/icons/common/ArrowLeft.svg";
+import ExternalLink from "@public/icons/mypage/external-link.svg";
+
 export default function MyPage() {
 	const router = useRouter();
 	const userData = useUserStore((state) => state.userData);
@@ -97,12 +100,7 @@ export default function MyPage() {
 			{/* 헤더 부분 */}
 			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[60px]">
 				<Link href="/my-page">
-					<Image
-						src="/icons/common/ArrowLeft.svg"
-						alt="뒤로가기"
-						width={24}
-						height={24}
-					/>
+					<Image src={ArrowLeft} alt="뒤로가기" width={24} height={24} />
 				</Link>
 				<div className="s2 mr-[18px] w-full text-center text-gray-normal">
 					설정
@@ -125,22 +123,12 @@ export default function MyPage() {
 					className="flex items-center justify-between py-4"
 				>
 					<div className="text-base">개인정보 처리 방침</div>
-					<Image
-						src="/icons/mypage/external-link.svg"
-						alt="외부 링크"
-						width={20}
-						height={20}
-					/>
+					<Image src={ExternalLink} alt="외부 링크" width={20} height={20} />
 				</Link>
 
 				<Link href="/terms" className="flex items-center justify-between py-4">
 					<div className="text-base">이용약관</div>
-					<Image
-						src="/icons/mypage/external-link.svg"
-						alt="외부 링크"
-						width={20}
-						height={20}
-					/>
+					<Image src={ExternalLink} alt="외부 링크" width={20} height={20} />
 				</Link>
 
 				<Link
@@ -150,12 +138,7 @@ export default function MyPage() {
 					className="flex items-center justify-between py-4"
 				>
 					<div className="text-base">문의사항</div>
-					<Image
-						src="/icons/mypage/external-link.svg"
-						alt="외부 링크"
-						width={20}
-						height={20}
-					/>
+					<Image src={ExternalLink} alt="외부 링크" width={20} height={20} />
 				</Link>
 			</div>
 

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import XButton from "@public/icons/x-circle.svg";
 import Image from "next/image";
 import type { RefObject } from "react";
 import { Input } from "../ui/input";
@@ -65,7 +66,7 @@ const ClearableInput = ({
 						} as React.ChangeEvent<HTMLInputElement>)
 					}
 				>
-					<Image src="/icons/x-circle.svg" alt="제거" width={24} height={24} />
+					<Image src={XButton} alt="제거" width={24} height={24} />
 				</button>
 			)}
 		</div>

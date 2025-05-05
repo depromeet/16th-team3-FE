@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { memo } from "react";
 
+import Plus from "@public/icons/home/plus.svg";
+
 const TaskAddButton = ({
 	showTooltip,
 	onClick,
@@ -30,13 +32,7 @@ const TaskAddButton = ({
 				className="l2 flex h-[52px] w-[130px] items-center gap-2 rounded-full py-[16.5px] text-text-inverse"
 				onClick={onClick}
 			>
-				<Image
-					src="/icons/home/plus.svg"
-					alt="할일 추가"
-					width={16}
-					height={16}
-					priority
-				/>
+				<Image src={Plus} alt="할일 추가" width={16} height={16} priority />
 				할일 추가
 			</Button>
 		</div>

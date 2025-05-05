@@ -4,6 +4,8 @@ import { CheckboxWithGradientBorder } from "./Checkbox";
 import { constants } from "./constants";
 import { handleTextareaInput } from "./utils";
 
+import XCircle from "@public/icons/x-circle.svg";
+
 interface SubtaskItemProps {
 	goal: {
 		id: number;
@@ -131,12 +133,7 @@ export const SubtaskItem = ({
 									aria-label="세부 목표 삭제"
 									disabled={isSubmitting}
 								>
-									<Image
-										src="/icons/x-circle.svg"
-										alt="삭제"
-										width={24}
-										height={24}
-									/>
+									<Image src={XCircle} alt="삭제" width={24} height={24} />
 								</button>
 							</div>
 						)}

@@ -8,7 +8,6 @@ import {
 	DrawerContent,
 	DrawerFooter,
 } from "@/components/ui/drawer";
-import { useTask } from "@/hooks/useTasks";
 import { useUserStore } from "@/store/useUserStore";
 import type { Task } from "@/types/task";
 import { calculateRemainingTime, parseDateAndTime } from "@/utils/dateFormat";
@@ -19,7 +18,11 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// 페르소나가 필수인 Task 타입 정의
+import DetailArrowRight from "@public/icons/home/detail-arrow-right.svg";
+import DotsVertical from "@public/icons/home/dots-vertical.svg";
+import Edit from "@public/icons/home/edit.svg";
+import TrashCan from "@public/icons/home/trashcan.svg";
+
 interface TaskWithPersona extends Omit<Task, "persona"> {
 	persona: NonNullable<Task["persona"]>;
 }
@@ -241,12 +244,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 						type="button"
 						aria-label="더 많은 옵션"
 					>
-						<Image
-							src="/icons/home/dots-vertical.svg"
-							alt="More"
-							width={4}
-							height={18}
-						/>
+						<Image src={DotsVertical} alt="More" width={4} height={18} />
 					</button>
 
 					{showMenu && (
@@ -268,7 +266,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 							>
 								삭제하기
 								<Image
-									src="/icons/home/trashcan.svg"
+									src={TrashCan}
 									alt="Delete"
 									width={16}
 									height={16}
@@ -288,7 +286,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 							>
 								할일 이름 바꾸기
 								<Image
-									src="/icons/home/edit.svg"
+									src={Edit}
 									alt="Edit"
 									width={16}
 									height={16}
@@ -347,7 +345,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 								</span>
 								{showArrow && (
 									<Image
-										src="/icons/home/detail-arrow-right.svg"
+										src={DetailArrowRight}
 										alt="Edit"
 										width={20}
 										height={20}
@@ -377,7 +375,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 								</span>
 								{showArrow && (
 									<Image
-										src="/icons/home/detail-arrow-right.svg"
+										src={DetailArrowRight}
 										alt="Edit"
 										width={20}
 										height={20}
@@ -407,7 +405,7 @@ const TaskDetailSheet: React.FC<TaskDetailSheetProps> = ({
 								</span>
 								{showArrow && (
 									<Image
-										src="/icons/home/detail-arrow-right.svg"
+										src={DetailArrowRight}
 										alt="Edit"
 										width={20}
 										height={20}

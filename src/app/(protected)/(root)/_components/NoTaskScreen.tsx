@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { memo } from "react";
 
+import XMan from "@public/icons/home/xman.svg";
+
 interface NoTaskScreenProps {
 	firstText: string;
 	secondText: string;
@@ -16,7 +18,7 @@ const NoTaskScreen = ({
 		<div className="mb-[40px]">
 			<div className="flex flex-col items-center justify-center">
 				<Image
-					src="/icons/home/xman.svg"
+					src={XMan}
 					alt="Character"
 					width={80}
 					height={80}

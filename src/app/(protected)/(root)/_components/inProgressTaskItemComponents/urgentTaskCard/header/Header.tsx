@@ -32,8 +32,8 @@ const Header = ({ task, personaImageUrl }: HeaderProps) => {
 					alt="Character"
 					width={136}
 					height={136}
-					loading="eager"
 					className="relative z-10"
+					priority
 				/>
 			</div>
 		</>

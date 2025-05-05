@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import {
 	Drawer,
@@ -9,6 +8,10 @@ import {
 import { useTransitionRouter } from "next-view-transitions";
 import Image from "next/image";
 import Link from "next/link";
+
+import ArrowRight from "@public/icons/home/arrow-right.svg";
+import GPClock from "@public/icons/home/gp-clock.svg";
+import HeartFire from "@public/icons/home/heartfire.svg";
 
 interface CreateTaskSheetProps {
 	isOpen: boolean;
@@ -81,7 +84,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 						<div className="mb-3 flex items-center rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<Image
-									src="/icons/home/gp-clock.svg"
+									src={GPClock}
 									alt="Clock"
 									width={30}
 									height={30}
@@ -100,7 +103,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 									</p>
 									<div className="text-text-neutral">
 										<Image
-											src="/icons/home/arrow-right.svg"
+											src={ArrowRight}
 											alt="Arrow"
 											width={24}
 											height={24}
@@ -125,7 +128,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 						<div className="mb-8 flex items-center overflow-hidden rounded-[20px]">
 							<div className="flex h-[32px] w-[32px] items-center justify-start">
 								<Image
-									src="/icons/home/heartfire.svg"
+									src={HeartFire}
 									alt="Heart"
 									width={30}
 									height={30}
@@ -142,7 +145,7 @@ const CreateTaskSheet = ({ isOpen, onClose }: CreateTaskSheetProps) => {
 									</p>
 									<div className="text-text-neutral">
 										<Image
-											src="/icons/home/arrow-right.svg"
+											src={ArrowRight}
 											alt="Arrow"
 											width={24}
 											height={24}

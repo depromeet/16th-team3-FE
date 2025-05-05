@@ -4,6 +4,8 @@ import { GradientCheckbox } from "./Checkbox";
 import { constants } from "./constants";
 import { handleTextareaInput } from "./utils";
 
+import Delete from "@public/icons/immersion/delete.svg";
+
 interface NewSubtaskFormProps {
 	onSave: (title: string) => void;
 	onCancel: () => void;
@@ -92,12 +94,7 @@ export const NewSubtaskForm = ({
 								aria-label="추가 취소"
 								disabled={isSubmitting}
 							>
-								<Image
-									src="/icons/immersion/delete.svg"
-									alt="취소"
-									width={24}
-									height={24}
-								/>
+								<Image src={Delete} alt="취소" width={24} height={24} />
 							</button>
 						</div>
 					)}

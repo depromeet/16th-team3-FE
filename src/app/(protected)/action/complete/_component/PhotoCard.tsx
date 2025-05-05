@@ -22,6 +22,7 @@ export default function CompletePhotoCard({
 							fill
 							className="object-cover rounded-[4px]"
 							sizes="48px"
+							priority
 						/>
 					</div>
 					<div className="flex flex-col gap-1">

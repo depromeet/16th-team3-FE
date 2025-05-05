@@ -5,6 +5,8 @@ import { useUserStore } from "@/store/useUserStore";
 import Image from "next/image";
 import Link from "next/link";
 
+import Clap from "@public/icons/signup/clap.svg";
+
 export default function SignupCompletePage() {
 	const { userData } = useUserStore();
 
@@ -23,7 +25,7 @@ export default function SignupCompletePage() {
 			<div className="bg-blur-purple absolute bottom-[120px] left-0 right-0 z-0 h-[240px] w-[100vw] blur-[75px]" />
 			<div className="flex flex-col items-center justify-center text-center mb-[100px]">
 				<Image
-					src="/icons/signup/clap.svg"
+					src={Clap}
 					alt="환영 손 아이콘"
 					width={142}
 					height={80}

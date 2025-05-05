@@ -68,6 +68,7 @@ export default function Complete() {
 						alt="페르소나 이미지"
 						width={165}
 						height={165}
+						priority
 					/>
 
 					<Badge>{`${currentTask?.persona.name} ${userData.nickname}`}</Badge>

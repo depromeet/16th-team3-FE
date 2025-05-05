@@ -8,6 +8,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
+import AppleLogo from "@public/icons/login/apple.svg";
+import KakaoLogo from "@public/icons/login/kakao.svg";
+import LoginCharacter from "@public/icons/login/login-character.png";
+
 declare global {
 	interface Window {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -127,7 +131,7 @@ const LoginPage = () => {
 
 			<div className="mt-5 flex flex-1 flex-col items-center justify-start">
 				<Image
-					src="/icons/login/login-character.png"
+					src={LoginCharacter}
 					alt="로그인 캐릭터"
 					width={348}
 					height={348}
@@ -157,12 +161,7 @@ const LoginPage = () => {
 					className="l2 gap-2 rounded-[16px] bg-[#FEE500] text-[#0f1114]"
 					onClick={handleKakaoLogin}
 				>
-					<Image
-						src="/icons/login/kakao.svg"
-						alt="kakao"
-						width={24}
-						height={24}
-					/>
+					<Image src={KakaoLogo} alt="kakao" width={24} height={24} />
 					<span className="pt-0.5">카카오로 계속하기</span>
 				</Button>
 
@@ -172,12 +171,7 @@ const LoginPage = () => {
 						className="l2 i gap-2 rounded-[16px] bg-[#e6edf8] text-[#0f1114]"
 						onClick={handleAppleLogin}
 					>
-						<Image
-							src="/icons/login/apple.svg"
-							alt="apple"
-							width={24}
-							height={24}
-						/>
+						<Image src={AppleLogo} alt="apple" width={24} height={24} />
 						<span className="pt-1">Apple로 계속하기</span>
 					</Button>
 				)}

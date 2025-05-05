@@ -27,6 +27,9 @@ import { ko } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 import type { EditPageProps } from "../../context";
 
+import CheckedBox from "@public/icons/CheckedBox.svg";
+import UnCheckedBox from "@public/icons/UnCheckedBox.svg";
+
 const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 	const { taskId } = use(params);
 
@@ -508,7 +511,7 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 						{/* ! TODO: Checkbox로 변환하기  */}
 						{isOnlyMinute ? (
 							<Image
-								src="/icons/CheckedBox.svg"
+								src={CheckedBox}
 								alt="checkedBox"
 								width={20}
 								height={20}
@@ -517,7 +520,7 @@ const EstimatedTimeEditPage = ({ params }: EditPageProps) => {
 							/>
 						) : (
 							<Image
-								src="/icons/UnCheckedBox.svg"
+								src={UnCheckedBox}
 								alt="uncheckedBox"
 								width={20}
 								height={20}

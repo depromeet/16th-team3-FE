@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Error from "@public/icons/Error.svg";
 import Image from "next/image";
 import type { ReactNode } from "react";
 
@@ -20,7 +21,7 @@ const Toast = ({ icon, message, className }: ToastProps) => {
 			)}
 		>
 			{icon || (
-				<Image src="/icons/Error.svg" alt="error" width={20} height={20} />
+				<Image src={Error} alt="error" width={20} height={20} priority />
 			)}
 			<span className="text-sm">{message}</span>
 		</div>

@@ -17,6 +17,9 @@ import {
 	DrawerTrigger,
 } from "../../../../../components/ui/drawer";
 
+import CheckedBox from "@public/icons/CheckedBox.svg";
+import UnCheckedBox from "@public/icons/UnCheckedBox.svg";
+
 interface TimeSelectedComponentProps {
 	editTitle?: string | null;
 	deadlineTime: TimePickerType;
@@ -181,7 +184,7 @@ const TimeSelectedComponent = ({
 						</label>
 						{isMidnight ? (
 							<Image
-								src="/icons/CheckedBox.svg"
+								src={CheckedBox}
 								alt="checkedBox"
 								width={20}
 								height={20}
@@ -193,7 +196,7 @@ const TimeSelectedComponent = ({
 							/>
 						) : (
 							<Image
-								src="/icons/UnCheckedBox.svg"
+								src={UnCheckedBox}
 								alt="uncheckedBox"
 								width={20}
 								height={20}

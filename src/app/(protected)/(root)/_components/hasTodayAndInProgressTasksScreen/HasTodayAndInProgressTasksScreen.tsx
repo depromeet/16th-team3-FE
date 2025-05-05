@@ -1,6 +1,7 @@
 import useTaskFiltering from "@/hooks/useTaskFilter";
 import { useHomeData, useStartTask } from "@/hooks/useTasks";
 import type { Task } from "@/types/task";
+import Clock from "@public/icons/home/clock.svg";
 import Image from "next/image";
 import React from "react";
 import InProgressTaskItem from "../InProgressTaskItem";
@@ -62,7 +63,7 @@ const HasTodayAndInProgressTasksScreen = ({
 											</span>
 											<span className="c3 mx-1 text-text-neutral">•</span>
 											<Image
-												src="/icons/home/clock.svg"
+												src={Clock}
 												alt="시간"
 												width={14}
 												height={14}

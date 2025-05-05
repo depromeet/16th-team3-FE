@@ -9,6 +9,8 @@ import { useState } from "react";
 import type { InstantTaskInputType } from "../../context";
 import TaskTypeChip from "../taskTypeChip/TaskTypeChip";
 
+import ClockStopWatch from "@public/icons/clock-stopwatch.svg";
+
 interface TaskTypeInputProps {
 	context: InstantTaskInputType;
 	isIdle: boolean;
@@ -59,7 +61,7 @@ const InstantTaskTypeInput = ({
 				<div className="flex flex-col gap-3 pb-6 pt-4">
 					<div className="flex h-[26px] w-auto items-center gap-1 self-start rounded-[8px] bg-component-accent-secondary px-[7px] py-[6px]">
 						<Image
-							src="/icons/clock-stopwatch.svg"
+							src={ClockStopWatch}
 							alt="clock-stopwatch"
 							width={14}
 							height={14}

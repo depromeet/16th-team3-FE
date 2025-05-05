@@ -4,6 +4,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+import Check from "@public/icons/week/check.svg";
+
 export type FilterOption = {
 	id: string;
 	label: string;
@@ -118,7 +120,7 @@ const TaskFilterDropdown: React.FC<TaskFilterDropdownProps> = ({
 							{option.label}
 							{selectedOption?.id === option.id && (
 								<Image
-									src="/icons/week/check.svg"
+									src={Check}
 									alt="선택됨"
 									width={20}
 									height={20}

@@ -8,6 +8,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { KeyboardEvent } from "react";
 
+import Emergency2 from "@public/icons/immersion/emergency.png";
+import Emergency from "@public/icons/immersion/emergency.svg";
+
 interface TasksDropdownProps {
 	inProgressTasks: Task[];
 	currentTaskId: number;
@@ -146,7 +149,7 @@ export default function TasksDropdown({
 					</span>
 					{hasUrgentTask() && (
 						<Image
-							src="/icons/immersion/emergency.png"
+							src={Emergency2}
 							alt="긴급"
 							width={16}
 							height={16}
@@ -218,7 +221,7 @@ export default function TasksDropdown({
 								>
 									{isUrgent(task) && (
 										<Image
-											src="/icons/immersion/emergency.svg"
+											src={Emergency}
 											alt="긴급"
 											width={14}
 											height={14}

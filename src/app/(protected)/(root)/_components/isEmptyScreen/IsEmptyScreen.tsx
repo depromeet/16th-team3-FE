@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { memo } from "react";
 
+import Rocket from "@public/icons/home/rocket.svg";
+
 const IsEmptyScreen = () => {
 	return (
 		<div className="mt-[130px]">
 			<div className="flex flex-col items-center px-4 text-center">
 				<div className="mb-[40px]">
 					<Image
-						src="/icons/home/rocket.svg"
+						src={Rocket}
 						alt="Rocket"
 						width={142}
 						height={80}

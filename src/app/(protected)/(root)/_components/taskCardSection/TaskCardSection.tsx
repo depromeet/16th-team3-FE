@@ -2,6 +2,8 @@ import type { Task } from "@/types/task";
 import Image from "next/image";
 import TaskCardButton from "./taskCardButton/TaskCardButton";
 
+import Clock from "@public/icons/home/clock.svg";
+
 interface TaskCardSectionProps {
 	task: Task;
 	index: number;
@@ -36,7 +38,7 @@ const TaskCardSection = ({
 							</span>
 							<span className="c3 mx-1 text-text-neutral">•</span>
 							<Image
-								src="/icons/home/clock.svg"
+								src={Clock}
 								alt="시간"
 								width={14}
 								height={14}
