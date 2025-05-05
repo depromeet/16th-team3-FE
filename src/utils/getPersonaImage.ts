@@ -5,7 +5,9 @@ import {
 
 import type { StaticImageData } from "next/image";
 
-export const getPersonaImage = (personaId?: number): StaticImageData => {
+export const getPersonaImage = (
+	personaId?: number,
+): StaticImageData | string => {
 	if (!personaId || personaId < 1 || personaId > 24) {
 		return DEFAULT_PERSONA_ICON;
 	}

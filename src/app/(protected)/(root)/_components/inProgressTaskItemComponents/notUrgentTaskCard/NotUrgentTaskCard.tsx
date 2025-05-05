@@ -1,12 +1,12 @@
-import { useRemainingTime } from "@/hooks/useRemainingTime";
 import type { Task } from "@/types/task";
+import type { StaticImageData } from "next/image";
 import Content from "./content/Content";
 import Header from "./header/Header";
 
 interface NotUrgentTaskCardProps {
 	task: Task;
 	showRemaining: boolean;
-	personaImageUrl: string;
+	personaImageUrl: StaticImageData | string;
 	handleContinueClick: (e: React.MouseEvent) => void;
 	handleCardClick: (e: React.MouseEvent) => void;
 }

@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import type { Task } from "@/types/task";
 import { AnimatePresence, motion } from "framer-motion";
+import type { StaticImageData } from "next/image";
 import TimeDisplaySection from "../TimeDisplaySection";
 import Header from "./header/Header";
 
 interface UrgentTaskCardProps {
 	task: Task;
 	showRemaining: boolean;
-	personaImageUrl: string;
+	personaImageUrl: StaticImageData | string;
 	handleContinueClick: (e: React.MouseEvent) => void;
 	handleCardClick: (e: React.MouseEvent) => void;
 }
