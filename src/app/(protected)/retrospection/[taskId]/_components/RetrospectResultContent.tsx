@@ -1,3 +1,4 @@
+import { RETRO_ICON_MAP } from "@public/icons/retro";
 import Image from "next/image";
 
 const RetrospectResultContent = ({
@@ -5,7 +6,7 @@ const RetrospectResultContent = ({
 	setRetrospectContent,
 }: RetrospectContentProps) => {
 	const NOT_SELECTED = -1;
-	const RESULT_CONTENT = [0, 1, 2, 3, 4];
+	const RESULT_CONTENT = [0, 1, 2, 3, 4] as const;
 
 	const handleResultContentClick = (selected: number) => {
 		const selectedResult = selected as ResultContent;
@@ -18,19 +19,23 @@ const RetrospectResultContent = ({
 
 	return (
 		<div className="flex gap-[18px]">
-			{RESULT_CONTENT.map((num, index) => (
-				// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-				<div key={index} onClick={() => handleResultContentClick(num)}>
-					<Image
-						src={`/icons/retro/retro1-${num}-${retrospectContent.satisfaction === num ? 1 : 0}.svg`}
-						alt="retro content index"
-						width={40}
-						height={40}
-						priority
-					/>
-				</div>
-			))}
+			{RESULT_CONTENT.map((num, index) => {
+				const { off, on } = RETRO_ICON_MAP[num];
+				const isOn = retrospectContent.satisfaction === num;
+				return (
+					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+					<div key={index} onClick={() => handleResultContentClick(num)}>
+						<Image
+							src={isOn ? on : off}
+							alt={`retro content ${num}`}
+							width={40}
+							height={40}
+							priority
+						/>
+					</div>
+				);
+			})}
 		</div>
 	);
 };

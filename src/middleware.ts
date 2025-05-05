@@ -22,52 +22,52 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(new URL("/login", request.url), 302);
 	}
 
-	if (!isOpenPath && !accessToken && refreshToken) {
-		const cookieStore = request.cookies;
-		const oldRefreshToken = cookieStore.get("refreshToken")?.value;
+	// if (!isOpenPath && !accessToken && refreshToken) {
+	// 	const cookieStore = request.cookies;
+	// 	const oldRefreshToken = cookieStore.get("refreshToken")?.value;
 
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
-			{
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ refreshToken: oldRefreshToken }),
-			},
-		);
+	// 	const response = await fetch(
+	// 		`${process.env.NEXT_PUBLIC_API_URL}${REFRESH_ENDPOINT}`,
+	// 		{
+	// 			method: "POST",
+	// 			headers: { "Content-Type": "application/json" },
+	// 			body: JSON.stringify({ refreshToken: oldRefreshToken }),
+	// 		},
+	// 	);
 
-		if (!response.ok) {
-			const resp = NextResponse.redirect(new URL("/login", request.url), 307);
-			resp.cookies.delete("accessToken");
-			resp.cookies.delete("refreshToken");
-			return resp;
-		}
+	// 	if (!response.ok) {
+	// 		const resp = NextResponse.redirect(new URL("/login", request.url), 307);
+	// 		resp.cookies.delete("accessToken");
+	// 		resp.cookies.delete("refreshToken");
+	// 		return resp;
+	// 	}
 
-		const { accessToken, refreshToken: newRefreshToken } =
-			(await response.json()) as {
-				accessToken: string;
-				refreshToken: string;
-			};
+	// 	const { accessToken, refreshToken: newRefreshToken } =
+	// 		(await response.json()) as {
+	// 			accessToken: string;
+	// 			refreshToken: string;
+	// 		};
 
-		const nextResponse = NextResponse.next();
+	// 	const nextResponse = NextResponse.next();
 
-		nextResponse.cookies.set("accessToken", accessToken, {
-			httpOnly: true,
-			secure: true,
-			sameSite: "none",
-			path: "/",
-			maxAge: 60 * 60,
-		});
+	// 	nextResponse.cookies.set("accessToken", accessToken, {
+	// 		httpOnly: true,
+	// 		secure: true,
+	// 		sameSite: "none",
+	// 		path: "/",
+	// 		maxAge: 60 * 60,
+	// 	});
 
-		nextResponse.cookies.set("refreshToken", newRefreshToken, {
-			httpOnly: true,
-			secure: true,
-			sameSite: "none",
-			path: "/",
-			maxAge: 60 * 60 * 24 * 7,
-		});
+	// 	nextResponse.cookies.set("refreshToken", newRefreshToken, {
+	// 		httpOnly: true,
+	// 		secure: true,
+	// 		sameSite: "none",
+	// 		path: "/",
+	// 		maxAge: 60 * 60 * 24 * 7,
+	// 	});
 
-		return nextResponse;
-	}
+	// 	return nextResponse;
+	// }
 
 	if (isOpenPath && accessToken) {
 		return NextResponse.redirect(new URL("/", request.url));

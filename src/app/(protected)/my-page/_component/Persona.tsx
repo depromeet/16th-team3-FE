@@ -1,4 +1,5 @@
 import { Badge } from "@/components/component/Badge";
+import { getPersonaImage } from "@/utils/getPersonaImage";
 import Image from "next/image";
 import { memo } from "react";
 
@@ -17,6 +18,8 @@ const Persona = ({
 	isCharacterPage,
 	onClick,
 }: PersonaProps) => {
+	const imgUrl = getPersonaImage(id);
+
 	return (
 		// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 		<div
@@ -28,7 +31,7 @@ const Persona = ({
 				className={`flex items-center justify-center w-[72px] h-[72px] rounded-[24px] bg-component-gray-secondary ${selectedPersona ? "border-2 border-point-gradient" : ""}`}
 			>
 				<Image
-					src={`/icons/character/${id}.png`}
+					src={imgUrl}
 					alt={`persona-character-${id}`}
 					width={72}
 					height={72}

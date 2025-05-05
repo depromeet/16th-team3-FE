@@ -41,8 +41,8 @@ const retrospectItems: RetrospectItems = {
 	},
 };
 
-const RESULT_CONTENT = [0, 1, 2, 3, 4];
-const FOCUS_STEPS = [0, 1, 2, 3, 4, 5];
+const RESULT_CONTENT = [0, 1, 2, 3, 4] as const;
+const FOCUS_STEPS = [0, 1, 2, 3, 4, 5] as const;
 const BAR = {
 	HEIGHT: 18,
 	SLIDER_RADIUS: 9,
