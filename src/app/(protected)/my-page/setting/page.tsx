@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import CustomBackHeader from "@/components/customBackHeader/CustomBackHeader";
 import ArrowLeft from "@public/icons/common/ArrowLeft.svg";
 import ExternalLink from "@public/icons/mypage/external-link.svg";
 
@@ -98,14 +99,7 @@ export default function MyPage() {
 	return (
 		<div className="flex flex-col">
 			{/* 헤더 부분 */}
-			<div className="z-20 fixed top-0 w-[100vw] flex items-center justify-between px-5 py-[14px] bg-background-primary pt-[60px]">
-				<Link href="/my-page">
-					<Image src={ArrowLeft} alt="뒤로가기" width={24} height={24} />
-				</Link>
-				<div className="s2 mr-[18px] w-full text-center text-gray-normal">
-					설정
-				</div>
-			</div>
+			<CustomBackHeader title="설정" backRoute="/my-page" />
 
 			<div className="px-5 mt-[65px]">
 				<div className="l5 text-gray-alternative">서비스 관리</div>
