@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import type React from "react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
+
+import DefaultSpurtyImage from "@public/icons/mypage/default-profile.png";
 
 interface ProfileImageProps {
 	imageUrl: string;
@@ -12,23 +13,23 @@ interface ProfileImageProps {
 	className?: string;
 }
 
-// ! 기본 이미지가 사용되는 경우가 있을까? - 에러 상황일 때?
-const DEFAULT_IMAGE = "/icons/mypage/default-profile.png";
-
-const ProfileImage: React.FC<ProfileImageProps> = ({
+const ProfileImage = ({
 	imageUrl,
 	alt = "프로필 이미지",
 	width = 72,
 	height = 72,
 	className = "rounded-full",
-}) => {
-	const [isLoading, setIsLoading] = useState(true);
+}: ProfileImageProps) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
+
+	const isDefault = imageUrl.includes("default_profile.jpeg");
 
 	useEffect(() => {
 		if (imageUrl) {
 			setIsLoading(true);
 
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 			const img = new (window as any).Image() as HTMLImageElement;
 			img.src = imageUrl;
 
@@ -47,25 +48,16 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 	}, [imageUrl]);
 
 	return (
-		<div style={{ width, height }} className="relative">
-			{isLoading ? (
-				<div
-					className={`absolute inset-0 animate-pulse bg-gray-200 ${className}`}
-					style={{ width, height }}
-				/>
-			) : (
-				<Image
-					src={isError ? DEFAULT_IMAGE : imageUrl || DEFAULT_IMAGE}
-					alt={alt}
-					width={width}
-					height={height}
-					onLoadingComplete={() => setIsLoading(false)}
-					className={`${className} transition-opacity duration-500 ${isLoading ? "opacity-0" : "opacity-100"}`}
-					priority
-				/>
-			)}
-		</div>
+		<Image
+			src={isError || isDefault ? DefaultSpurtyImage : imageUrl}
+			alt={alt}
+			width={width}
+			height={height}
+			onLoadingComplete={() => setIsLoading(false)}
+			className={`${className} transition-opacity duration-500 ${isLoading ? "opacity-0" : "opacity-100"}`}
+			priority
+		/>
 	);
 };
 
-export default ProfileImage;
+export default memo(ProfileImage);
