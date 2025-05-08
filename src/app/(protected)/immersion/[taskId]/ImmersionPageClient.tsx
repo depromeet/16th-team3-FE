@@ -14,6 +14,7 @@ import TasksDropdown from "@/app/(protected)/immersion/_components/TasksDropdown
 import { Badge } from "@/components/component/Badge";
 import Toast from "@/components/toast/Toast";
 import { Button } from "@/components/ui/button";
+import { Drawer, DrawerClose, DrawerContent } from "@/components/ui/drawer";
 import { useCompleteTask, useInProgressTasks } from "@/hooks/useTasks";
 import { getPersonaImage } from "@/utils/getPersonaImage";
 import ArrowLeft from "@public/icons/common/arrow-left.svg";
@@ -304,14 +305,10 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 			)}
 
 			{/* 할일 완료 바텀시트 */}
-			{showBottomSheet && (
-				<div
-					className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-60"
+			<Drawer open={showBottomSheet} onOpenChange={setShowBottomSheet}>
+				<DrawerContent
+					className="w-auto border-0 bg-component-gray-secondary pb-[33px] pt-2"
 					onClick={handleOverlayClick}
-					onKeyDown={handleOverlayClick}
-					tabIndex={0}
-					role="button"
-					aria-label="바텀시트 닫기"
 				>
 					<div className="flex w-full flex-col items-center rounded-t-[28px] bg-component-gray-secondary px-5 pb-[34px] pt-10">
 						<h2 className="t3 text-center text-gray-normal">
@@ -323,24 +320,27 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 						<p className="b3 mb-7 text-center text-text-neutral">
 							마감까지 {remainingTime}
 						</p>
-						<button
-							type="button"
-							className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 text-gray-strong"
-							onClick={handleConfirmComplete}
-						>
-							할일 끝내기
-						</button>
-
-						<button
-							type="button"
-							className="b2 w-full pb-2 pt-4 text-text-neutral"
-							onClick={() => setShowBottomSheet(false)}
-						>
-							몰입으로 돌아가기
-						</button>
+						<DrawerClose asChild>
+							<button
+								type="button"
+								className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 text-gray-strong"
+								onClick={handleConfirmComplete}
+							>
+								할일 끝내기
+							</button>
+						</DrawerClose>
+						<DrawerClose asChild>
+							<button
+								type="button"
+								className="b2 w-full pb-2 pt-4 text-text-neutral"
+								onClick={() => setShowBottomSheet(false)}
+							>
+								몰입으로 돌아가기
+							</button>
+						</DrawerClose>
 					</div>
-				</div>
-			)}
+				</DrawerContent>
+			</Drawer>
 
 			{/* 시간 만료 바텀시트 */}
 			{showTimeExpiredSheet && (
@@ -348,9 +348,6 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 					className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-60"
 					onClick={handleTimeExpiredOverlayClick}
 					onKeyDown={handleTimeExpiredOverlayClick}
-					tabIndex={0}
-					role="button"
-					aria-label="시간 만료 바텀시트 닫기"
 				>
 					<div className="flex w-full flex-col items-center rounded-t-[28px] bg-component-gray-secondary px-5 pb-[34px] pt-6">
 						<h2 className="t3 mt-4 text-center text-gray-normal">
