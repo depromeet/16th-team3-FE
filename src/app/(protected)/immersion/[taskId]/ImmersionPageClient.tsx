@@ -93,7 +93,6 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 
 	const handleConfirmComplete = () => {
 		completeTask(Number(initialTask.id));
-		router.push(`/immersion/complete?taskId=${initialTask.id}`);
 	};
 
 	const handleReflection = () => {
@@ -321,13 +320,15 @@ export default function ImmersionPageClient({ initialTask }: Props) {
 							마감까지 {remainingTime}
 						</p>
 						<DrawerClose asChild>
-							<button
-								type="button"
-								className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 text-gray-strong"
-								onClick={handleConfirmComplete}
-							>
-								할일 끝내기
-							</button>
+							<Link href={`/immersion/complete?taskId=${initialTask.id}`}>
+								<button
+									type="button"
+									className="l2 w-full rounded-[16px] bg-component-accent-primary py-4 text-gray-strong"
+									onClick={handleConfirmComplete}
+								>
+									할일 끝내기
+								</button>
+							</Link>
 						</DrawerClose>
 						<DrawerClose asChild>
 							<button

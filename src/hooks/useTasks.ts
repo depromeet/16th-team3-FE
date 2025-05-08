@@ -136,7 +136,7 @@ export const useCompleteTask = () => {
 		mutationFn: (taskId: number) => completeTask(taskId),
 		onSuccess: (updatedTask) => {
 			queryClient.setQueryData(["tasks", updatedTask.id], updatedTask);
-			queryClient.invalidateQueries({ queryKey: ["tasks"] });
+			queryClient.invalidateQueries({ queryKey: ["tasks", "myPage"] });
 		},
 	});
 };
