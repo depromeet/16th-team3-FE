@@ -23,13 +23,13 @@ const Header = ({ task, personaImageUrl }: HeaderProps) => {
 				/>
 			</div>
 			<div className="flex-1">
-				<p className="b3 text-text-neutral">{formatDueTime()}</p>
 				<h3
 					className="s1 t3 truncate text-text-strong"
 					style={{ maxWidth: "240px" }}
 				>
 					{task.title}
 				</h3>
+				<p className="b3 text-text-neutral">{formatDueTime()}</p>
 			</div>
 		</div>
 	);
