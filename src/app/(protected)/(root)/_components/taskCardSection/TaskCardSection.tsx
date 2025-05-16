@@ -27,6 +27,7 @@ const TaskCardSection = ({
 				onClick={() => handleTaskClick(task)}
 			>
 				<div>
+					<div className="s2 mt-[3px] text-text-strong">{task.title}</div>
 					<div className="c3 flex items-center text-text-primary">
 						<span className="flex items-center">
 							<span>
@@ -50,7 +51,6 @@ const TaskCardSection = ({
 							</span>
 						</span>
 					</div>
-					<div className="s2 mt-[3px] text-text-strong">{task.title}</div>
 				</div>
 
 				<TaskCardButton task={task} handleDetailTask={handleDetailTask} />
