@@ -32,7 +32,7 @@ const SpurtyLoader = () => {
 	return (
 		<div
 			className={`
-			flex flex-col justify-center items-center h-screen
+			flex flex-col justify-center items-center h-screen 
 			transition-opacity transition-transform duration-500 ease-out
 			${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
 		  `}
@@ -46,14 +46,12 @@ const SpurtyLoader = () => {
 					priority
 				/>
 			</div>
-			<div
-				className="s3 flex items-center justify-center whitespace-nowrap rounded-[999px] px-[14px] py-[10px] text-[#BDBDF5]"
-				style={{
-					background: "var(--Elevated-PointPriamry, rgba(107, 107, 225, 0.20))",
-					backdropFilter: "blur(30px)",
-				}}
-			>
-				<span>잠시만 기다려주세요</span>
+			<div className="t3 flex items-center justify-center text-center px-[14px] py-[10px] text-gray-strong">
+				<span>
+					할 일을 불러오고 있어요
+					<br />
+					잠시만 기다려주세요
+				</span>
 			</div>
 		</div>
 	);
